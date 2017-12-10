@@ -12,7 +12,6 @@ prefix = __name__+'.'
 
 for name in os.listdir(__path__[-1]):
     if (name.endswith(".py") and name != "__init__.py" and name != "abstract_alpha.py"):
-        print "name: ", name
         module_name = name[:-3]
         try:
             alpha_module = importlib.import_module(__name__ + '.' + module_name)

@@ -7,7 +7,7 @@ if __name__ == "__main__":
     print "Enter Bye to close the program"
     #print(">", end=" ")
     input_text = ''
-    pattern = re.compile('\w*(L|l)oad (A|a)l(f|ph)a\s*\w* (\d+.?\d*)\w*')
+    pattern = re.compile('(L|l)oad (A|a)l(f|ph)a\s*\w*\s*(\d+.?\d*)\w*')
     latest_version = max(alpha_module_dictionary.keys())
     alpha = alpha_module_dictionary[latest_version]()
     while (input_text != 'Bye' and input_text != 'bye'):
