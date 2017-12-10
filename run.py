@@ -8,7 +8,8 @@ if __name__ == "__main__":
     #print(">", end=" ")
     input_text = ''
     pattern = re.compile('\w*(L|l)oad (A|a)l(f|ph)a\s*\w* (\d+.?\d*)\w*')
-    alpha = alpha_module_dictionary[1.0]()
+    latest_version = max(alpha_module_dictionary.keys())
+    alpha = alpha_module_dictionary[latest_version]()
     while (input_text != 'Bye' and input_text != 'bye'):
         try:
             input_text = raw_input('> ')
