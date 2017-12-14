@@ -13,7 +13,7 @@ if __name__ == "__main__":
     while (input_text != 'Bye' and input_text != 'bye'):
         try:
             input_text = raw_input('> ')
-            match_out = pattern.match(input_text)
+            match_out = pattern.search(input_text)
             if match_out:
                 print match_out.groupdict
                 version = float(match_out.group(4))
