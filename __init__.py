@@ -1,3 +1,3 @@
 from alpharvis_versions import alpha_module_dictionary
-from commands import command_search, command_objects
+from commands import command_database
 import history

@@ -1,10 +1,9 @@
-from Alfarvis.history import KeywordSearch
+from Alfarvis.history import Database
 import importlib
 import os
 import pkgutil
 
-command_search = KeywordSearch()
-command_objects = []
+command_database = Database()
 
 pkg_dir = os.path.dirname(__file__)
 
@@ -13,5 +12,4 @@ for (module_loader, name, ispkg) in pkgutil.iter_modules([pkg_dir]):
 
 for i, cls in enumerate(abstract_command.AbstractCommand.__subclasses__()):
     cls_instance = cls()
-    command_objects.append(cls_instance)
-    command_search.add(cls_instance.commandTags(), i)
+    command_database.add(cls_instance.commandTags(), cls_instance)
