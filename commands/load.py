@@ -9,7 +9,7 @@ import os
 class Load(AbstractCommand):
 
     def commandTags(self):
-        return ["load"]
+        return ["load", "import"]
 
     def argumentTypes(self):
         return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.csv)]
