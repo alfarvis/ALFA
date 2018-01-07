@@ -39,7 +39,9 @@ class KeywordSearch(object):
         """
         Return the indices which are common
         among all the keywords specified by
-        performing an intersection
+        performing an intersection.
+        Parameters:
+            keyword_list - list of keywords to search for index
         """
         common_index_set = None
         for keyword in keyword_list:
