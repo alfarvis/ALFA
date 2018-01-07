@@ -20,7 +20,7 @@ class TestLoad(unittest.TestCase):
         argument_types = load_command.argumentTypes()
         self.assertEqual(len(argument_types), 1)
         self.assertFalse(argument_types[0].optional)
-        self.assertEqual(argument_types[0].argument_type, ArgumentType.csv)
+        self.assertEqual(argument_types[0].argument_type, ArgumentType.string)
         self.assertEqual(argument_types[0].tags, [])
 
     def testVerifyArguments(self):

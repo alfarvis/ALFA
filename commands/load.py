@@ -12,7 +12,7 @@ class Load(AbstractCommand):
         return ["load", "import"]
 
     def argumentTypes(self):
-        return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.csv)]
+        return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.string)]
 
     def verifyArguments(self, file_name):
         if type(file_name) != str:
