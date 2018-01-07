@@ -18,6 +18,8 @@ class TestKeywordSearch(unittest.TestCase):
         self.assertEqual(out, [0, 1])
         out = keyword_search.search(['batting_average','dravid'])
         self.assertEqual(out, [1])
+        out = keyword_search.search(['What', 'is', 'dravid', 'age'])
+        self.assertEqual(out, [0])
         out = keyword_search.search(['sachin','dravid'])
         self.assertEqual(out, [])
 

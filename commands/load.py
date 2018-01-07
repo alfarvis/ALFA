@@ -21,9 +21,9 @@ class Load(AbstractCommand):
 
     def evaluate(self, file_name):
         command_status = CommandStatus.Error
-        if os.path.isfile(args[0]):
+        if os.path.isfile(file_name):
             try:
-                data = pd.read_csv(args[0])
+                data = pd.read_csv(file_name)
                 command_status = CommandStatus.Success
             except:
                 command_status = CommandStatus.Error

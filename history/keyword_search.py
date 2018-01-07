@@ -43,13 +43,13 @@ class KeywordSearch(object):
         Parameters:
             keyword_list - list of keywords to search for index
         """
-        common_index_set = None
+        common_index_set = []
         for keyword in keyword_list:
             if keyword not in self.keyword_dict:
-                return list()
+                continue
             else:
                 current_index_set = self.keyword_dict[keyword]
-                if common_index_set is None:
+                if not common_index_set:
                     common_index_set = current_index_set
                 common_index_set.intersection_update(current_index_set)
         return list(common_index_set)
