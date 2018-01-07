@@ -3,12 +3,24 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 from enum import Enum
 
+
 class CommandStatus(Enum):
     Success = 1
     Error = 2
 
+
 class AbstractCommand(object):
     __metaclass__ = ABCMeta
+
+    @abstractproperty
+    def commandTags(self):
+        """
+        Return a list of strings that
+        identify the command among
+        a list of commands
+        """
+        pass
+
     @abstractproperty
     def argumentTypes(self):
         """

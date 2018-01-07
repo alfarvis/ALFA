@@ -9,6 +9,7 @@ class ArgumentType(Enum):
     number = 3
     string = 4
 
+
 class Argument(object):
     """
     Provides information about an argument:

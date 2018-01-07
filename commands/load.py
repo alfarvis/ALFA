@@ -5,7 +5,12 @@ from abstract_command import AbstractCommand, CommandStatus
 from argument import Argument, ArgumentType
 import os
 
+
 class Load(AbstractCommand):
+
+    def commandTags(self):
+        return ["load"]
+
     def argumentTypes(self):
         return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.csv)]
 
