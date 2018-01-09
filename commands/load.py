@@ -1,8 +1,9 @@
 #!/usr/bin/env python2
 
 import pandas as pd
-from abstract_command import AbstractCommand, CommandStatus
-from argument import Argument, ArgumentType
+from Alfarvis.basic_definitions import ArgumentType, CommandStatus
+from abstract_command import AbstractCommand
+from argument import Argument
 import os
 
 

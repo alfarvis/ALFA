@@ -1,13 +1,6 @@
 #!/usr/bin/env python2
 
 from abc import ABCMeta, abstractmethod, abstractproperty
-from enum import Enum
-
-
-class CommandStatus(Enum):
-    Success = 1
-    Error = 2
-
 
 class AbstractCommand(object):
     __metaclass__ = ABCMeta

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import unittest
-from Alfarvis import command_database, ArgumentType, CommandStatus, package_directory
+from Alfarvis.basic_definitions import ArgumentType, CommandStatus
+from Alfarvis import command_database, package_directory
 import os
 
 class TestLoad(unittest.TestCase):
