@@ -8,6 +8,7 @@ class ArgumentType(Enum):
     csv = 2
     number = 3
     string = 4
+    file_name = 5
 
 
 class Argument(object):

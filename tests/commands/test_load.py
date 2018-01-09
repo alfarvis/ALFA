@@ -16,16 +16,16 @@ class TestLoad(unittest.TestCase):
 
     def testArgumentTypes(self):
         result = command_database.search(["load"])
-        load_command = result[0]
+        load_command = result[0].data
         argument_types = load_command.argumentTypes()
         self.assertEqual(len(argument_types), 1)
         self.assertFalse(argument_types[0].optional)
-        self.assertEqual(argument_types[0].argument_type, ArgumentType.string)
+        self.assertEqual(argument_types[0].argument_type, ArgumentType.file_name)
         self.assertEqual(argument_types[0].tags, [])
 
     def testEvaluate(self):
         result = command_database.search(["load"])
-        load_command = result[0]
+        load_command = result[0].data
         arg = load_command.argumentTypes()[0]
         arguments = {arg.keyword:'Random'}
         self.assertEqual(load_command.evaluate(**arguments), CommandStatus.Error)

@@ -12,7 +12,7 @@ class Load(AbstractCommand):
         return ["load", "import"]
 
     def argumentTypes(self):
-        return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.string)]
+        return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.file_name)]
 
     def evaluate(self, file_name):
         command_status = CommandStatus.Error
