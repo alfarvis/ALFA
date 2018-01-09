@@ -35,16 +35,6 @@ class AbstractCommand(object):
         pass
 
     @abstractmethod
-    def verifyArguments(self, *args):
-        """
-        Check the arguments passed for evaluate
-        to have the correct types.
-
-        Returns true if arguments are of valid type
-        """
-        pass
-
-    @abstractmethod
     def evaluate(self, *args):
         """
         Evaluate the command using the arguments

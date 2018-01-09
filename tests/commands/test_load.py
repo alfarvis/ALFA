@@ -23,12 +23,6 @@ class TestLoad(unittest.TestCase):
         self.assertEqual(argument_types[0].argument_type, ArgumentType.string)
         self.assertEqual(argument_types[0].tags, [])
 
-    def testVerifyArguments(self):
-        result = command_database.search(["load"])
-        load_command = result[0]
-        self.assertTrue(load_command.verifyArguments(file_name="File"))
-        self.assertFalse(load_command.verifyArguments(file_name=100))
-
     def testEvaluate(self):
         result = command_database.search(["load"])
         load_command = result[0]

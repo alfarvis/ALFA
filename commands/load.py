@@ -14,11 +14,6 @@ class Load(AbstractCommand):
     def argumentTypes(self):
         return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.string)]
 
-    def verifyArguments(self, file_name):
-        if type(file_name) != str:
-            return False
-        return True
-
     def evaluate(self, file_name):
         command_status = CommandStatus.Error
         if os.path.isfile(file_name):
