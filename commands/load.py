@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 import pandas as pd
-from Alfarvis.basic_definitions import ArgumentType, CommandStatus
+from Alfarvis.basic_definitions import DataType, CommandStatus
 from abstract_command import AbstractCommand
 from argument import Argument
 import os
@@ -13,7 +13,7 @@ class Load(AbstractCommand):
         return ["load", "import"]
 
     def argumentTypes(self):
-        return [Argument(keyword="file_name", optional=False, argument_type=ArgumentType.file_name)]
+        return [Argument(keyword="file_name", optional=False, argument_type=DataType.file_name)]
 
     def evaluate(self, file_name):
         command_status = CommandStatus.Error

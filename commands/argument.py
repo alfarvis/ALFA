@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from Alfarvis.basic_definitions import ArgumentType
+from Alfarvis.basic_definitions import DataType
 
 
 class Argument(object):
@@ -11,7 +11,7 @@ class Argument(object):
         - keyword that is used in evaluation
     """
 
-    def __init__(self, argument_type=ArgumentType.string, optional=True, keyword="", tags=[]):
+    def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[]):
         # If argument is optional, need not be provided by user
         self.optional = optional
         # Argument type also used to disambiguate the arguments

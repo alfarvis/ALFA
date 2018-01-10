@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 from data_base import Database
-from Alfarvis.basic_definitions import ArgumentType
+from Alfarvis.basic_definitions import DataType
 
 class ArgumentDatabase:
     _argument_database = dict()
     def __init__(self):
-        for argument_type in ArgumentType:
+        for argument_type in DataType:
             self._argument_database[argument_type] = Database()
     
     def add(self, argument_type, keyword_list, data_object):

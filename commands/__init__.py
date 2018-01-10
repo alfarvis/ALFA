@@ -1,5 +1,4 @@
 from Alfarvis.history import Database
-from argument import ArgumentType
 import importlib
 import os
 import pkgutil

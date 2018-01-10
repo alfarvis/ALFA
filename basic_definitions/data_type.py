@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-class ArgumentType(Enum):
+class DataType(Enum):
     image = 1
     csv = 2
     number = 3

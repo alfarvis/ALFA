@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import unittest
-from Alfarvis.basic_definitions import ArgumentType, CommandStatus
+from Alfarvis.basic_definitions import DataType, CommandStatus
 from Alfarvis import command_database, package_directory
 import os
 
@@ -15,13 +15,13 @@ class TestLoad(unittest.TestCase):
         result = command_database.search(["load", "now"])
         self.assertEqual(len(result), 1)
 
-    def testArgumentTypes(self):
+    def testDataTypes(self):
         result = command_database.search(["load"])
         load_command = result[0].data
         argument_types = load_command.argumentTypes()
         self.assertEqual(len(argument_types), 1)
         self.assertFalse(argument_types[0].optional)
-        self.assertEqual(argument_types[0].argument_type, ArgumentType.file_name)
+        self.assertEqual(argument_types[0].argument_type, DataType.file_name)
         self.assertEqual(argument_types[0].tags, [])
 
     def testEvaluate(self):
