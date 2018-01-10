@@ -1,8 +1,14 @@
 #!/usr/bin/env python2
-
+"""
+Provide abstract base class for implementing new commands
+"""
 from abc import ABCMeta, abstractmethod, abstractproperty
 
 class AbstractCommand(object):
+    """
+    Base class for new commands. Provides virtual
+    functions to be implemented by new commands
+    """
     __metaclass__ = ABCMeta
 
     @abstractproperty

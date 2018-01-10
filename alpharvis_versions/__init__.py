@@ -1,3 +1,6 @@
+"""
+Provides dictionary of available alpha versions stored in this dictionary
+"""
 import importlib
 import pkgutil
 import os

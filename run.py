@@ -1,4 +1,9 @@
 #!/usr/bin/env python2
+"""
+Main executable that calls alpha with specified version
+and facilitates communication between user and alpha
+through command line
+"""
 import re
 from Alfarvis import alpha_module_dictionary
 

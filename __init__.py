@@ -1,3 +1,8 @@
+"""
+Alfarvis
+
+Text based parsing tool
+"""
 from alpharvis_versions import alpha_module_dictionary
 from commands import command_database
 import basic_definitions

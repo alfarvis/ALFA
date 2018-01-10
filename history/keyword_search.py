@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+Keyword search to store indices to data
+"""
 from sets import Set
 
 

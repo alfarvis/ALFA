@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+Provides definition of argument for a command
+"""
 from Alfarvis.basic_definitions import DataType
 
 
@@ -12,6 +15,9 @@ class Argument(object):
     """
 
     def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[]):
+        """
+        Constructor
+        """
         # If argument is optional, need not be provided by user
         self.optional = optional
         # Argument type also used to disambiguate the arguments

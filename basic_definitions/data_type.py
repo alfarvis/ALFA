@@ -1,8 +1,14 @@
 #!/usr/bin/env python
+"""
+Define data type of data stored in database
+"""
 from enum import Enum
 
 
 class DataType(Enum):
+    """
+    Different types of data stored in database
+    """
     image = 1
     csv = 2
     number = 3

@@ -6,6 +6,9 @@ class Alpha(AbstractAlpha):
     __version__ = 1.0
     @classmethod
     def _get_version(self):
+        """
+        Return current version
+        """
         return self.__version__
 
     def __call__(self, text):

@@ -1,8 +1,15 @@
 #!/usr/bin/env python2
+"""
+Abstract class for implementing other alpha versions
+"""
 
 from abc import ABCMeta, abstractmethod, abstractproperty
 
 class AbstractAlpha(object):
+    """
+    Abstract base class that provides framework for other
+    alpha classes
+    """
     __metaclass__ = ABCMeta
     @abstractproperty
     @classmethod

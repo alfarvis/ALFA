@@ -1,0 +1,3 @@
+"""
+Different tests for alpha
+"""

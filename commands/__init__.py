@@ -1,3 +1,7 @@
+"""
+Provide commands database available for alpharvis
+to implement
+"""
 from Alfarvis.history import Database
 import importlib
 import os
