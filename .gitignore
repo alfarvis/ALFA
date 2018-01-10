@@ -3,3 +3,5 @@
 resources/.ipynb_checkpoints/
 NOTES
 bakup
+htmlcov/
+.coverage

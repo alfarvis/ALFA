@@ -1,8 +1,15 @@
 #!/usr/bin/env python2
+"""
+Defines alpha 1.0
+"""
 
 from abstract_alpha import AbstractAlpha
 
 class Alpha(AbstractAlpha):
+    """
+    Simple alpha that just repeats
+    whatever is input
+    """
     __version__ = 1.0
     @classmethod
     def _get_version(self):
