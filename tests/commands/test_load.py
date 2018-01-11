@@ -1,24 +1,29 @@
 #!/usr/bin/env python
 import unittest
 from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
-from Alfarvis import command_database, package_directory
-from Alfarvis.history import session_history
+from Alfarvis import package_directory, create_command_database
+from Alfarvis.commands.load import Load
+from Alfarvis.history import TypeDatabase
 import os
 
 class TestLoad(unittest.TestCase):
+    def setUp(self):
+        self.session_history = TypeDatabase()
+
     def testSearchingLoad(self):
+        command_database = create_command_database(self.session_history)
         result = command_database.search(["load"])
         self.assertEqual(len(result), 1)
         result = command_database.search(["import"])
         self.assertEqual(len(result), 1)
 
     def testSearchingLoadWithMultipleKeywords(self):
+        command_database = create_command_database(self.session_history)
         result = command_database.search(["load", "now"])
         self.assertEqual(len(result), 1)
 
     def testDataTypes(self):
-        result = command_database.search(["load"])
-        load_command = result[0].data
+        load_command = Load(self.session_history)
         argument_types = load_command.argumentTypes()
         self.assertEqual(len(argument_types), 1)
         self.assertFalse(argument_types[0].optional)
@@ -26,8 +31,7 @@ class TestLoad(unittest.TestCase):
         self.assertEqual(argument_types[0].tags, [])
 
     def testEvaluate(self):
-        result = command_database.search(["load"])
-        load_command = result[0].data
+        load_command = Load(self.session_history)
         arg = load_command.argumentTypes()[0]
         file_name_object = DataObject('Random', ['random', 'file'])
         arguments = {arg.keyword:file_name_object}
@@ -36,8 +40,7 @@ class TestLoad(unittest.TestCase):
         self.assertEqual(load_command.evaluate(**arguments), CommandStatus.Success)
 
     def testSavingToHistory(self):
-        result = command_database.search(["load"])
-        load_command = result[0].data
+        load_command = Load(self.session_history)
         arg = load_command.argumentTypes()[0]
         file_name_object = DataObject(os.path.join(package_directory,
                                                    'resources/data.csv'),
@@ -45,6 +48,7 @@ class TestLoad(unittest.TestCase):
         arguments = {arg.keyword:file_name_object}
         load_command.evaluate(**arguments)
         # Search for csv data from history
-        data_object = session_history.search(DataType.csv, ['breast', 'cancer', 'data'])
+        data_object = self.session_history.search(DataType.csv,
+                                                  ['breast', 'cancer', 'data'])
         self.assertEqual(len(data_object), 1)
         self.assertEqual(data_object[0].keyword_list, ['breast', 'cancer'])

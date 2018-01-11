@@ -5,9 +5,11 @@ and facilitates communication between user and alpha
 through command line
 """
 import re
-from Alfarvis import alpha_module_dictionary
+from Alfarvis import create_alpha_module_dictionary
 
 if __name__ == "__main__":
+    # Create alpha module dictionary
+    alpha_module_dictionary = create_alpha_module_dictionary()
     print("Input a text to receive response from Alfarvis")
     print "Enter Bye to close the program"
     #print(">", end=" ")
