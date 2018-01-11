@@ -52,4 +52,4 @@ class Database(object):
         index_list = self.keyword_search.search(keyword_list)
         for index in index_list:
             self.keyword_search.discard(self.data_objects[index].keyword_list, index)
-            del self.data_objects[index]
+            self.data_objects[index] = None

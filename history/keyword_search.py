@@ -37,6 +37,8 @@ class KeywordSearch(object):
         for keyword in keyword_list:
             if keyword in self.keyword_dict:
                 self.keyword_dict[keyword].discard(index)
+                if not self.keyword_dict[keyword]:
+                    del self.keyword_dict[keyword]
 
     def search(self, keyword_list):
         """

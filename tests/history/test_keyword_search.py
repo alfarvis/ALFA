@@ -7,7 +7,6 @@ class TestKeywordSearch(unittest.TestCase):
         keyword_search = KeywordSearch()
         out = keyword_search.search(['hello'])
         self.assertEqual(len(out), 0)
-        keyword_search.discard(['helwo'], 0)
 
     def testAddingKeywords(self):
         keyword_search = KeywordSearch()

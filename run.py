@@ -7,7 +7,7 @@ through command line
 import re
 from Alfarvis import create_alpha_module_dictionary
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     # Create alpha module dictionary
     alpha_module_dictionary = create_alpha_module_dictionary()
     print("Input a text to receive response from Alfarvis")
