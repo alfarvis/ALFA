@@ -6,3 +6,5 @@ data type etc.
 from keyword_search import KeywordSearch
 from data_base import Database
 from type_data_base import TypeDatabase
+
+session_history = TypeDatabase()

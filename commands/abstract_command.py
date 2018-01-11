@@ -11,6 +11,9 @@ class AbstractCommand(object):
     """
     __metaclass__ = ABCMeta
 
+    def __init__(self, history):
+        self.history = history
+
     @abstractproperty
     def commandTags(self):
         """
