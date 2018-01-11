@@ -12,6 +12,10 @@ class AbstractCommand(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, history):
+        """
+        Store history to store results
+        from command evaluation.
+        """
         self.history = history
 
     @abstractproperty
