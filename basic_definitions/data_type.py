@@ -14,5 +14,7 @@ class DataType(Enum):
     number = 3
     string = 4
     file_name = 5
+    trained_model = 6
+    algorithm_arg = 7
 
 
