@@ -22,4 +22,9 @@ class DataObject(object):
         self.keyword_list = keyword_list
         self.time_stamp = datetime.datetime.now()
 
+    def __eq__(self, data):
+        return bool(set(self.keyword_list).intersection(set(data.keyword_list)))
+
+    def __ne__(self, data):
+        return not self.__eq__(data)
 
