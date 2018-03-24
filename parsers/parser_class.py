@@ -23,6 +23,11 @@ class AlfaDataParser:
     def findIntersection(self, list1, list2):
         return set(list1).intersection(set(list2))
 
+    def printCommands(self, command_list):
+        print("Found multiple commands. Please select one of the commands")
+        for command in command_list:
+            print(command.keyword_list[0])
+
     def command_parse(self, text):
         """
         Parse an input from user to resolve commands
@@ -42,10 +47,12 @@ class AlfaDataParser:
         """
         split_text = text.split(" ")
         if len(self.command_search_result) > 0:
+            # If old text is used, we will not be able to resolve command
+            # Since there will be multiple commands always
             res = self.command_database.search(split_text)
         else:
             # Tokenize text
-            self.keyword_list.append(split_text)
+            self.keyword_list = self.keyword_list + split_text
             res = self.command_database.search(self.keyword_list)
         if len(res) == 0:
             print("Command not found")
@@ -63,10 +70,10 @@ class AlfaDataParser:
                     self.foundCommand(list(intersection_set))
                 else:
                     self.command_search_result = list(intersection_set)
-                    print("Found multiple commands. Please select one of the commands")
+                    self.printCommands(self.command_search_result)
             else:
                 self.command_search_result = res
-                print("Found multiple commands. Please select one of the commands")
+                self.printCommands(self.command_search_result)
     
     def foundCommand(self, res):
         print("Found command", res[0])
@@ -79,37 +86,39 @@ class AlfaDataParser:
         # Tokenize text
         # Resolve arguments or data
         split_text = text.split(" ")
-        # TODO Get out of the resolve args if user wants to
-        # Tokenize text
-        self.resolveArguments(split_text)
-        return 0
+        if 'quit' in split_text:
+            self.clearCommandSearchResults()
+        else:
+            self.resolveArguments(split_text)
 
     def resolveArguments(self, key_words):
         all_arg_names = set()
         for i in range (len(self.argumentTypes)):
-            # TODO Only resolve args which are not foundfff
             # TODO Try to use information from user when command gives error
+            # TODO If user wants to substitute arguments in the process of resolution then ask him for confirmation. 
             arg_type = self.argumentTypes[i].argument_type
             arg_name = self.argumentTypes[i].keyword
+            if arg_name in self.argumentsFound:
+                continue
             data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)
-            if len(data_res==1):
+            if len(data_res)==1:
                 self.argumentsFound[arg_name] = data_res[0].data
-            elif len(data_res > 1):
-                if arg_name in self.argument_search_results:
+            elif len(data_res) > 1:
+                if arg_name in self.argument_search_result:
                     intersection_set = self.findIntersection(self.argument_search_result[arg_name],
                                                              data_res)
                     if len(intersection_set) == 0:
                         self.argument_search_result[arg_name] = data_res
                     elif len(intersection_set) == 1:
-                        intersection_list = list(intersection_set)
-                        self.argumentsFound[arg_name] = intersection_list[0].data
+                        self.argumentsFound[arg_name] = intersection_set.pop().data
                     else:
                         self.argument_search_result[arg_name] = list(intersection_set)
                 else:
                     self.argument_search_result[arg_name] = data_res
         if len(self.argumentTypes) == len(self.argumentsFound):
             self.currentState = ParserStates.command_known_data_known
+            self.argument_search_result = {}
             self.executeCommand(self.command, self.argumentsFound)
         else:
             self.currentState = ParserStates.command_known_data_unknown
@@ -122,6 +131,7 @@ class AlfaDataParser:
         command_status = command.evaluate(**arguments)
         if command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
+            # TODO Find which arguments are wrong and resolve only those data
         elif command_status == CommandStatus.Success:
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
@@ -142,8 +152,5 @@ class AlfaDataParser:
 
     def getCurrentState(self):
         return self.currentState
-
-    def FindArgumentFromHistory(self):
-        return 0 
 
 
