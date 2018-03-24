@@ -2,7 +2,7 @@
 """
 Create a dictionary of alpha modules
 """
-import abstract_alpha
+from . import abstract_alpha
 
 def create_alpha_module_dictionary():
     """
@@ -20,5 +20,5 @@ def create_alpha_module_dictionary():
             continue
         else:
             alpha_module_dictionary[alpha_class._get_version()] = alpha_class
-    print "Available alpha versions: ", alpha_module_dictionary.keys()
+    print("Available alpha versions: ", alpha_module_dictionary.keys())
     return alpha_module_dictionary

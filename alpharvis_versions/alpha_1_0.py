@@ -3,7 +3,7 @@
 Defines alpha 1.0
 """
 
-from abstract_alpha import AbstractAlpha
+from .abstract_alpha import AbstractAlpha
 
 class Alpha(AbstractAlpha):
     """

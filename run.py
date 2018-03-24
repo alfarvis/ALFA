@@ -11,7 +11,7 @@ if __name__ == "__main__": # pragma: no cover
     # Create alpha module dictionary
     alpha_module_dictionary = create_alpha_module_dictionary()
     print("Input a text to receive response from Alfarvis")
-    print "Enter Bye to close the program"
+    print("Enter Bye to close the program")
     #print(">", end=" ")
     input_text = ''
     pattern = re.compile('(L|l)oad (A|a)l(f|ph)a\s*\w*\s*(\d+.?\d*)\w*')
@@ -22,23 +22,23 @@ if __name__ == "__main__": # pragma: no cover
             input_text = raw_input('> ')
             match_out = pattern.search(input_text)
             if match_out:
-                print match_out.groupdict
+                print(match_out.groupdict)
                 version = float(match_out.group(4))
-                print "Trying to load alpha v", version
+                print("Trying to load alpha v", version)
                 if version in alpha_module_dictionary:
                     try:
                         alpha = alpha_module_dictionary[version]()
-                        print "Successfully loaded alpha version", version
+                        print("Successfully loaded alpha version", version)
                     except:
-                        print "Cannot instantiate alpha"
+                        print("Cannot instantiate alpha")
                         alpha = None
                 else:
-                    print "No existing version: ", version
+                    print("No existing version: ", version)
             elif alpha is not None:
-                print alpha(input_text)
+                print(alpha(input_text))
             else:
-                print "No alpha loaded!"
+                print("No alpha loaded!")
         except (KeyboardInterrupt, EOFError) as e:
-            print ""
+            print("")
             break
-    print "Closing Program! Good Bye."
+    print("Closing Program! Good Bye.")
