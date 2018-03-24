@@ -1,4 +1,4 @@
-from parser_states import ParserStates
+from .parser_states import ParserStates
 from Alfarvis import create_command_database
 from Alfarvis.basic_definitions import CommandStatus
 
@@ -20,6 +20,7 @@ class AlfaDataParser:
         self.argumentsFound = {}  # Resolved arguments to separate from unresolved args
         self.argument_search_result = {} # To resolve argument search results
     
+    @classmethod
     def findIntersection(self, list1, list2):
         return set(list1).intersection(set(list2))
 
