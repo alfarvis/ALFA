@@ -4,8 +4,8 @@ Define load command
 """
 import pandas as pd
 from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
-from abstract_command import AbstractCommand
-from argument import Argument
+from .abstract_command import AbstractCommand
+from .argument import Argument
 import os
 
 

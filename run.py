@@ -19,7 +19,7 @@ if __name__ == "__main__": # pragma: no cover
     alpha = alpha_module_dictionary[latest_version]()
     while (input_text != 'Bye' and input_text != 'bye'):
         try:
-            input_text = raw_input('> ')
+            input_text = input('> ')
             match_out = pattern.search(input_text)
             if match_out:
                 print(match_out.groupdict)

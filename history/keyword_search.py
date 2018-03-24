@@ -2,7 +2,7 @@
 """
 Keyword search to store indices to data
 """
-from sets import Set
+
 
 
 class KeywordSearch(object):
@@ -26,7 +26,7 @@ class KeywordSearch(object):
         """
         for keyword in keyword_list:
             if keyword not in self.keyword_dict:
-                self.keyword_dict[keyword] = Set()
+                self.keyword_dict[keyword] = set()
             self.keyword_dict[keyword].add(index)
 
     def discard(self, keyword_list, index):

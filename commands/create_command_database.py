@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from Alfarvis.history import Database
-import abstract_command
+from . import abstract_command
 
 def create_command_database(session_history):
     """

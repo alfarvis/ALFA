@@ -2,7 +2,7 @@
 """
 Database to store data using keywords
 """
-from keyword_search import KeywordSearch
+from .keyword_search import KeywordSearch
 from Alfarvis.basic_definitions import DataObject
 
 class Database(object):

@@ -3,7 +3,7 @@
 data base with data type and keyword resolution capabilities
 """
 
-from data_base import Database
+from .data_base import Database
 from Alfarvis.basic_definitions import DataType
 
 class TypeDatabase:
