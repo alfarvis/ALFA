@@ -4,10 +4,12 @@ from Alfarvis.basic_definitions import CommandStatus
 
 
 class AlfaDataParser:
+
     def __init__(self, history):
         self.textInput = ""
-        self.history = history # Data history
-        self.command_database = create_command_database(history) # Command database
+        self.history = history  # Data history
+        self.command_database = create_command_database(
+            history)  # Command database
         self.clearCommandSearchResults()
 
     def clearCommandSearchResults(self):
@@ -16,10 +18,12 @@ class AlfaDataParser:
         """
         self.currentState = ParserStates.command_unknown  # Parser state
         self.keyword_list = []  # Keywords extracted from input text
-        self.command_search_result = []  # If a command is currently being parsed, resolve arguments for that command
+        # If a command is currently being parsed, resolve arguments for that
+        # command
+        self.command_search_result = []
         self.argumentsFound = {}  # Resolved arguments to separate from unresolved args
-        self.argument_search_result = {} # To resolve argument search results
-    
+        self.argument_search_result = {}  # To resolve argument search results
+
     @classmethod
     def findIntersection(self, list1, list2):
         return set(list1).intersection(set(list2))
@@ -57,13 +61,15 @@ class AlfaDataParser:
             res = self.command_database.search(self.keyword_list)
         if len(res) == 0:
             print("Command not found")
-            print("If you would like to know about existing commands, please say Find commands or Please help me")
+            print(
+                "If you would like to know about existing commands, please say Find commands or Please help me")
             self.clearCommandSearchResults()
         elif len(res) == 1:
             self.foundCommand(res)
         else:
             if len(self.command_search_result) > 0:
-                intersection_set = self.findIntersection(self.command_search_result, res)
+                intersection_set = self.findIntersection(
+                    self.command_search_result, res)
                 if len(intersection_set) == 0:
                     self.command_search_result = res
                     print("The new commands do not match with the old input.")
@@ -75,12 +81,11 @@ class AlfaDataParser:
             else:
                 self.command_search_result = res
                 self.printCommands(self.command_search_result)
-    
+
     def foundCommand(self, res):
         print("Found command", res[0])
         self.currentState = ParserStates.command_known
         self.currentCommand = res[0].data
-        self.argumentTypes = self.currentCommand.argumentTypes()
         self.resolveArguments(self.keyword_list)
 
     def data_parse(self, text):
@@ -94,16 +99,21 @@ class AlfaDataParser:
 
     def resolveArguments(self, key_words):
         all_arg_names = set()
-        for i in range (len(self.argumentTypes)):
+        argumentTypes = self.currentCommand.argumentTypes()
+        for i in range(len(argumentTypes)):
             # TODO Try to use information from user when command gives error
-            # TODO If user wants to substitute arguments in the process of resolution then ask him for confirmation. 
-            arg_type = self.argumentTypes[i].argument_type
-            arg_name = self.argumentTypes[i].keyword
+            # TODO If user wants to substitute arguments in the process of resolution then ask him for confirmation.
+            # TODO Handle multiple arguments with same type
+            # TODO Handle arguments from keywords
+            # TODO Handle composite commands (resolveCommands similar to
+            # resolveArguments)
+            arg_type = argumentTypes[i].argument_type
+            arg_name = argumentTypes[i].keyword
             if arg_name in self.argumentsFound:
                 continue
             data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)
-            if len(data_res)==1:
+            if len(data_res) == 1:
                 self.argumentsFound[arg_name] = data_res[0].data
             elif len(data_res) > 1:
                 if arg_name in self.argument_search_result:
@@ -112,18 +122,21 @@ class AlfaDataParser:
                     if len(intersection_set) == 0:
                         self.argument_search_result[arg_name] = data_res
                     elif len(intersection_set) == 1:
-                        self.argumentsFound[arg_name] = intersection_set.pop().data
+                        self.argumentsFound[
+                            arg_name] = intersection_set.pop().data
                     else:
-                        self.argument_search_result[arg_name] = list(intersection_set)
+                        self.argument_search_result[
+                            arg_name] = list(intersection_set)
                 else:
                     self.argument_search_result[arg_name] = data_res
-        if len(self.argumentTypes) == len(self.argumentsFound):
+        if len(argumentTypes) == len(self.argumentsFound):
             self.currentState = ParserStates.command_known_data_known
             self.argument_search_result = {}
-            self.executeCommand(self.command, self.argumentsFound)
+            self.executeCommand(self.currentCommand, self.argumentsFound)
         else:
             self.currentState = ParserStates.command_known_data_unknown
-            unknown_args = all_arg_names.difference(set(self.argumentsFound.keys()))
+            unknown_args = all_arg_names.difference(
+                set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
             print("Cannot find some arguments", unknown_args)
 
@@ -137,8 +150,8 @@ class AlfaDataParser:
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
         return 0
-        
-    def parse(self,textInput):
+
+    def parse(self, textInput):
         """
         Take input from user and resolve/run the instructions
         """
@@ -153,5 +166,3 @@ class AlfaDataParser:
 
     def getCurrentState(self):
         return self.currentState
-
-
