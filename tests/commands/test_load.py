@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import unittest
-from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
+from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject, FileNameObject
 from Alfarvis import package_directory, create_command_database
 from Alfarvis.commands.load import Load
 from Alfarvis.history import TypeDatabase
@@ -33,16 +33,20 @@ class TestLoad(unittest.TestCase):
     def testEvaluate(self):
         load_command = Load(self.session_history)
         arg = load_command.argumentTypes()[0]
-        file_name_object = DataObject('Random', ['random', 'file'])
+        file_name_data_object = FileNameObject()
+        file_name_object = DataObject(file_name_data_object, ['random', 'file'])
         arguments = {arg.keyword:file_name_object}
         result_object = load_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Error)
-        file_name_object.data = os.path.join(package_directory, 'resources/data.csv')
+        file_name_data_object.path = os.path.join(package_directory, 'resources/data.csv')
+        file_name_data_object.data_type = DataType.csv
+        file_name_object.data = file_name_data_object
+        
         result_object = load_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)
 
 #    def testSavingToHistory(self):
-#        load_command = Load(self.session_history)
+#        load_command = Load(self.session_history) 
 #        arg = load_command.argumentTypes()[0]
 #        file_name_object = DataObject(os.path.join(package_directory,
 #                                                   'resources/data.csv'),
