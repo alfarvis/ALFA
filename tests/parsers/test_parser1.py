@@ -8,8 +8,8 @@ Created on Fri Mar 23 22:34:24 2018
 
 import unittest
 from Alfarvis.parsers import AlfaDataParser, ParserStates
-from Alfarvis.history import TypeDatabase
-from Alfarvis.basic_definitions import DataObject, CommandStatus, DataType
+from Alfarvis.basic_definitions import (DataObject, CommandStatus, DataType,
+                                        ResultObject)
 from Alfarvis.commands.abstract_command import AbstractCommand
 from Alfarvis.commands.argument import Argument
 
@@ -20,18 +20,18 @@ class DummyCommand(AbstractCommand):
         return ["dummy", "test"]
 
     def argumentTypes(self):
-        return [Argument(keyword="dummy", optional=False, argument_type=DataType.string)]
+        return [Argument(keyword="dummy", optional=False,
+                         argument_type=DataType.string)]
 
     def evaluate(self, dummy):
-        self.history.add(DataType.string, ["dummy", "result"], dummy)
-        return CommandStatus.Success
+        return ResultObject(dummy, ["dummy", "result"], DataType.string)
 
 
 class TestParserMethods(unittest.TestCase):
 
     def setUp(self):
-        self.history = TypeDatabase()
-        self.parser = AlfaDataParser(self.history)
+        self.parser = AlfaDataParser()
+        self.history = self.parser.history
 
     def checkResult(self, history, expected_result, keywords, data_type):
         res = self.history.search(DataType.string, keywords)
@@ -51,7 +51,7 @@ class TestParserMethods(unittest.TestCase):
         self.parser.printCommands(command_list)
 
     def test_execute_command(self):
-        command = DummyCommand(self.history)
+        command = DummyCommand()
         self.parser.executeCommand(command, {"dummy": "How are you"})
         out = self.checkResult(self.history, "How are you", ["dummy"],
                                DataType.string)
@@ -64,7 +64,7 @@ class TestParserMethods(unittest.TestCase):
         self.history.add(DataType.string, ["quote", "favorite"],
                          "Pen is sharper than knife")
         key_words = "Call the dummy function with my input".split(' ')
-        self.parser.currentCommand = DummyCommand(self.history)
+        self.parser.currentCommand = DummyCommand()
         self.parser.resolveArguments(key_words)
         out = self.checkResult(self.history, "dummy input", ["dummy", "result"],
                                DataType.string)
@@ -77,7 +77,7 @@ class TestParserMethods(unittest.TestCase):
                          "Pen is sharper than knife")
 
         key_words = "Call the dummy function with my input".split(' ')
-        self.parser.currentCommand = DummyCommand(self.history)
+        self.parser.currentCommand = DummyCommand()
         self.parser.resolveArguments(key_words)
         out = self.checkResult(self.history, "Pen is sharper than knife",
                                ["dummy", "result"], DataType.string)
@@ -93,7 +93,7 @@ class TestParserMethods(unittest.TestCase):
         self.history.add(DataType.string, ["quote", "hate"],
                          "Pen is not sharper than knife")
         key_words = "Call the dummy function with my quote".split(' ')
-        self.parser.currentCommand = DummyCommand(self.history)
+        self.parser.currentCommand = DummyCommand()
         self.parser.resolveArguments(key_words)
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_known_data_unknown)

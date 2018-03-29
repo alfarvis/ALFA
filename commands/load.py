@@ -3,7 +3,8 @@
 Define load command
 """
 import pandas as pd
-from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject, ResultObject
+from Alfarvis.basic_definitions import (DataType, CommandStatus, DataObject,
+                                        ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from skimage.io import imread

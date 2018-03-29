@@ -11,13 +11,6 @@ class AbstractCommand(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, history):
-        """
-        Store history to store results
-        from command evaluation.
-        """
-        self.history = history
-
     @abstractproperty
     def commandTags(self):
         """
@@ -44,8 +37,8 @@ class AbstractCommand(object):
     def evaluate(self, *args):
         """
         Evaluate the command using the arguments
-        passed and stores any result in history
+        passed
 
-        Returns status of evaluation.
+        Returns ResultObject with result and any errors
         """
         pass

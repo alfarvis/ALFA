@@ -1,15 +1,15 @@
 from .parser_states import ParserStates
 from Alfarvis import create_command_database
+from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
 
 
 class AlfaDataParser:
 
-    def __init__(self, history):
+    def __init__(self):
         self.textInput = ""
-        self.history = history  # Data history
-        self.command_database = create_command_database(
-            history)  # Command database
+        self.history = TypeDatabase()
+        self.command_database = create_command_database()  # Command database
         self.clearCommandSearchResults()
 
     def clearCommandSearchResults(self):
@@ -142,14 +142,16 @@ class AlfaDataParser:
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
-        command_status = command.evaluate(**arguments)
-        if command_status == CommandStatus.Error:
+        result = command.evaluate(**arguments)
+        if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
             # TODO Find which arguments are wrong and resolve only those data
-        elif command_status == CommandStatus.Success:
+        elif result.command_status == CommandStatus.Success:
+            # TODO Add a new function to add result to history
+            self.history.add(result.data_type, result.keyword_list,
+                             result.data_object)
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
-        return 0
 
     def parse(self, textInput):
         """
