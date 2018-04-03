@@ -65,7 +65,7 @@ class AlfaDataParser:
                 "If you would like to know about existing commands, please say Find commands or Please help me")
             self.clearCommandSearchResults()
         elif len(res) == 1:
-            self.foundCommand(res)
+            self.foundCommand(res[0])
         else:
             if len(self.command_search_result) > 0:
                 intersection_set = self.findIntersection(
@@ -74,7 +74,7 @@ class AlfaDataParser:
                     self.command_search_result = res
                     print("The new commands do not match with the old input.")
                 elif len(intersection_set) == 1:
-                    self.foundCommand(list(intersection_set))
+                    self.foundCommand(intersection_set.pop())
                 else:
                     self.command_search_result = list(intersection_set)
                     self.printCommands(self.command_search_result)
@@ -83,12 +83,12 @@ class AlfaDataParser:
                 self.printCommands(self.command_search_result)
 
     def foundCommand(self, res):
-        print("Found command", res[0])
+        print("Found command", res.keyword_list[0])
         self.currentState = ParserStates.command_known
-        self.currentCommand = res[0].data
+        self.currentCommand = res.data
         self.resolveArguments(self.keyword_list)
 
-    def data_parse(self, text):
+    def arg_reparse(self, text):
         # Tokenize text
         # Resolve arguments or data
         split_text = text.split(" ")
@@ -162,9 +162,6 @@ class AlfaDataParser:
             self.command_parse(textInput)
         elif self.currentState == ParserStates.command_known_data_unknown:
             # Resolve argument types
-            self.data_parse(textInput)
+            self.arg_reparse(textInput)
         else:
             print("No input required in: ", self.currentState)
-
-    def getCurrentState(self):
-        return self.currentState

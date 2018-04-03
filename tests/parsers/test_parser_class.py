@@ -66,8 +66,8 @@ class TestParserMethods(unittest.TestCase):
         key_words = "Call the dummy function with my input".split(' ')
         self.parser.currentCommand = DummyCommand()
         self.parser.resolveArguments(key_words)
-        out = self.checkResult(self.history, "dummy input", ["dummy", "result"],
-                               DataType.string)
+        out = self.checkResult(self.history, "dummy input",
+                               ["dummy", "result"], DataType.string)
         self.assertTrue(out)
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
@@ -103,6 +103,57 @@ class TestParserMethods(unittest.TestCase):
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
         out = self.checkResult(self.history, "Pen is sharper than knife",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+
+    def test_arg_reparse_quit(self):
+        self.parser.currentState = ParserStates.command_known_data_unknown
+        self.parser.arg_reparse('please quit')
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_arg_reparse(self):
+        self.history.add(DataType.string, ["input", "my"], "my dummy input")
+        self.history.add(DataType.string, [
+                         "input", "your"], "your dummy input")
+        self.parser.state = ParserStates.command_known_data_unknown
+        self.parser.currentCommand = DummyCommand()
+        res = self.history.search(DataType.string, "input")
+        # Set multiple results to parse from
+        self.parser.argument_search_result["dummy"] = res
+        self.parser.arg_reparse("Use my input")
+        out = self.checkResult(self.history, "my dummy input",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        out = self.checkResult(self.history, "your dummy input",
+                               ["dummy", "result"], DataType.string)
+        self.assertFalse(out)
+
+    def test_found_command(self):
+        self.history.add(DataType.string, ["input", "my"], "my dummy input")
+        self.history.add(DataType.string, [
+                         "input", "your"], "your dummy input")
+        input_text = "Call the dummy function with my input"
+        self.parser.keyword_list = input_text.split(' ')
+        cmd_in = DataObject(DummyCommand(), ["dummy", "test"])
+        self.parser.foundCommand(cmd_in)
+
+        out = self.checkResult(self.history, "my dummy input",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        out = self.checkResult(self.history, "your dummy input",
+                               ["dummy", "result"], DataType.string)
+        self.assertFalse(out)
+
+    def test_command_parse(self):
+        self.history.add(DataType.string, ["input", "my"], "my dummy input")
+        self.history.add(DataType.string, [
+                         "input", "your"], "your dummy input")
+        self.parser.command_parse("Call the dummy function with your input")
+        out = self.checkResult(self.history, "my dummy input",
+                               ["dummy", "result"], DataType.string)
+        self.assertFalse(out)
+        out = self.checkResult(self.history, "your dummy input",
                                ["dummy", "result"], DataType.string)
         self.assertTrue(out)
 
