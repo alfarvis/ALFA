@@ -1,5 +1,5 @@
 from .parser_states import ParserStates
-from Alfarvis import create_command_database
+from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
 
