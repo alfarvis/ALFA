@@ -114,7 +114,7 @@ class AlfaDataParser:
             data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)
             if len(data_res) == 1:
-                self.argumentsFound[arg_name] = data_res[0].data
+                self.argumentsFound[arg_name] = data_res[0]
             elif len(data_res) > 1:
                 if arg_name in self.argument_search_result:
                     intersection_set = self.findIntersection(self.argument_search_result[arg_name],
@@ -123,7 +123,7 @@ class AlfaDataParser:
                         self.argument_search_result[arg_name] = data_res
                     elif len(intersection_set) == 1:
                         self.argumentsFound[
-                            arg_name] = intersection_set.pop().data
+                            arg_name] = intersection_set.pop()
                     else:
                         self.argument_search_result[
                             arg_name] = list(intersection_set)

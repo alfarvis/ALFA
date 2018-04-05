@@ -20,5 +20,7 @@ class DataType(Enum):
     algorithm_arg = 7
     #imdb is image database
     imdb = 8
+    # data_base is a meta type which contains files which have databases(i.e other files)
+    data_base = 9
 
 

@@ -24,10 +24,11 @@ class Load(AbstractCommand):
 
     def argumentTypes(self):
         """
-        A list of  argument structs that specify the inputs needed for executing
-        the load command
+        A list of  argument structs that specify the inputs needed for
+        executing the load command
         """
-        return [Argument(keyword="file_name", optional=False, argument_type=DataType.file_name)]
+        return [Argument(keyword="file_name", optional=False,
+                         argument_type=DataType.file_name)]
 
     def evaluate(self, file_name):
         """
@@ -66,7 +67,9 @@ class Load(AbstractCommand):
                 keyword_list = file_name.keyword_list
                 csv_object = DataObject(data, keyword_list)
                 
-                result_object = ResultObject(data_type, keyword_list, csv_object, command_status)
+                result_object = ResultObject(csv_object, keyword_list,
+                                             data_type, command_status)
+                print("Loaded file: ", os.path.basename(file_name.data.path))
                 
                 
             except:                
