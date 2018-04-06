@@ -17,6 +17,3 @@ class ResultObject:
         self.keyword_list = keyword_list
         self.data = data
         self.command_status = command_status
-        
-        
-

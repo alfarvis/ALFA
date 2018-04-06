@@ -2,8 +2,9 @@
 """
 Define load command
 """
-import pandas as pd
-from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject, ResultObject
+
+from Alfarvis.basic_definitions import (DataType, CommandStatus, 
+                                        ResultObject)
 from Alfarvis.commands.read_data import ReadData
 from .abstract_command import AbstractCommand
 from .argument import Argument
@@ -24,10 +25,11 @@ class Load(AbstractCommand):
 
     def argumentTypes(self):
         """
-        A list of  argument structs that specify the inputs needed for executing
-        the load command
+        A list of  argument structs that specify the inputs needed for
+        executing the load command
         """
-        return [Argument(keyword="file_name", optional=False, argument_type=DataType.file_name)]
+        return [Argument(keyword="file_name", optional=False,
+                         argument_type=DataType.file_name)]
 
     def evaluate(self, file_name):
         """
@@ -41,8 +43,10 @@ class Load(AbstractCommand):
         result_object = ResultObject(None ,None , None,command_status)
         
         if os.path.isfile(file_name.data.path):
+
             try:                
-                result_object = ReadData.read(file_name)                                
+                result_object = ReadData.read(file_name)       
+                print("Loaded file: ", os.path.basename(file_name.data.path))                         
             except:                
                 result_object = ResultObject(None ,None , None, command_status)
         

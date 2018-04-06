@@ -20,6 +20,11 @@ class DataType(Enum):
     trained_model = 7
     algorithm_arg = 8 # This is the type of algorithm run
     #imdb is image database
+
     imdb = 9
+
+    # data_base is a meta type which contains files which have databases(i.e other files)
+    data_base = 10
+
 
 

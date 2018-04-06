@@ -4,11 +4,13 @@ Defines a data object
 """
 import datetime
 
+
 class DataObject(object):
     """
     Defines a data object that is stored
     in the data base
     """
+
     def __init__(self, data, keyword_list):
         """
         Constructor. Also stores the time
@@ -22,9 +24,11 @@ class DataObject(object):
         self.keyword_list = keyword_list
         self.time_stamp = datetime.datetime.now()
 
+    def __hash__(self):
+        return hash(' '.join(self.keyword_list))
+
     def __eq__(self, data):
-        return bool(set(self.keyword_list).intersection(set(data.keyword_list)))
+        return ' '.join(self.keyword_list) == ' '.join(data.keyword_list)
 
     def __ne__(self, data):
         return not self.__eq__(data)
-
