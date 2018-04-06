@@ -9,13 +9,13 @@ from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
 
 class ResultObject:
     
-    def __init__(self,data_object,keyword_list,data_type=DataType.number,command_status=CommandStatus.Success):
+    def __init__(self,data,keyword_list,data_type=DataType.number,command_status=CommandStatus.Success):
         """
         Creates a result object to store in the database
         """
         self.data_type = data_type
         self.keyword_list = keyword_list
-        self.data_object = data_object
+        self.data = data
         self.command_status = command_status
         
         

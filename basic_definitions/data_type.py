@@ -12,13 +12,14 @@ class DataType(Enum):
     image = 1
     csv = 2
     number = 3
-    string = 4
+    array = 4
+    string = 5
     # file_name is a meta data type. It contains a path to one of the other data types
-    file_name = 5
+    file_name = 6
     
-    trained_model = 6
-    algorithm_arg = 7
+    trained_model = 7
+    algorithm_arg = 8 # This is the type of algorithm run
     #imdb is image database
-    imdb = 8
+    imdb = 9
 
 

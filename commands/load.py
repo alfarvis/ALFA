@@ -4,9 +4,10 @@ Define load command
 """
 import pandas as pd
 from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject, ResultObject
+from Alfarvis.commands.read_data import ReadData
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from skimage.io import imread
+
 import os
 
 
@@ -37,38 +38,12 @@ class Load(AbstractCommand):
                 2. Type of the file to load
         """
         command_status = CommandStatus.Error
-        result_object = ResultObject(None,None ,None , command_status)
+        result_object = ResultObject(None ,None , None,command_status)
         
         if os.path.isfile(file_name.data.path):
-            try:
-                data_path = file_name.data.path
-                data_type = file_name.data.data_type
-                if data_type==DataType.csv:
-                    data = pd.read_csv(data_path)
-                elif data_type == DataType.image:
-                    data = imread(data_path)
-                elif data_type == DataType.algorithm_arg:
-                    #load from json/csv
-                    #function call create_algorithm_from_csv
-                    a=4
-                elif data_type == DataType.trained_model:
-                    #load from hpdf5 file type
-                    # function call load_trained_model
-                    a=4
-                elif data_type == DataType.imdb:
-                    data = pd.read_csv(data_path)
-                # TODO: Add for imdb
-                    
-                
-                
-                command_status = CommandStatus.Success
-                keyword_list = file_name.keyword_list
-                csv_object = DataObject(data, keyword_list)
-                
-                result_object = ResultObject(data_type, keyword_list, csv_object, command_status)
-                
-                
+            try:                
+                result_object = ReadData.read(file_name)                                
             except:                
-                result_object = ResultObject(None,None ,None , command_status)
+                result_object = ResultObject(None ,None , None, command_status)
         
         return result_object
