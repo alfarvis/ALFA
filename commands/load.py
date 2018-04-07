@@ -3,9 +3,10 @@
 Define load command
 """
 
-from Alfarvis.basic_definitions import (DataType, CommandStatus, 
+from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
-from Alfarvis.commands.read_data import ReadData
+#from Alfarvis.commands.read_data import ReadData
+from Alfarvis.data_handlers import create_reader_dictionary
 from .abstract_command import AbstractCommand
 from .argument import Argument
 
@@ -16,6 +17,9 @@ class Load(AbstractCommand):
     """
     Loads a csv file
     """
+
+    def __init__(self):
+        self.reader_dictionary = create_reader_dictionary()
 
     def commandTags(self):
         """
@@ -39,15 +43,17 @@ class Load(AbstractCommand):
                 1. Path of the file to load
                 2. Type of the file to load
         """
-        command_status = CommandStatus.Error
-        result_object = ResultObject(None ,None , None,command_status)
-        
-        if os.path.isfile(file_name.data.path):
+        result_object = ResultObject(None, None, None, CommandStatus.Error)
 
-            try:                
-                result_object = ReadData.read(file_name)       
-                print("Loaded file: ", os.path.basename(file_name.data.path))                         
-            except:                
-                result_object = ResultObject(None ,None , None, command_status)
-        
+        if os.path.isfile(file_name.data.path):
+            data_type = file_name.data.data_type
+            if data_type in self.reader_dictionary:
+                reader = self.reader_dictionary[data_type]
+                result_object = reader.read(file_name.data.path,
+                                            file_name.keyword_list)
+                print("Loaded file: ", os.path.basename(file_name.data.path))
+            else:
+                print("We cannot load ", data_type,
+                      " yet! Please try again later")
+
         return result_object

@@ -40,7 +40,7 @@ class TestLoad(unittest.TestCase):
         file_name_object.data = file_name_data_object
         
         result_object = load_command.evaluate(**arguments)
-        self.assertEqual(result_object[0].command_status, CommandStatus.Success)
+        self.assertEqual(result_object.command_status, CommandStatus.Success)
 
 
 if __name__ == '__main__':
