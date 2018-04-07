@@ -24,7 +24,7 @@ def add_basic_database(history):
         if type(results) == list:
             for result in results:
                 history.add(result.data_type, result.keyword_list,
-                            result.data_object)
+                            result.data)
             print("Loaded basic file database")
         else:
             print ("Failed to load file database")

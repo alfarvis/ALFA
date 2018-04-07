@@ -8,8 +8,7 @@ Created on Fri Mar 23 22:34:24 2018
 
 import unittest
 from Alfarvis.parsers import AlfaDataParser, ParserStates
-from Alfarvis.basic_definitions import (DataObject, CommandStatus, DataType,
-                                        ResultObject)
+from Alfarvis.basic_definitions import (DataObject, DataType, ResultObject)
 from Alfarvis.commands.abstract_command import AbstractCommand
 from Alfarvis.commands.argument import Argument
 
@@ -24,10 +23,11 @@ class DummyCommand(AbstractCommand):
                          argument_type=DataType.string)]
 
     def evaluate(self, dummy):
-        return ResultObject(dummy, ["dummy", "result"], DataType.string)
+        return ResultObject(dummy.data, ["dummy", "result"], DataType.string)
 
 
-class TestParserMethods(unittest.TestCase):
+class TestParserMethods(unittest.
+                        TestCase):
 
     def setUp(self):
         self.parser = AlfaDataParser()
@@ -52,7 +52,8 @@ class TestParserMethods(unittest.TestCase):
 
     def test_execute_command(self):
         command = DummyCommand()
-        self.parser.executeCommand(command, {"dummy": "How are you"})
+        dummy_input = DataObject("How are you", ["question"])
+        self.parser.executeCommand(command, {"dummy": dummy_input})
         out = self.checkResult(self.history, "How are you", ["dummy"],
                                DataType.string)
         self.assertTrue(out)

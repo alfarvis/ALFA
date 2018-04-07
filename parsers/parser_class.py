@@ -142,14 +142,21 @@ class AlfaDataParser:
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
-        result = command.evaluate(**arguments)
+        results = command.evaluate(**arguments)
+        if type(results) == list:
+            for result in results:
+                self.addResultToHistory(result)
+        else:
+            self.addResultToHistory(results)
+
+    def addResultToHistory(self, result):
         if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
             # TODO Find which arguments are wrong and resolve only those data
         elif result.command_status == CommandStatus.Success:
             # TODO Add a new function to add result to history
             self.history.add(result.data_type, result.keyword_list,
-                             result.data_object)
+                             result.data)
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
 
