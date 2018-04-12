@@ -39,8 +39,8 @@ class TestLoad(unittest.TestCase):
         file_name_data_object.data_type = DataType.csv
         file_name_object.data = file_name_data_object
         
-        result_object = load_command.evaluate(**arguments)
-        self.assertEqual(result_object.command_status, CommandStatus.Success)
+        result_objects = load_command.evaluate(**arguments)
+        self.assertEqual(result_objects[0].command_status, CommandStatus.Success)
 
 
 if __name__ == '__main__':
