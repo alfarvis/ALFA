@@ -2,12 +2,13 @@ from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
-# TODO: When in the function add result to history, 
-# if the command has given an error, the code gets stuck in 
+# TODO: When in the function add result to history,
+# if the command has given an error, the code gets stuck in
 # an infinite loop. Correct this
 # TODO: The same file keeps getting loaded again and again. The code needs to check
-# if this file already is in the history, do not load it. 
+# if this file already is in the history, do not load it.
 # TODO: The code is trying to find arguments even if they are optional
+
 
 class AlfaDataParser:
 
@@ -102,18 +103,28 @@ class AlfaDataParser:
         else:
             self.resolveArguments(split_text)
 
+    def checkArgumentsFound(self, argumentsFound, argumentTypes):
+        """
+        Check all non optional arguments are found
+        """
+        for argument in argumentTypes:
+            arg_name = argument.keyword
+            if (not argument.optional) and (arg_name not in argumentsFound):
+                return False
+        return True
+
     def resolveArguments(self, key_words):
         all_arg_names = set()
         argumentTypes = self.currentCommand.argumentTypes()
-        for i in range(len(argumentTypes)):
+        for argument in argumentTypes:
             # TODO Try to use information from user when command gives error
             # TODO If user wants to substitute arguments in the process of resolution then ask him for confirmation.
             # TODO Handle multiple arguments with same type
             # TODO Handle arguments from keywords
             # TODO Handle composite commands (resolveCommands similar to
             # resolveArguments)
-            arg_type = argumentTypes[i].argument_type
-            arg_name = argumentTypes[i].keyword
+            arg_type = argument.argument_type
+            arg_name = argument.keyword
             if arg_name in self.argumentsFound:
                 continue
             data_res = self.history.search(arg_type, key_words)
@@ -134,7 +145,7 @@ class AlfaDataParser:
                             arg_name] = list(intersection_set)
                 else:
                     self.argument_search_result[arg_name] = data_res
-        if len(argumentTypes) == len(self.argumentsFound):
+        if self.checkArgumentsFound(self.argumentsFound, argumentTypes):
             self.currentState = ParserStates.command_known_data_known
             self.argument_search_result = {}
             self.executeCommand(self.currentCommand, self.argumentsFound)
@@ -157,7 +168,7 @@ class AlfaDataParser:
     def addResultToHistory(self, result):
         if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
-            # TODO Find which arguments are wrong and resolve only those data            
+            # TODO Find which arguments are wrong and resolve only those data
         elif result.command_status == CommandStatus.Success:
             # TODO Add a new function to add result to history
             #print("Data type of result is :",result.data_type)
