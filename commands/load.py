@@ -44,6 +44,9 @@ class Load(AbstractCommand):
                 2. Type of the file to load
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        if file_name.data.loaded:
+            print("File already loaded!")
+            return ResultObject(None, None, None, CommandStatus.Success)
 
         if os.path.isfile(file_name.data.path):
             data_type = file_name.data.data_type
@@ -52,6 +55,7 @@ class Load(AbstractCommand):
                 result_object = reader.read(file_name.data.path,
                                             file_name.keyword_list)
                 print("Loaded file: ", os.path.basename(file_name.data.path))
+                file_name.data.loaded = True
             else:
                 print("We cannot load ", data_type,
                       " yet! Please try again later")

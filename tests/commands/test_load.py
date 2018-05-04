@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import unittest
-from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject, FileNameObject
+from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject, FileObject
 from Alfarvis import package_directory, create_command_database
 from Alfarvis.commands.load import Load
 import os
@@ -30,7 +30,7 @@ class TestLoad(unittest.TestCase):
     def testEvaluate(self):
         load_command = Load()
         arg = load_command.argumentTypes()[0]
-        file_name_data_object = FileNameObject()
+        file_name_data_object = FileObject('', DataType.file_name, '', False)
         file_name_object = DataObject(file_name_data_object, ['random', 'file'])
         arguments = {arg.keyword:file_name_object}
         result_object = load_command.evaluate(**arguments)

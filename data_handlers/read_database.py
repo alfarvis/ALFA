@@ -5,13 +5,10 @@ Load the file data base into history
 
 from collections import namedtuple
 from .abstract_reader import AbstractReader
-from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus
+from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, FileObject
 from Alfarvis import package_directory
 import pandas as pd
 import os
-
-FileObject = namedtuple(
-    'FileObject', field_names='path, data_type, description')
 
 
 class ReadDatabase(AbstractReader):
@@ -63,7 +60,7 @@ class ReadDatabase(AbstractReader):
                     file_path = os.path.join(package_directory, 'resources',
                                              row['file_name'])
                     file_object = FileObject(file_path, file_type,
-                                             row['description'])
+                                             row['description'], False)
                     keywords = row['keywords'].split(' ')
                     file_res = ResultObject(file_object, keywords,
                                             DataType.file_name)

@@ -9,13 +9,7 @@ There are two fields that this object contains
  2. Type of data
 """
 
-from Alfarvis.basic_definitions import DataType
+from namedlist import namedlist
 
-class FileNameObject:
-    
-    def __init__(self,data_path="",data_type=DataType.number):
-        """
-        Creates a result object to store in the database
-        """
-        self.data_type = data_type
-        self.path = data_path
+FileObject = namedlist(
+            'FileObject', field_names='path, data_type, description, loaded')
