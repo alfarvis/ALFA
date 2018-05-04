@@ -169,11 +169,12 @@ class AlfaDataParser:
         if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
             # TODO Find which arguments are wrong and resolve only those data
-        elif result.command_status == CommandStatus.Success:
+        elif (result.command_status == CommandStatus.Success):
             # TODO Add a new function to add result to history
             #print("Data type of result is :",result.data_type)
-            self.history.add(result.data_type, result.keyword_list,
-                             result.data)
+            if (result.data_type is not None):
+                self.history.add(result.data_type, result.keyword_list,
+                                 result.data)
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
 
