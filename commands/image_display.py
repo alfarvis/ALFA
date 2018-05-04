@@ -26,7 +26,7 @@ class ImageDisplay(AbstractCommand):
         """
         return tags that are used to identify load command
         """
-        return ["display", "image","show"]
+        return ["display","show"]
 
     def argumentTypes(self):
         """
@@ -34,18 +34,20 @@ class ImageDisplay(AbstractCommand):
         executing the load command
         """
         #return []
-        return [Argument(keyword="image", optional=False,
+        return [Argument(keyword="image", optional=True,
                          argument_type=DataType.image)]
 
-    def evaluate(self, image):
+    def evaluate(self, image=None):
         """
         Display the image specified            
         """
         
         #if image!=0:
         #kList=['Image','Image2']
-        VarStore.SetCurrentImage(image.data,image.keyword_list[0])
+        if image is not None:
+            VarStore.SetCurrentImage(image.data,image.keyword_list[0])
         plt.imshow(VarStore.currImg)
+        plt.show()
         print("Displaying image"+ VarStore.currImg_name)
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
