@@ -48,13 +48,24 @@ class KeywordSearch(object):
         Parameters:
             keyword_list - list of keywords to search for index
         """
-        common_index_set = []
+        common_index_dict = {}
+        max_hit_set = set()
+        max_hit_count = 1
         for keyword in keyword_list:
             if keyword not in self.keyword_dict:
                 continue
             else:
                 current_index_set = self.keyword_dict[keyword]
-                if not common_index_set:
-                    common_index_set = current_index_set
-                common_index_set.intersection_update(current_index_set)
-        return list(common_index_set)
+                intersect = max_hit_set.intersection(current_index_set)
+                intersect_empty = (not intersect)
+                if not intersect_empty:
+                    max_hit_set = intersect
+                    max_hit_count = max_hit_count + 1
+                for elem in current_index_set:
+                    current_hit = 1
+                    if elem in common_index_dict:
+                        current_hit = common_index_dict[elem] + 1
+                    common_index_dict[elem] = current_hit
+                    if intersect_empty and (current_hit == max_hit_count):
+                        max_hit_set.add(elem)
+        return list(max_hit_set)

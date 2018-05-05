@@ -20,7 +20,7 @@ class TestKeywordSearch(unittest.TestCase):
         out = keyword_search.search(['What', 'is', 'dravid', 'age'])
         self.assertEqual(out, [0])
         out = keyword_search.search(['sachin','dravid'])
-        self.assertEqual(out, [])
+        self.assertEqual(out, [0, 1, 2])
 
     def testRemovingKeywords(self):
         keyword_search = KeywordSearch()
@@ -33,3 +33,6 @@ class TestKeywordSearch(unittest.TestCase):
         self.assertEqual(out, [])
         out = keyword_search.search(['world'])
         self.assertEqual(out, [1])
+
+if __name__ == '__main__':
+    unittest.main()
