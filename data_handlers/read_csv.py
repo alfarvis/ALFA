@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from .abstract_reader import AbstractReader
 from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus
+from Alfarvis.Toolboxes.VariableStore.VarStore import VarStore
 import pandas as pd
 import re
 
@@ -15,6 +16,7 @@ class ReadCSV(AbstractReader):
     def read(self, file_path, keyword_list):
         try:
             data = pd.read_csv(file_path)
+            VarStore.SetCurrentCSV(data,keyword_list[0])
             command_status = CommandStatus.Success
         except:
             return ResultObject(None, None, None, CommandStatus.Error)

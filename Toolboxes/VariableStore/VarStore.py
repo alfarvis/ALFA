@@ -10,13 +10,16 @@ class VarStore:
     """
     Contains current memory of all kinds of variables
     """
+    
     @classmethod
     def SetCurrentCSV(self,data,name):
         
         self.CurrCSV = data
         self.CurrCSV_name = name
-        label_header=self.label_header
         
+        label_header=self.CurrCSV.columns[0]
+        self.label_header = label_header
+        print("label header:", label_header)
         datas = pd.DataFrame(self.CurrCSV)
         datas.columns = list(self.CurrCSV.columns)
         data_drop = datas.drop(label_header,axis=1)
@@ -32,6 +35,7 @@ class VarStore:
     
     @classmethod    
     def SetCurrentImage(self,data,name):
+        print("I was here")
         self.currImg = data
         self.currImg_name = name
         

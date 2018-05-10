@@ -47,7 +47,7 @@ class ImageDisplay(AbstractCommand):
         if image is not None:
             VarStore.SetCurrentImage(image.data,image.keyword_list[0])
         plt.imshow(VarStore.currImg)
-        plt.show()
+        plt.show(block=False)
         print("Displaying image"+ VarStore.currImg_name)
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
