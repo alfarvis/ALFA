@@ -12,7 +12,7 @@ class TestDataObject(unittest.TestCase):
         data_object4 = DataObject(1, ['1', 'data'])
         self.assertTrue(data_object1 == data_object3)
         self.assertTrue(data_object1 != data_object2)
-        self.assertTrue(data_object1 != data_object4)
+        self.assertTrue(data_object1 == data_object4)
 
 if __name__ == '__main__':
     unittest.main()
