@@ -39,10 +39,19 @@ class ImageDisplay(AbstractCommand):
         """
         Display the image specified
         """
+        if (image is None) and not hasattr(VarStore,'currImg'):
+            print("No image provided to display")
+            return ResultObject(None, None, None, CommandStatus.Error)
         try:
-            plt.imshow(image.data)
+            if image is None:
+                curr_image = VarStore.currImg
+                image_name = VarStore.currImg_name
+            else:
+                curr_image = image.data
+                image_name = image.keyword_list[0]
+            plt.imshow(curr_image)
             plt.show(block=False)
-            print("Displaying image" + image.keyword_list[0])
+            print("Displaying image" + image_name)
             if image is not None:
                 VarStore.SetCurrentImage(image.data, image.keyword_list[0])
             result_object = ResultObject(
