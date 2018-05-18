@@ -37,8 +37,8 @@ class TestKeywordSearch(unittest.TestCase):
         keyword_search.add(['sachin', 'tendulkar'], 1)
         self.assertEqual(keyword_search.correctTypo(
             'drvid'), {'dravid', 'david'})
-        self.assertEqual(keyword_search.correctTypo('tendkar'), {'tendulkar'})
-        self.assertEqual(keyword_search.correctTypo('schn'), {'sachin'})
+        self.assertEqual(keyword_search.correctTypo('tendukar'), {'tendulkar'})
+        self.assertEqual(keyword_search.correctTypo('sachn'), {'sachin'})
 
     def testMisspelledKeywords(self):
         keyword_search = KeywordSearch()

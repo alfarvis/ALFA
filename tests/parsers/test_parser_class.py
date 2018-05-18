@@ -34,7 +34,7 @@ class TestParserMethods(unittest.
         self.history = self.parser.history
 
     def checkResult(self, history, expected_result, keywords, data_type):
-        res = self.history.search(DataType.string, keywords)
+        res = self.history.search(data_type, keywords)
         if len(res) != 1:
             print("Multiple entries found")
             return False
@@ -93,13 +93,13 @@ class TestParserMethods(unittest.
                          "Reynolds")
         self.history.add(DataType.string, ["quote", "hate"],
                          "Pen is not sharper than knife")
-        key_words = "Call the dummy function with my quote".split(' ')
+        key_words = "Call dummy function with my quote".split(' ')
         self.parser.currentCommand = DummyCommand()
         self.parser.resolveArguments(key_words)
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_known_data_unknown)
         # Resolve arguments
-        key_words = "favorite one".split(' ')
+        key_words = "favorite quote".split(' ')
         self.parser.resolveArguments(key_words)
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
