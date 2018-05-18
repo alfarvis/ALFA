@@ -29,16 +29,20 @@ class KeywordSearch(object):
         keywords
         """
         self.keyword_dict = dict()
+        # If the length of the word is less than this,
+        # double typos will not be considered
+        self.min_wordlength_double_typo = 4
 
     def correctTypo(self, word):
         """
         Check if some combinations of word slices match the dictionary keys
         """
         w = Word(word)
-        # TODO Currently double typos are giving random matches like
-        # 'the' matches with 'hate' but does not make sense. So will figure
-        # that out later.
-        return (self.known(w.typos()) or self.known(w.double_typos()))
+        s1 = self.known(w.typos())
+        if not s1 and len(word) >= self.min_wordlength_double_typo:
+            return (s1 or self.known(w.double_typos()))
+        else:
+            return s1
 
     def known(self, word_set):
         return (word_set & self.keyword_dict.keys())
