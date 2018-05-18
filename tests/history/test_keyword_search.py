@@ -2,7 +2,9 @@
 import unittest
 from Alfarvis.history import KeywordSearch
 
+
 class TestKeywordSearch(unittest.TestCase):
+
     def testEmptyKeywordSearch(self):
         keyword_search = KeywordSearch()
         out = keyword_search.search(['hello'])
@@ -15,12 +17,28 @@ class TestKeywordSearch(unittest.TestCase):
         keyword_search.add(['sachin', 'batting_average'], 2)
         out = keyword_search.search(['dravid'])
         self.assertEqual(out, [0, 1])
-        out = keyword_search.search(['batting_average','dravid'])
+        out = keyword_search.search(['batting_average', 'dravid'])
         self.assertEqual(out, [1])
         out = keyword_search.search(['What', 'is', 'dravid', 'age'])
         self.assertEqual(out, [0])
-        out = keyword_search.search(['sachin','dravid'])
+        out = keyword_search.search(['sachin', 'dravid'])
         self.assertEqual(out, [0, 1, 2])
+
+    def testKnownWords(self):
+        keyword_search = KeywordSearch()
+        keyword_search.add(['dravid', 'age'], 0)
+        keyword_search.add(['sachin', 'tendulkar'], 1)
+        out_set = keyword_search.known({'sachin', 'age', 'hello', 'dravid'})
+        self.assertEqual(out_set, {'sachin', 'dravid', 'age'})
+
+    def testTypos(self):
+        keyword_search = KeywordSearch()
+        keyword_search.add(['dravid', 'david', 'age'], 0)
+        keyword_search.add(['sachin', 'tendulkar'], 1)
+        self.assertEqual(keyword_search.correctTypo(
+            'drvid'), {'dravid', 'david'})
+        self.assertEqual(keyword_search.correctTypo('tendkar'), {'tendulkar'})
+        self.assertEqual(keyword_search.correctTypo('schn'), {'sachin'})
 
     def testMisspelledKeywords(self):
         keyword_search = KeywordSearch()

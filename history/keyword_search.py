@@ -3,7 +3,7 @@
 Keyword search to store indices to data
 """
 
-from autocorrect import spell
+from .word import Word
 
 
 class KeywordSearch(object):
@@ -19,6 +19,16 @@ class KeywordSearch(object):
         keywords
         """
         self.keyword_dict = dict()
+
+    def correctTypo(self, word):
+        """
+        Check if some combinations of word slices match the dictionary keys
+        """
+        w = Word(word)
+        return (self.known(w.typos()) or self.known(w.double_typos()))
+
+    def known(self, word_set):
+        return (word_set & self.keyword_dict.keys())
 
     def add(self, keyword_list, index):
         """
@@ -55,12 +65,11 @@ class KeywordSearch(object):
         for keyword in keyword_list:
             # Try correcting if not in dict
             if keyword not in self.keyword_dict:
-                  corrected_keyword = spell(keyword)
-                  if corrected_keyword != keyword:
-                        print("Correcting keyword: ", keyword,
-                              corrected_keyword)
-                  keyword = corrected_keyword
-
+                out_list = list(self.correctTypo(keyword))
+                if out_list:
+                    print("Correcting: ", keyword, out_list[0])
+                    keyword = out_list[0]
+                    keyword_list.extend(out_list[1:])
             # Try checking if the corrected/original word is in dictionary
             if keyword in self.keyword_dict:
                 current_index_set = self.keyword_dict[keyword]
