@@ -3,6 +3,7 @@
 Keyword search to store indices to data
 """
 
+from autocorrect import spell
 
 
 class KeywordSearch(object):
@@ -52,9 +53,16 @@ class KeywordSearch(object):
         max_hit_set = set()
         max_hit_count = 1
         for keyword in keyword_list:
+            # Try correcting if not in dict
             if keyword not in self.keyword_dict:
-                continue
-            else:
+                  corrected_keyword = spell(keyword)
+                  if corrected_keyword != keyword:
+                        print("Correcting keyword: ", keyword,
+                              corrected_keyword)
+                  keyword = corrected_keyword
+
+            # Try checking if the corrected/original word is in dictionary
+            if keyword in self.keyword_dict:
                 current_index_set = self.keyword_dict[keyword]
                 intersect = max_hit_set.intersection(current_index_set)
                 intersect_empty = (not intersect)

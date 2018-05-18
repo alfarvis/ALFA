@@ -13,3 +13,7 @@ Dependencies:
   - pandas
   - seaborn
   - scikit-image
+
+Autocorrect: __https://github.com/phatpiglet/autocorrect__
+Can install using `pip install autocorrect` or using `python setup.py install` to build and install the package
+

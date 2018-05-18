@@ -22,6 +22,15 @@ class TestKeywordSearch(unittest.TestCase):
         out = keyword_search.search(['sachin','dravid'])
         self.assertEqual(out, [0, 1, 2])
 
+    def testMisspelledKeywords(self):
+        keyword_search = KeywordSearch()
+        keyword_search.add(['dravid', 'age'], 10)
+        keyword_search.add(['dravid', 'batting', 'average'], 11)
+        out = keyword_search.search('What is dravid agge'.split())
+        self.assertEqual(out, [10])
+        out = keyword_search.search('What is battting avelage'.split())
+        self.assertEqual(out, [11])
+
     def testRemovingKeywords(self):
         keyword_search = KeywordSearch()
         keyword_search.add(['hello'], 0)
