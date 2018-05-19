@@ -7,6 +7,8 @@ import re
 
 
 class ReadCSV(AbstractReader):
+    #This will split the sentence into multiple keywords using anything except
+    #a-z,0-9 and + as a partition
     pattern = re.compile('[^a-z0-9]+')
     col_head_pattern = re.compile('Unnamed: [0-9]+')
 
@@ -29,7 +31,7 @@ class ReadCSV(AbstractReader):
             data, keyword_list, DataType.csv, command_status)
         result_objects.append(result_object)
         # Too many columns do not extract them individually
-        if len(data.columns) > 50:
+        if len(data.columns) > 5000:
             return result_object
         for column in data.columns:
             if self.col_head_pattern.match(column):
@@ -41,5 +43,6 @@ class ReadCSV(AbstractReader):
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status)
             result_objects.append(result_object)
-
+            #TODO check if this is storing the correct keyword for the array
+            VarStore.SetCurrentArray(col_data, column)
         return result_objects
