@@ -1,11 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """
 Define load command
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
-#from Alfarvis.commands.read_data import ReadData
 from Alfarvis.data_handlers import create_reader_dictionary
 from .abstract_command import AbstractCommand
 from .argument import Argument
@@ -59,5 +58,7 @@ class Load(AbstractCommand):
             else:
                 print("We cannot load ", data_type,
                       " yet! Please try again later")
-
+        else:
+            print("File not found.\n Please make sure the file exists "
+                  "in the specified location")
         return result_object

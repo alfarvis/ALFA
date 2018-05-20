@@ -109,7 +109,14 @@ class AlfaDataParser:
         """
         for argument in argumentTypes:
             arg_name = argument.keyword
+            # If argument is not optional and argument is not found then return False
             if (not argument.optional) and (arg_name not in argumentsFound):
+                return False
+            # If argument is optional and number of results > 1 return False
+            if (arg_name not in argumentsFound and
+                argument.optional and
+                (arg_name in self.argument_search_result) and
+                len(self.argument_search_result[arg_name]) > 1):
                 return False
         return True
 
@@ -118,7 +125,8 @@ class AlfaDataParser:
         argumentTypes = self.currentCommand.argumentTypes()
         for argument in argumentTypes:
             # TODO Try to use information from user when command gives error
-            # TODO If user wants to substitute arguments in the process of resolution then ask him for confirmation.
+            # TODO If user wants to substitute arguments in the process of 
+            # resolution then ask him for confirmation.
             # TODO Handle multiple arguments with same type
             # TODO Handle arguments from keywords
             # TODO Handle composite commands (resolveCommands similar to
@@ -154,6 +162,7 @@ class AlfaDataParser:
             unknown_args = all_arg_names.difference(
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
+            # TODO Make this response intelligent
             print("Cannot find some arguments", unknown_args)
 
     def executeCommand(self, command, arguments):
