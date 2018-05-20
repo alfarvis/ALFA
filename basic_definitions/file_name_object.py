@@ -4,7 +4,7 @@
 Created on Tue Mar 27 21:52:29 2018
 
 This is a class that defines the filename data type
-There are four fields that this object contains
+There fields in the file object are as follows:
  1. Path for the data file
  2. Type of data
  3. Description of the file
