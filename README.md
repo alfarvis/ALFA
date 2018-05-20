@@ -2,14 +2,6 @@
 Functional Language based on voice recognition
 
 # Installation
-Add the parent directory to python path
+Install anaconda [distribution](https://www.anaconda.com/enterprise/?gclid=Cj0KCQjwlv_XBRDrARIsAH-iRJRs4Z2f4a9RqhkFkI3xryMwrPEOknxk3OOhNbrk9GqYmaj00kL3XUMaAik1EALw_wcB).
 
-Dependencies:
-  - spyder
-  - namedlist
-  - scipy
-  - conda install -c conda-forge namedlist
-  - nltk
-  - pandas
-  - seaborn
-  - scikit-image
+Then create conda environment using `conda create -f environment.yaml`. Once all the packages are installed, activate the environment using `conda activate Alfarvis`. Then run the executable using `python run.py`. To install the package, you can do `pip install .` or `python setup.py install` from the source directory
