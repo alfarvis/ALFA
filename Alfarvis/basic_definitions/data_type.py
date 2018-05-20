@@ -11,6 +11,8 @@ class DataType(Enum):
     """
     image = 1
     csv = 2
+    # A number represents a constant value. For example if the user wants
+    # 5 + 5 then the data type is number otherwise its array
     number = 3
     array = 4
     string = 5
