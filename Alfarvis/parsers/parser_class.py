@@ -38,6 +38,13 @@ class AlfaDataParser:
         print("Found multiple commands. Please select one of the commands")
         for command in command_list:
             print(command.keyword_list[0])
+    
+    #Keeping it different for commands and arguments for now in case we want 
+    #to add further intelligence in either whihc might have a different logic
+    def printArguments(self, arg_list):
+       
+        for arguments in arg_list:
+            print(" ".join(arguments.keyword_list))
 
     def command_parse(self, text):
         """
@@ -163,7 +170,21 @@ class AlfaDataParser:
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
             # TODO Make this response intelligent
-            print("Cannot find some arguments", unknown_args)
+            print("\nChecking for arguments...\n")
+            foundList = self.argumentsFound
+            unknownList = list(unknown_args)
+            for i in range (len(foundList)):
+                print ("Argument ",foundList[i], "found")
+                print ("Matching argument: ", self.printArguments(self.argumentsFound[foundList[i]]))
+            for i in range (len(unknownList)):
+                if len(self.argument_search_result[unknownList[i]])>0:                    
+                    print("\nMultiple arguments found for ",unknownList[i])
+                    print (self.printArguments(self.argument_search_result[unknownList[i]]))
+                else:
+                    print("Could not find any match for ",unknownList[i])
+            if len(unknownList)>0:
+                print("\nPlease provide more clues to help me resolve these arguments")
+            
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
