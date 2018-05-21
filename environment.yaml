@@ -15,5 +15,6 @@ dependencies:
     - namedlist==1.7
     - pep8
     - python-coveralls
+    - nose2
 prefix: /home/gowtham/anaconda3/envs/Alfarvis
 
