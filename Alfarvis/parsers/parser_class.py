@@ -38,14 +38,14 @@ class AlfaDataParser:
         print("Found multiple commands. Please select one of the commands")
         for command in command_list:
             print(command.keyword_list[0])
-    
-    #Keeping it different for commands and arguments for now in case we want 
-    #to add further intelligence in either whihc might have a different logic
+
+    # Keeping it different for commands and arguments for now in case we want
+    # to add further intelligence in either whihc might have a different logic
     def printArguments(self, arg_list):
-       
+
         for iter in range(len(arg_list)):
             #print(" ".join(arguments.keyword_list))
-            print(iter+1,": "," ".join(arg_list[iter].keyword_list))
+            print(iter+1, ": ", " ".join(arg_list[iter].keyword_list))
 
     def command_parse(self, text):
         """
@@ -124,7 +124,7 @@ class AlfaDataParser:
             if (arg_name not in argumentsFound and
                 argument.optional and
                 (arg_name in self.argument_search_result) and
-                len(self.argument_search_result[arg_name]) > 1):
+                    len(self.argument_search_result[arg_name]) > 1):
                 return False
         return True
 
@@ -133,7 +133,7 @@ class AlfaDataParser:
         argumentTypes = self.currentCommand.argumentTypes()
         for argument in argumentTypes:
             # TODO Try to use information from user when command gives error
-            # TODO If user wants to substitute arguments in the process of 
+            # TODO If user wants to substitute arguments in the process of
             # resolution then ask him for confirmation.
             # TODO Handle multiple arguments with same type
             # TODO Handle arguments from keywords
@@ -173,18 +173,19 @@ class AlfaDataParser:
             print("\nChecking for arguments...\n")
             foundList = self.argumentsFound
             unknownList = list(unknown_args)
-            for i in range (len(foundList)):
-                print ("Argument ",foundList[i], "found")
-                print ("Matching argument: ", self.printArguments(self.argumentsFound[foundList[i]]))
-            for i in range (len(unknownList)):
-                if len(self.argument_search_result[unknownList[i]])>0:                    
-                    print("\nMultiple arguments found for ",unknownList[i])
-                    (self.printArguments(self.argument_search_result[unknownList[i]]))
+            for i in range(len(foundList)):
+                print("Argument ", foundList[i], "found")
+                print("Matching argument: ", self.printArguments(
+                    self.argumentsFound[foundList[i]]))
+            for i in range(len(unknownList)):
+                if len(self.argument_search_result[unknownList[i]]) > 0:
+                    print("\nMultiple arguments found for ", unknownList[i])
+                    (self.printArguments(
+                        self.argument_search_result[unknownList[i]]))
                 else:
-                    print("Could not find any match for ",unknownList[i])
-            if len(unknownList)>0:
+                    print("Could not find any match for ", unknownList[i])
+            if len(unknownList) > 0:
                 print("\nPlease provide more clues to help me resolve these arguments")
-            
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
