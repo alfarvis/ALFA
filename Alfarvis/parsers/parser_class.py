@@ -177,7 +177,7 @@ class AlfaDataParser:
                 print("Matching argument: ", self.printArguments(
                     self.argumentsFound[foundList[i]]))
             for i in range(len(unknownList)):
-                if len(self.argument_search_result[unknownList[i]]) > 0:
+                if unknownList[i] in self.argument_search_result:
                     print("\nMultiple arguments found for ", unknownList[i])
                     (self.printArguments(
                         self.argument_search_result[unknownList[i]]))
