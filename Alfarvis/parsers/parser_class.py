@@ -43,8 +43,9 @@ class AlfaDataParser:
     #to add further intelligence in either whihc might have a different logic
     def printArguments(self, arg_list):
        
-        for arguments in arg_list:
-            print(" ".join(arguments.keyword_list))
+        for iter in range(len(arg_list)):
+            #print(" ".join(arguments.keyword_list))
+            print(iter+1,": "," ".join(arg_list[iter].keyword_list))
 
     def command_parse(self, text):
         """
@@ -169,7 +170,6 @@ class AlfaDataParser:
             unknown_args = all_arg_names.difference(
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
-            # TODO Make this response intelligent
             print("\nChecking for arguments...\n")
             foundList = self.argumentsFound
             unknownList = list(unknown_args)
@@ -179,7 +179,7 @@ class AlfaDataParser:
             for i in range (len(unknownList)):
                 if len(self.argument_search_result[unknownList[i]])>0:                    
                     print("\nMultiple arguments found for ",unknownList[i])
-                    print (self.printArguments(self.argument_search_result[unknownList[i]]))
+                    (self.printArguments(self.argument_search_result[unknownList[i]]))
                 else:
                     print("Could not find any match for ",unknownList[i])
             if len(unknownList)>0:
