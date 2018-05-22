@@ -113,14 +113,15 @@ class AlfaDataParser:
         """
         for argument in argumentTypes:
             arg_name = argument.keyword
-            # If argument is not optional and argument is not found then return False
+            # If argument is not optional and argument is not found then return
+            # False
             if (not argument.optional) and (arg_name not in argumentsFound):
                 return False
             # If argument is optional and number of results > 1 return False
             if (arg_name not in argumentsFound and
                 argument.optional and
                 (arg_name in self.argument_search_result) and
-                len(self.argument_search_result[arg_name]) > 1):
+                    len(self.argument_search_result[arg_name]) > 1):
                 return False
         return True
 
@@ -130,7 +131,7 @@ class AlfaDataParser:
         If the list size is one, it unwraps the list
         and returns the actual value
         """
-        if len(in_list)  == 1 and arg_number == 1:
+        if len(in_list) == 1 and arg_number == 1:
             return in_list[0]
         return in_list
 
@@ -147,7 +148,7 @@ class AlfaDataParser:
         argumentTypes = self.currentCommand.argumentTypes()
         for argument in argumentTypes:
             # TODO Try to use information from user when command gives error
-            # TODO If user wants to substitute arguments in the process of 
+            # TODO If user wants to substitute arguments in the process of
             # resolution then ask him for confirmation.
             # TODO Handle multiple arguments with same type
             # TODO Handle arguments from keywords
@@ -173,17 +174,17 @@ class AlfaDataParser:
                     previous_result = self.argument_search_result[arg_name]
                     if len(previous_result) > argument.number:
                         res_set = self.findIntersection(
-                                previous_result, data_res)
+                            previous_result, data_res)
                     else:
                         res_set = self.findUnion(previous_result, data_res)
                     if len(res_set) == argument.number:
                         self.argumentsFound[arg_name] = self.unwrap(
-                                list(res_set), argument.number)
+                            list(res_set), argument.number)
                     elif len(res_set) == 0:
                         self.argument_search_result[arg_name] = data_res
                     else:
                         self.argument_search_result[
-                                arg_name] = list(res_set)
+                            arg_name] = list(res_set)
 
                 else:
                     self.argument_search_result[arg_name] = data_res
