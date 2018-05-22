@@ -44,7 +44,6 @@ class AlfaDataParser:
     def printArguments(self, arg_list):
 
         for iter in range(len(arg_list)):
-            #print(" ".join(arguments.keyword_list))
             print(iter+1, ": ", " ".join(arg_list[iter].keyword_list))
 
     def command_parse(self, text):
