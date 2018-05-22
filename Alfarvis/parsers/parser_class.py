@@ -34,6 +34,10 @@ class AlfaDataParser:
     def findIntersection(self, list1, list2):
         return set(list1).intersection(set(list2))
 
+    @classmethod
+    def findUnion(self, list1, list2):
+        return set(list1).union(set(list2))
+
     def printCommands(self, command_list):
         print("Found multiple commands. Please select one of the commands")
         for command in command_list:
@@ -120,6 +124,24 @@ class AlfaDataParser:
                 return False
         return True
 
+    @classmethod
+    def unwrap(self, in_list, arg_number):
+        """
+        If the list size is one, it unwraps the list
+        and returns the actual value
+        """
+        if len(in_list)  == 1 and arg_number == 1:
+            return in_list[0]
+        return in_list
+
+    def checkArgumentNumber(self, argument_number, data_res_len):
+        """
+        Check argument number matches with number of arguments
+        found for that argument type
+        """
+        return ((argument_number == -1 and data_res_len > 0) or
+                (data_res_len == argument_number))
+
     def resolveArguments(self, key_words):
         all_arg_names = set()
         argumentTypes = self.currentCommand.argumentTypes()
@@ -131,26 +153,38 @@ class AlfaDataParser:
             # TODO Handle arguments from keywords
             # TODO Handle composite commands (resolveCommands similar to
             # resolveArguments)
+            assert(argument.number != 0)
             arg_type = argument.argument_type
             arg_name = argument.keyword
             if arg_name in self.argumentsFound:
                 continue
             data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)
-            if len(data_res) == 1:
-                self.argumentsFound[arg_name] = data_res[0]
-            elif len(data_res) > 1:
+            # If infinite args allowed and we found some args or
+            # if finite args allowed and we found exactly those
+            # many arguments
+            # TODO print intelligent responses as in which arguments
+            # are missing or more?
+            if self.checkArgumentNumber(argument.number, len(data_res)):
+                self.argumentsFound[arg_name] = self.unwrap(data_res,
+                                                            argument.number)
+            elif len(data_res) != argument.number and len(data_res) > 0:
                 if arg_name in self.argument_search_result:
-                    intersection_set = self.findIntersection(self.argument_search_result[arg_name],
-                                                             data_res)
-                    if len(intersection_set) == 0:
+                    previous_result = self.argument_search_result[arg_name]
+                    if len(previous_result) > argument.number:
+                        res_set = self.findIntersection(
+                                previous_result, data_res)
+                    else:
+                        res_set = self.findUnion(previous_result, data_res)
+                    if len(res_set) == argument.number:
+                        self.argumentsFound[arg_name] = self.unwrap(
+                                list(res_set), argument.number)
+                    elif len(res_set) == 0:
                         self.argument_search_result[arg_name] = data_res
-                    elif len(intersection_set) == 1:
-                        self.argumentsFound[
-                            arg_name] = intersection_set.pop()
                     else:
                         self.argument_search_result[
-                            arg_name] = list(intersection_set)
+                                arg_name] = list(res_set)
+
                 else:
                     self.argument_search_result[arg_name] = data_res
         if self.checkArgumentsFound(self.argumentsFound, argumentTypes):

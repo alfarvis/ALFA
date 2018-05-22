@@ -26,3 +26,5 @@ class Argument(object):
         self.tags = tags
         # Keyword used in function to identify the argument
         self.keyword = keyword
+        # The number of arguments of this argument type
+        self.number = 1
