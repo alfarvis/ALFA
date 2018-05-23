@@ -5,7 +5,8 @@ from Alfarvis.basic_definitions import CommandStatus
 # TODO: When in the function add result to history,
 # if the command has given an error, the code gets stuck in
 # an infinite loop. Correct this
-# TODO: The same file keeps getting loaded again and again. The code needs to check
+# TODO: The same file keeps getting loaded again and again.
+# The code needs to check
 # if this file already is in the history, do not load it.
 # TODO: The code is trying to find arguments even if they are optional
 
@@ -27,7 +28,8 @@ class AlfaDataParser:
         # If a command is currently being parsed, resolve arguments for that
         # command
         self.command_search_result = []
-        self.argumentsFound = {}  # Resolved arguments to separate from unresolved args
+        # Resolved arguments to separate from unresolved args
+        self.argumentsFound = {}
         self.argument_search_result = {}  # To resolve argument search results
 
     @classmethod
@@ -58,7 +60,7 @@ class AlfaDataParser:
                    set current command
                    and start resolve arguments
                else if no command found:
-                   return                
+                   return
         """
         split_text = text.split(" ")
         if len(self.command_search_result) > 0:
@@ -71,8 +73,8 @@ class AlfaDataParser:
             res = self.command_database.search(self.keyword_list)
         if len(res) == 0:
             print("Command not found")
-            print(
-                "If you would like to know about existing commands, please say Find commands or Please help me")
+            print("If you would like to know about existing commands,"
+                  " please say Find commands or Please help me")
             self.clearCommandSearchResults()
         elif len(res) == 1:
             self.foundCommand(res[0])
@@ -106,6 +108,24 @@ class AlfaDataParser:
             self.clearCommandSearchResults()
         else:
             self.resolveArguments(split_text)
+
+    def fillOptionalArguments(self, argumentsFound, argumentTypes):
+        """
+        Fill optional arguments with last object from cache
+        """
+        for argument in argumentTypes:
+            arg_type = argument.argument_type
+            arg_name = argument.keyword
+            if (argument.optional and
+                (arg_name not in argumentsFound) and
+                    (arg_name not in self.argument_search_result)):
+                if argument.number > 1:
+                    print("Arguments with multi-input cannot be optional")
+                    continue
+                cache_res = self.history.getLastObject(arg_type)
+                if cache_res is not None:
+                    # Use unwrap for infinite args
+                    argumentsFound[arg_name] = self.unwrap(cache_res)
 
     def checkArgumentsFound(self, argumentsFound, argumentTypes):
         """
@@ -188,6 +208,8 @@ class AlfaDataParser:
 
                 else:
                     self.argument_search_result[arg_name] = data_res
+        # Fill all the optional arguments
+        self.fillOptionalArguments(self.argumentsFound, argumentTypes)
         if self.checkArgumentsFound(self.argumentsFound, argumentTypes):
             self.currentState = ParserStates.command_known_data_known
             self.argument_search_result = {}
@@ -215,7 +237,6 @@ class AlfaDataParser:
             # TODO Find which arguments are wrong and resolve only those data
         elif (result.command_status == CommandStatus.Success):
             # TODO Add a new function to add result to history
-            #print("Data type of result is :",result.data_type)
             if (result.data_type is not None):
                 self.history.add(result.data_type, result.keyword_list,
                                  result.data)
