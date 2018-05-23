@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 from .abstract_reader import AbstractReader
 from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus
-from Alfarvis.Toolboxes.VariableStore.VarStore import VarStore
 import pandas as pd
 import re
 
 
 class ReadCSV(AbstractReader):
-    #This will split the sentence into multiple keywords using anything except
-    #a-z,0-9 and + as a partition
+    # This will split the sentence into multiple keywords using anything except
+    # a-z,0-9 and + as a partition
     pattern = re.compile('[^a-z0-9]+')
     col_head_pattern = re.compile('Unnamed: [0-9]+')
 
@@ -23,7 +22,6 @@ class ReadCSV(AbstractReader):
             print("File not found")
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        VarStore.SetCurrentCSV(data, keyword_list[0])
         command_status = CommandStatus.Success
 
         result_objects = []
@@ -37,12 +35,10 @@ class ReadCSV(AbstractReader):
             if self.col_head_pattern.match(column):
                 continue
             col_data = data[column].values
-            # TODO process column to remove capitals, special characters 
+            # TODO process column to remove capitals, special characters
             # and split the text
             col_keyword_list = self.pattern.split(column) + keyword_list
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status)
             result_objects.append(result_object)
-            #TODO check if this is storing the correct keyword for the array
-            VarStore.SetCurrentArray(col_data, column)
         return result_objects

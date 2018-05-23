@@ -3,7 +3,6 @@ import unittest
 from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
 from Alfarvis import package_directory, create_command_database
 from Alfarvis.commands.image_display import ImageDisplay
-from Alfarvis.Toolboxes.VariableStore.VarStore import VarStore
 from skimage.io import imread
 import matplotlib.pyplot as plt
 import os
@@ -40,13 +39,12 @@ class TestImageDisplay(unittest.TestCase):
         data_object.data = 123
         result_object = image_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Error)
-        # Use current Image:
+        # No more optional image should be passed by parser:
+        result_object = image_command.evaluate(**{arg.keyword: None})
+        self.assertEqual(result_object.command_status, CommandStatus.Error)
+        # Use real image
         image_data = imread(os.path.join(
             package_directory, 'resources', 'image.jpg'))
-        VarStore.SetCurrentImage(image_data, "random")
-        result_object = image_command.evaluate(**{arg.keyword: None})
-        self.assertEqual(result_object.command_status, CommandStatus.Success)
-        # Use real image
         data_object.data = image_data
         result_object = image_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)

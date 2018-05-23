@@ -133,16 +133,7 @@ class AlfaDataParser:
         Check all non optional arguments are found
         """
         for argument in argumentTypes:
-            arg_name = argument.keyword
-            # If argument is not optional and argument is not found then return
-            # False
-            if (not argument.optional) and (arg_name not in argumentsFound):
-                return False
-            # If argument is optional and number of results > 1 return False
-            if (arg_name not in argumentsFound and
-                argument.optional and
-                (arg_name in self.argument_search_result) and
-                    len(self.argument_search_result[arg_name]) > 1):
+            if argument.keyword not in argumentsFound:
                 return False
         return True
 

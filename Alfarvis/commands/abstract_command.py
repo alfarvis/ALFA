@@ -4,6 +4,7 @@ Provide abstract base class for implementing new commands
 """
 from abc import ABCMeta, abstractmethod, abstractproperty
 
+
 class AbstractCommand(object):
     """
     Base class for new commands. Provides virtual

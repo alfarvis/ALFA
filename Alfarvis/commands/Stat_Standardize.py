@@ -7,10 +7,9 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from Alfarvis.Toolboxes.VariableStore.VarStore import VarStore
 import numpy
-import re
 from sklearn import preprocessing
+import copy
 
 
 class StatMax(AbstractCommand):
@@ -32,30 +31,25 @@ class StatMax(AbstractCommand):
         return [Argument(keyword="csv_data", optional=True,
                          argument_type=DataType.csv)]
 
-    def evaluate(self, csv_data=None):
+    def evaluate(self, csv_data):
         """
         Transform a csv to its standardized counterpart
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        if csv_data is not None:
-            keyword_list = csv_data.keyword_list
-            VarStore.SetCurrentCSV(csv_data.data, " ".join(keyword_list))
-        else:
-            # This will split the sentence into multiple keywords
-            # using anything except a-z,0-9 and + as a partition
-            pattern = re.compile('[^a-z0-9]+')
-            keyword_list = pattern.split(VarStore.currCSV_name)
+        keyword_list = csv_data.keyword_list
+        keyword_list.extend(["scale", "standardize"])
+        data = csv_data.data
 
-        if numpy.issubdtype(VarStore.X.dtype, numpy.number):
-            scaler = preprocessing.StandardScaler().fit(VarStore.X)
-            X_train = scaler.transform(VarStore.X)
-            data1 = csv_data.data
-            for i in range(len(VarStore.columnList)):
-                data1[VarStore.columnList[i]] = X_train[:, i]
+        if numpy.issubdtype(data.dtype, numpy.number):
+            scaler = preprocessing.StandardScaler().fit(data)
+            X_train = scaler.transform(data)
+            scaled_data = copy.copy(csv_data.data)
+            for i, column in enumerate(csv_data.columns):
+                scaled_data[column] = X_train[:, i]
 
             print("Saving the scaled data...")
-            result_object = ResultObject(data1, keyword_list,
+            result_object = ResultObject(scaled_data, keyword_list,
                                          DataType.array,
                                          CommandStatus.Success)
         else:
