@@ -116,16 +116,17 @@ class AlfaDataParser:
         for argument in argumentTypes:
             arg_type = argument.argument_type
             arg_name = argument.keyword
+            arg_number = argument.number
             if (argument.optional and
                 (arg_name not in argumentsFound) and
                     (arg_name not in self.argument_search_result)):
-                if argument.number > 1:
+                if arg_number > 1:
                     print("Arguments with multi-input cannot be optional")
                     continue
                 cache_res = self.history.getLastObject(arg_type)
                 if cache_res is not None:
                     # Use unwrap for infinite args
-                    argumentsFound[arg_name] = self.unwrap(cache_res)
+                    argumentsFound[arg_name] = cache_res
 
     def checkArgumentsFound(self, argumentsFound, argumentTypes):
         """
