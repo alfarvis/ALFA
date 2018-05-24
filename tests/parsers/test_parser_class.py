@@ -88,6 +88,34 @@ class TestParserMethods(unittest.
                         DataObject(None, ['Random Forrest'])]
         self.parser.printCommands(command_list)
 
+    def test_fill_optional_arguments(self):
+        # Set up a few dummy arguments
+        argumentTypes = [Argument(keyword="dummy1", optional=True,
+                                  argument_type=DataType.string),
+                         Argument(keyword="dummy2", optional=False,
+                                  argument_type=DataType.string)]
+        self.history.add(DataType.string, ["input", "my"], "dummy input")
+        data_object = self.history.search(DataType.string, ["my", "input"])[0]
+        argumentsFound = {}
+        self.parser.fillOptionalArguments(argumentsFound, argumentTypes)
+        self.assertTrue('dummy1' in argumentsFound)
+        self.assertFalse('dummy2' in argumentsFound)
+        self.assertEqual(argumentsFound['dummy1'], data_object)
+
+    def test_fill_optional_arguments_already_found(self):
+        # Set up a few dummy arguments
+        argumentTypes = [Argument(keyword="dummy1", optional=True,
+                                  argument_type=DataType.string),
+                         Argument(keyword="dummy2", optional=False,
+                                  argument_type=DataType.string)]
+        self.history.add(DataType.string, ["input", "my"], "dummy input")
+        data_object = self.history.search(DataType.string, ["my", "input"])[0]
+        argumentsFound = {'dummy1': 'Found'}
+        self.parser.fillOptionalArguments(argumentsFound, argumentTypes)
+        self.assertTrue('dummy1' in argumentsFound)
+        self.assertFalse('dummy2' in argumentsFound)
+        self.assertEqual(argumentsFound['dummy1'], 'Found')
+
     def test_execute_command(self):
         command = DummyCommand()
         dummy_input = DataObject("How are you", ["question"])

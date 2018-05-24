@@ -2,6 +2,7 @@
 from Alfarvis.history import Database
 from . import abstract_command
 
+
 def create_command_database():
     """
     Create a database of the available commands that are

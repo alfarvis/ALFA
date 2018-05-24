@@ -7,9 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from Alfarvis.Toolboxes.VariableStore.VarStore import VarStore
 import numpy
-import re
 
 
 class StatStdev(AbstractCommand):
@@ -38,16 +36,10 @@ class StatStdev(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        if array_data is not None:
-            keyword_list = array_data.keyword_list
-            VarStore.SetCurrentArray(array_data.data, " ".join(keyword_list))
-        else:
-            # This will split the sentence into multiple keywords
-            # using anything except a-z,0-9 and + as a partition
-            pattern = re.compile('[^a-z0-9]+')
-            keyword_list = pattern.split(VarStore.currArray_name)
-        if numpy.issubdtype(VarStore.currArray.dtype, numpy.number):
-            std_val = numpy.std(VarStore.currArray)
+        keyword_list = array_data.keyword_list
+        array = array_data.data
+        if numpy.issubdtype(array.dtype, numpy.number):
+            std_val = numpy.std(array)
             print("Standard deviation of ", " ".join(
                 keyword_list), " is ", std_val)
             result_object = ResultObject(

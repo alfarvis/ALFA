@@ -2,7 +2,9 @@
 import unittest
 from Alfarvis.history import Database
 
+
 class TestDatabase(unittest.TestCase):
+
     def testSearchingObjects(self):
         data_base = Database()
         data_base.add(["dravid", "age"], 20)
@@ -32,3 +34,18 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(len(data_list), 0)
         data_list = data_base.search(["kohli", "age"])
         self.assertEqual(len(data_list), 0)
+
+    def testGetLastObject(self):
+        data_base = Database()
+        data_base.add(["dravid", "age"], 20)
+        data_base.add(["sachin", "age"], 30)
+        data_base.add(["kohli", "age"], 25)
+        self.assertRaises(RuntimeError, data_base.getLastObject, -1)
+        cache_res = data_base.getLastObject(0)
+        self.assertEqual(cache_res.data, 25)
+        cache_res = data_base.getLastObject(1)
+        self.assertEqual(cache_res.data, 30)
+        cache_res = data_base.getLastObject(2)
+        self.assertEqual(cache_res.data, 20)
+        cache_res = data_base.getLastObject(3)
+        self.assertTrue(cache_res is None)
