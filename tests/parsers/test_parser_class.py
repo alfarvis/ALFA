@@ -26,6 +26,40 @@ class DummyCommand(AbstractCommand):
         return ResultObject(dummy.data, ["dummy", "result"], DataType.string)
 
 
+class CommandWithMultiArgNumber(AbstractCommand):
+
+    def commandTags(self):
+        return ["multi", "arg", "fun"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="dummy", optional=False,
+                         argument_type=DataType.string,
+                         number=4)]
+
+    def evaluate(self, dummy):
+        result_data = set()
+        for i in range(4):
+            result_data.add(dummy[i].data)
+        return ResultObject(result_data, ["dummy", "result"], DataType.string)
+
+
+class CommandWithInfArgNumber(AbstractCommand):
+
+    def commandTags(self):
+        return ["inf", "arg", "fun"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="dummy", optional=False,
+                         argument_type=DataType.string,
+                         number=-1)]
+
+    def evaluate(self, dummy):
+        result_data = set()
+        for dummy_in in dummy:
+            result_data.add(dummy_in.data)
+        return ResultObject(result_data, ["dummy", "result"], DataType.string)
+
+
 class TestParserMethods(unittest.
                         TestCase):
 
@@ -44,6 +78,10 @@ class TestParserMethods(unittest.
     def test_find_intersection(self):
         self.assertEqual(AlfaDataParser.findIntersection(
             [1, 2, 3], [4, 3, 5]), {3})
+
+    def test_find_union(self):
+        self.assertEqual(AlfaDataParser.findUnion(
+            [1, 2, 3], [4, 3, 5]), {1, 2, 3, 4, 5})
 
     def test_print_commands(self):
         command_list = [DataObject(None, ['load']),
@@ -68,6 +106,75 @@ class TestParserMethods(unittest.
         self.parser.currentCommand = DummyCommand()
         self.parser.resolveArguments(key_words)
         out = self.checkResult(self.history, "dummy input",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_multi_arg_number(self):
+        for i in range(4):
+            input_val = "input" + str(i + 1)
+            self.history.add(DataType.string, [input_val], input_val)
+        key_words = ("Call the multi arg function with input1 input2"
+                     " input3 input4").split(' ')
+        self.parser.currentCommand = CommandWithMultiArgNumber()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history,
+                               {"input1", "input2", "input3", "input4"},
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_inf_arg_number(self):
+        for i in range(10):
+            input_val = "input" + str(i + 1)
+            self.history.add(DataType.string, [input_val], input_val)
+        key_words = ("Call the inf arg function with input1 input2"
+                     " input7").split(' ')
+        self.parser.currentCommand = CommandWithInfArgNumber()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history,
+                               {"input1", "input2", "input7"},
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_overspecify_resolve_argument_multi_arg_number(self):
+        for i in range(6):
+            input_val = "input" + str(i + 1)
+            self.history.add(DataType.string, [input_val], input_val)
+        key_words = ("Call the multi arg function with input1 input2"
+                     " input3 input4 input5 input6").split(' ')
+        self.parser.currentCommand = CommandWithMultiArgNumber()
+        self.parser.resolveArguments(key_words)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_known_data_unknown)
+        # Try resolving now
+        key_words = "Use input5 input2 input3 input4".split(' ')
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history,
+                               {"input2", "input3", "input4", "input5"},
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_underspecify_resolve_argument_multi_arg_number(self):
+        for i in range(6):
+            input_val = "input" + str(i + 1)
+            self.history.add(DataType.string, [input_val], input_val)
+        key_words = "Call the multi arg function with input1 input2".split(' ')
+        self.parser.currentCommand = CommandWithMultiArgNumber()
+        self.parser.resolveArguments(key_words)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_known_data_unknown)
+        # Try resolving now
+        key_words = "Also use input3 input5".split(' ')
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history,
+                               {"input3", "input2", "input5", "input1"},
                                ["dummy", "result"], DataType.string)
         self.assertTrue(out)
         self.assertEqual(self.parser.currentState,

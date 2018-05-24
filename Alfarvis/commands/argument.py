@@ -14,7 +14,8 @@ class Argument(object):
         - keyword that is used in evaluation
     """
 
-    def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[]):
+    def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[],
+                 number=1):
         """
         Constructor
         """
@@ -26,3 +27,5 @@ class Argument(object):
         self.tags = tags
         # Keyword used in function to identify the argument
         self.keyword = keyword
+        # The number of arguments of this argument type
+        self.number = number
