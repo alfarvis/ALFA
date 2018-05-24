@@ -40,11 +40,11 @@ class AlfaDataParser:
             print(command.keyword_list[0])
 
     # Keeping it different for commands and arguments for now in case we want
-    # to add further intelligence in either whihc might have a different logic
-    def printArguments(self, arg_list):
+    # to add further intelligence in either which might have a different logic
+    def printArguments(self, args):
 
-        for iter in range(len(arg_list)):
-            print(iter+1, ": ", " ".join(arg_list[iter].keyword_list))
+        for arg in args:
+            print(" ".join(arg.keyword_list))
 
     def command_parse(self, text):
         """
@@ -169,20 +169,18 @@ class AlfaDataParser:
             unknown_args = all_arg_names.difference(
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
-            print("\nChecking for arguments...\n")
-            foundList = self.argumentsFound
+            print("\nChecking for arguments...\n")            
             unknownList = list(unknown_args)
-            for i in range(len(foundList)):
-                print("Argument ", foundList[i], "found")
-                print("Matching argument: ", self.printArguments(
-                    self.argumentsFound[foundList[i]]))
-            for i in range(len(unknownList)):
-                if unknownList[i] in self.argument_search_result:
-                    print("\nMultiple arguments found for ", unknownList[i])
+            for arg in self.argumentsFound:
+                print("Argument ", arg, "found")
+                print("Matching argument: ", self.printArguments(arg))
+            for arg in unknown_args:
+                if arg in self.argument_search_result:
+                    print("\nMultiple arguments found for ", arg)
                     (self.printArguments(
-                        self.argument_search_result[unknownList[i]]))
+                        self.argument_search_result[arg]))
                 else:
-                    print("Could not find any match for ", unknownList[i])
+                    print("Could not find any match for ", arg)
             if len(unknownList) > 0:
                 print("\nPlease provide more clues to help me resolve these arguments")
 
