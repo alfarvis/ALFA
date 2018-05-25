@@ -2,6 +2,7 @@ from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
+import numpy as np
 # TODO: When in the function add result to history,
 # if the command has given an error, the code gets stuck in
 # an infinite loop. Correct this
@@ -116,6 +117,54 @@ class AlfaDataParser:
         else:
             self.resolveArguments(split_text)
 
+    @classmethod
+    def getMinIndices(self, array):
+        """
+        Find the indices of all the elements that have the smallest value in
+        the array
+        Parameters:
+            array - Any iterable with elements that can be compared to a
+                    numeric value
+        Return: the indices of the minimum values in the array
+        """
+        out = []
+        min_val = np.Inf
+        for i, val in enumerate(array):
+            if val < min_val:
+                min_val = val
+                out = [i]
+            elif val == min_val:
+                out.append(i)
+        return out
+
+    def fillClosestArguments(self, argument_search_result,
+                             argumentsFound, argumentTypes):
+        """
+        If an argument has multiple hits, find the closest one based on
+        percent match in the target match. For example
+        "favorite quote" matches with
+        ("favorite quote", "favorite quote length"). If both elements
+        have same type, then we want to choose "favorite quote" which has
+        100% percent match.
+        Parameters:
+            argument_search_result - dictionary with multiple data results
+            argumentsFound - arguments that have already been found
+            argumentTypes - list of arguments accepted by the command
+        Return:
+            Fill arguments found
+        """
+        for argument in argumentTypes:
+            arg_name = argument.keyword
+            arg_number = argument.number
+            # Currently we only handle closest match of single sized arguments
+            if (arg_name in argument_search_result and
+                    arg_number == 1):
+                match_res = argument_search_result[arg_name]
+                data_len_list = [data.length for data in match_res]
+                idx = self.getMinIndices(data_len_list)
+                if len(idx) == 1:
+                    argumentsFound[arg_name] = match_res[idx[0]]
+
     def fillOptionalArguments(self, argumentsFound, argumentTypes):
         """
         Fill optional arguments with last object from cache
@@ -169,7 +218,6 @@ class AlfaDataParser:
             # TODO Try to use information from user when command gives error
             # TODO If user wants to substitute arguments in the process of
             # resolution then ask him for confirmation.
-            # TODO Handle multiple arguments with same type
             # TODO Handle arguments from keywords
             # TODO Handle composite commands (resolveCommands similar to
             # resolveArguments)
@@ -207,6 +255,9 @@ class AlfaDataParser:
 
                 else:
                     self.argument_search_result[arg_name] = data_res
+        self.fillClosestArguments(self.argument_search_result,
+                                  self.argumentsFound,
+                                  argumentTypes)
         # Fill all the optional arguments
         self.fillOptionalArguments(self.argumentsFound, argumentTypes)
         if self.checkArgumentsFound(self.argumentsFound, argumentTypes):
@@ -218,7 +269,7 @@ class AlfaDataParser:
             unknown_args = all_arg_names.difference(
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
-            print("\nChecking for arguments...\n")            
+            print("\nChecking for arguments...\n")
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
                 print("Argument ", arg, "found")
@@ -231,7 +282,8 @@ class AlfaDataParser:
                 else:
                     print("Could not find any match for ", arg)
             if len(unknownList) > 0:
-                print("\nPlease provide more clues to help me resolve these arguments")
+                print("\nPlease provide more clues to help me resolve",
+                      "these arguments")
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
