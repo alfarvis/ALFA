@@ -3,6 +3,8 @@
 Provide abstract base class for implementing new commands
 """
 from abc import ABCMeta, abstractmethod, abstractproperty
+import string
+import random
 
 
 class AbstractCommand(object):
@@ -43,3 +45,28 @@ class AbstractCommand(object):
         Returns ResultObject with result and any errors
         """
         pass
+
+    def random_generator(size=6, chars=string.ascii_lowercase):
+        return ''.join(random.choice(chars) for x in range(size))
+
+    def addCommandToKeywords(self, keyword_set):
+        tags = self.commandTags()
+        tags_added = False
+        for tag in tags:
+            if tag not in keyword_set:
+                tags_added = True
+                keyword_set.add(tag)
+        # If command tags not found
+        # try adding result tag
+        # if result already present, try
+        # adding secondary
+        for tag in ["result", "secondary"]:
+            if tag not in keyword_set:
+                tags_added = True
+                keyword_set.add(tag)
+                break
+        if not tags_added:
+            print("Could not find a unique tag",
+                  "to add to the keyword_set")
+            print("Adding a random string")
+            keyword_set.add(random_generator())
