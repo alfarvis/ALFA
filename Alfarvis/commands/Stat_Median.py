@@ -36,14 +36,15 @@ class StatMedian(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_list = array_data.keyword_list
+        keyword_set = set(array_data.keyword_list)
+        self.addCommandToKeywords(keyword_set)
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
             median_val = numpy.median(array)
 
-            print("Median of ", " ".join(keyword_list), " is ", median_val)
-            result_object = ResultObject(median_val, keyword_list,
+            print("Median of ", " ".join(keyword_set), " is ", median_val)
+            result_object = ResultObject(median_val, keyword_set,
                                          DataType.array,
                                          CommandStatus.Success)
         else:
