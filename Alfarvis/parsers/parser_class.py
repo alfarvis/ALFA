@@ -310,6 +310,7 @@ class AlfaDataParser:
         """
         Take input from user and resolve/run the instructions
         """
+        textInput = textInput.lower()
         # Tokenizer and create keyword list
         if self.currentState == ParserStates.command_unknown:
             self.command_parse(textInput)
