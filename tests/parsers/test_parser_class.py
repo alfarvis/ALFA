@@ -11,6 +11,7 @@ from Alfarvis.parsers import AlfaDataParser, ParserStates
 from Alfarvis.basic_definitions import (DataObject, DataType, ResultObject)
 from Alfarvis.commands.abstract_command import AbstractCommand
 from Alfarvis.commands.argument import Argument
+import numpy as np
 
 
 class DummyCommand(AbstractCommand):
@@ -88,6 +89,45 @@ class TestParserMethods(unittest.
                         DataObject(None, ['Random Forrest'])]
         self.parser.printCommands(command_list)
 
+    def test_get_min_indices(self):
+        array = np.array([1, 2, 3, 4, 1, 1, 2, 2, 2, 4, 1])
+        idx = self.parser.getMinIndices(array)
+        self.assertEqual(idx, [0, 4, 5, 10])
+        array[-1] = -1
+        idx = self.parser.getMinIndices(array)
+        self.assertEqual(idx, [10])
+
+    def test_fill_closest_arguments(self):
+        argument_types = [Argument(keyword="dummy1", optional=False,
+                                   argument_type=DataType.string)]
+        self.history.add(DataType.string, ["mean", "tumor", "length"], "5.0")
+        self.history.add(DataType.string, ["mean", "tumor", "id"],
+                         "20")
+        self.history.add(DataType.string, ["tumor", "length"],
+                         "100")
+        argument_search_results = {"dummy1": self.history.search(
+            DataType.string, ["tumor", "length"])}
+        arguments_found = {}
+        self.parser.fillClosestArguments(argument_search_results,
+                                         arguments_found, argument_types)
+        self.assertTrue("dummy1" in arguments_found)
+        self.assertEqual(arguments_found["dummy1"].data, "100")
+
+    def test_unsuccessful_fill_closest_arguments(self):
+        argument_types = [Argument(keyword="dummy1", optional=False,
+                                   argument_type=DataType.string)]
+        self.history.add(DataType.string, ["mean", "tumor", "length"], "5.0")
+        self.history.add(DataType.string, ["mean", "tumor", "id"],
+                         "20")
+        self.history.add(DataType.string, ["tumor", "length"],
+                         "100")
+        argument_search_results = {"dummy1": self.history.search(
+            DataType.string, ["mean", "tumor"])}
+        arguments_found = {}
+        self.parser.fillClosestArguments(argument_search_results,
+                                         arguments_found, argument_types)
+        self.assertFalse("dummy1" in arguments_found)
+
     def test_fill_optional_arguments(self):
         # Set up a few dummy arguments
         argumentTypes = [Argument(keyword="dummy1", optional=True,
@@ -109,7 +149,6 @@ class TestParserMethods(unittest.
                          Argument(keyword="dummy2", optional=False,
                                   argument_type=DataType.string)]
         self.history.add(DataType.string, ["input", "my"], "dummy input")
-        data_object = self.history.search(DataType.string, ["my", "input"])[0]
         argumentsFound = {'dummy1': 'Found'}
         self.parser.fillOptionalArguments(argumentsFound, argumentTypes)
         self.assertTrue('dummy1' in argumentsFound)
@@ -239,6 +278,24 @@ class TestParserMethods(unittest.
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
         out = self.checkResult(self.history, "Pen is sharper than knife",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+
+    def test_successful_resolve_argument_multiple_results(self):
+        self.history.add(DataType.string, ["quote", "favorite", "ever"],
+                         "Pen is sharper than knife")
+        self.history.add(DataType.string, ["pen", "favorite"],
+                         "Reynolds")
+        self.history.add(DataType.string, ["quote"],
+                         "I am a simple quote")
+        # Logic: Since simple quote matches exactly with input,
+        # the simple quote used instead of the one with more qualifiers
+        key_words = "Call the dummy function with my quote".split(' ')
+        self.parser.currentCommand = DummyCommand()
+        self.parser.resolveArguments(key_words)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+        out = self.checkResult(self.history, "I am a simple quote",
                                ["dummy", "result"], DataType.string)
         self.assertTrue(out)
 

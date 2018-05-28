@@ -23,6 +23,7 @@ class DataObject(object):
         self.data = data
         self.keyword_list = keyword_list
         self.time_stamp = datetime.datetime.now()
+        self.length = len(keyword_list)
 
     def __hash__(self):
         return hash(' '.join(self.keyword_list))
