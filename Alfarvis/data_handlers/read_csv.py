@@ -45,9 +45,6 @@ class ReadCSV(AbstractReader):
                              for key_val in self.pattern.split(column)]
 
             col_data = data[column].values
-            # TODO process column to remove capitals, special characters
-            # and split the text
-            print(col_split)
             col_keyword_list = col_split + keyword_list
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status)
