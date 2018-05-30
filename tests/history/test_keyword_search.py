@@ -40,6 +40,21 @@ class TestKeywordSearch(unittest.TestCase):
         self.assertEqual(keyword_search.correctTypo('tendkar'), {'tendulkar'})
         self.assertEqual(keyword_search.correctTypo('schn'), {'sachin'})
 
+    def testTyposSmallWords(self):
+        keyword_search = KeywordSearch()
+        keyword_search.add(['load', 'id'], 0)
+        self.assertEqual(keyword_search.correctTypo('good'), set())
+        self.assertEqual(keyword_search.correctTypo('is'), set())
+        self.assertEqual(keyword_search.correctTypo('ld'), set())
+        self.assertEqual(keyword_search.correctTypo('loaad'), {'load'})
+        self.assertEqual(keyword_search.correctTypo('lod'), {'load'})
+        keyword_search.add(['tendulkar', 'fine'], 0)
+        self.assertEqual(keyword_search.correctTypo('fines'), {'fine'})
+        self.assertEqual(keyword_search.correctTypo('tendkar'), {'tendulkar'})
+        self.assertEqual(keyword_search.correctTypo('tendakar'), set())
+        self.assertEqual(keyword_search.correctTypo('line'), {'fine'})
+        self.assertEqual(keyword_search.correctTypo('cone'), set())
+
     def testMisspelledKeywords(self):
         keyword_search = KeywordSearch()
         keyword_search.add(['dravid', 'age'], 10)
