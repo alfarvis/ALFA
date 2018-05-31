@@ -38,7 +38,7 @@ class TestKeywordSearch(unittest.TestCase):
         self.assertEqual(keyword_search.correctTypo(
             'drvid'), {'dravid', 'david'})
         self.assertEqual(keyword_search.correctTypo('tendkar'), {'tendulkar'})
-        self.assertEqual(keyword_search.correctTypo('schn'), {'sachin'})
+        self.assertEqual(keyword_search.correctTypo('schin'), {'sachin'})
 
     def testTyposSmallWords(self):
         keyword_search = KeywordSearch()
@@ -50,6 +50,7 @@ class TestKeywordSearch(unittest.TestCase):
         self.assertEqual(keyword_search.correctTypo('lod'), {'load'})
         keyword_search.add(['tendulkar', 'fine'], 0)
         self.assertEqual(keyword_search.correctTypo('fines'), {'fine'})
+        self.assertEqual(keyword_search.correctTypo('finnes'), {'fine'})
         self.assertEqual(keyword_search.correctTypo('tendkar'), {'tendulkar'})
         self.assertEqual(keyword_search.correctTypo('tendakar'), set())
         self.assertEqual(keyword_search.correctTypo('line'), {'fine'})

@@ -69,7 +69,7 @@ class Word(object):
     def stringent_typos(self):
         """letter combinations one typo away from word
            Only additions/transposes allowed"""
-        return (self._transposes() |
+        return (self._transposes() | self._deletes() |
                 self._inserts())
 
     def typos(self):

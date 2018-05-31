@@ -29,9 +29,11 @@ class KeywordSearch(object):
         keywords
         """
         self.keyword_dict = dict()
-        # If the length of the word is less than this,
-        # double typos will not be considered
-        self.min_wordlength_double_typo = 4
+        # If the length of the word is greater than equal,
+        # stringent double typos will be considered
+        self.min_wordlength_double_typo = 5
+        # If the length of the word is greater than this,
+        # single typos will be considered
         self.min_wordlength_typo = 2
 
     def correctTypo(self, word):
