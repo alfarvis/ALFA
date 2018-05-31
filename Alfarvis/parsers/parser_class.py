@@ -3,11 +3,6 @@ from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
 import numpy as np
-# TODO: When in the function add result to history,
-# if the command has given an error, the code gets stuck in
-# an infinite loop. Correct this
-# TODO: The same file keeps getting loaded again and again.
-# The code needs to check
 # if this file already is in the history, do not load it.
 # TODO: The code is trying to find arguments even if they are optional
 
@@ -176,6 +171,9 @@ class AlfaDataParser:
             if (argument.optional and
                 (arg_name not in argumentsFound) and
                     (arg_name not in self.argument_search_result)):
+                if not argument.fill_from_cache:
+                    argumentsFound[arg_name] = None
+                    continue
                 if arg_number > 1:
                     print("Arguments with multi-input cannot be optional")
                     continue
