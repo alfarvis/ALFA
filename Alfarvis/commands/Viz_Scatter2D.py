@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Plot multiple arrays in a single line plot
+Plot a scatter plot between two arrays
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -11,6 +11,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
+from Alfarvis.Toolboxes.DataGuru import DataGuru
 
 
 class VizScatter2D(AbstractCommand):
@@ -27,7 +28,7 @@ class VizScatter2D(AbstractCommand):
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
-        executing the lineplot command
+        executing the scatter plot command
         """
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array,number=2)]
@@ -38,36 +39,19 @@ class VizScatter2D(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        
-        #Create a combined array and keyword list
-        kl1 =[]
-        arrays = []
-        array_size = 0
         sns.set(color_codes=True)
-        for array_data in array_datas:
-            kl1.append(array_data.keyword_list)
-            arrays.append(array_data.data)
-            if array_size == 0:
-                array_size = array_data.data.size
-            else:
-                if array_size != array_data.data.size:
-                    print("The arrays to be plotted are not of the same dimensions")
-                    result_object = ResultObject(None, None, None, CommandStatus.Error)
-                    return result_object
-            if (np.issubdtype(array_data.data.dtype, np.number))==False:  
-                print("Please provide numeric arrays")
-                result_object = ResultObject(None, None, None, CommandStatus.Error)
-                return result_object
-                
+        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        if command_status == CommandStatus.Error:
+            return ResultObject(None, None, None, CommandStatus.Error)
         
-        
-        array = np.array(arrays)
+ 
+        array = df.values
         if StatContainer.ground_truth is None:
-            plt.scatter(array[0,:],array[1,:],edgecolor = "None", alpha=0.35)
+            plt.scatter(array[:,0],array[:,1],edgecolor = "None", alpha=0.35)
             #sns.jointplot(x=" ".join(kl1[0]),y=" ".join(kl1[1]),data=array)
         else:
             #sns.jointplot(x=" ".join(kl1[0]),y=" ".join(kl1[1]),data=array,color = StatContainer.ground_truth.data)
-            plt.scatter(array[0,:],array[1,:],c = StatContainer.ground_truth.data, cmap = "jet",edgecolor = "None", alpha=0.35)
+            plt.scatter(array[:,0],array[:,1],c = StatContainer.ground_truth.data, cmap = "jet",edgecolor = "None", alpha=0.35)
         plt.xlabel(" ".join(kl1[0]))
         plt.ylabel(" ".join(kl1[1]))
         #plt.legend()
