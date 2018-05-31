@@ -18,4 +18,4 @@ class ReadImage(AbstractReader):
                                 command_status=CommandStatus.Error)
         # Initialize image manipulation command group
         return ResultObject(data, keyword_list, DataType.image,
-                            CommandStatus.Success)
+                            CommandStatus.Success, add_to_cache=True)

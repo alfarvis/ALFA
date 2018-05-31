@@ -300,7 +300,7 @@ class AlfaDataParser:
             # TODO Add a new function to add result to history
             if (result.data_type is not None):
                 self.history.add(result.data_type, result.keyword_list,
-                                 result.data)
+                                 result.data, result.add_to_cache)
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
 

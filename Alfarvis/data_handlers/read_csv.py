@@ -27,7 +27,8 @@ class ReadCSV(AbstractReader):
 
         result_objects = []
         result_object = ResultObject(
-            data, keyword_list, DataType.csv, command_status)
+            data, keyword_list, DataType.csv, command_status,
+            add_to_cache=True)
         result_objects.append(result_object)
         # Too many columns do not extract them individually
         if len(data.columns) > 5000:
@@ -47,6 +48,7 @@ class ReadCSV(AbstractReader):
             col_data = data[column].values
             col_keyword_list = col_split + keyword_list
             result_object = ResultObject(
-                col_data, col_keyword_list, DataType.array, command_status)
+                col_data, col_keyword_list, DataType.array, command_status,
+                add_to_cache=True)
             result_objects.append(result_object)
         return result_objects

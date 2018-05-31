@@ -23,7 +23,7 @@ class Database(object):
         self.cache_len = cache_len
         self.cache = deque(maxlen=cache_len)
 
-    def add(self, keyword_list, data_object):
+    def add(self, keyword_list, data_object, add_to_cache=True):
         """
         Add data with specified keyword list to database
         Parameters
@@ -32,7 +32,8 @@ class Database(object):
         self.keyword_search.add(keyword_list, len(self.data_objects))
         data_object = DataObject(data_object, keyword_list)
         self.data_objects.append(data_object)
-        self.cache.append(data_object)
+        if add_to_cache:
+            self.cache.append(data_object)
 
     def search(self, keyword_list):
         """
