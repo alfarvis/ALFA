@@ -36,13 +36,14 @@ class StatMax(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_list = array_data.keyword_list
+        keyword_set = set(array_data.keyword_list)
+        self.addCommandToKeywords(keyword_set)
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
             max_val = numpy.max(array)
-            print("Maximum of ", " ".join(keyword_list), " is ", max_val)
-            result_object = ResultObject(max_val, keyword_list,
+            print("Maximum of ", " ".join(keyword_set), " is ", max_val)
+            result_object = ResultObject(max_val, keyword_set,
                                          DataType.array,
                                          CommandStatus.Success)
         else:

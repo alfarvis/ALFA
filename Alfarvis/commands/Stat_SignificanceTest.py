@@ -55,4 +55,4 @@ class StatSigTest(AbstractCommand):
         #           " ".join(ground_truth.keyword_list),
         #           "using ", " ".join(keyword_list), " is ", ttest_val.pvalue)
         #     result_object = ResultObject(ttest_val.pvalue, keyword_list,
-        #                                  DataType.array, CommandStatus.Success)
+        # DataType.array, CommandStatus.Success)

@@ -37,8 +37,8 @@ class StatMax(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_list = csv_data.keyword_list
-        keyword_list.extend(["scale", "standardize"])
+        keyword_set = set(csv_data.keyword_list)
+        self.addCommandToKeywords(keyword_set)
         data = csv_data.data
 
         if numpy.issubdtype(data.dtype, numpy.number):
@@ -49,7 +49,7 @@ class StatMax(AbstractCommand):
                 scaled_data[column] = X_train[:, i]
 
             print("Saving the scaled data...")
-            result_object = ResultObject(scaled_data, keyword_list,
+            result_object = ResultObject(scaled_data, keyword_set,
                                          DataType.array,
                                          CommandStatus.Success)
         else:

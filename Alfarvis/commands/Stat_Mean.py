@@ -36,13 +36,14 @@ class StatMean(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_list = array_data.keyword_list
+        keyword_set = set(array_data.keyword_list)
+        self.addCommandToKeywords(keyword_set)
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
             mean_val = numpy.mean(array)
-            print("Mean of ", " ".join(keyword_list), " is ", mean_val)
-            result_object = ResultObject(mean_val, keyword_list,
+            print("Mean of ", " ".join(keyword_set), " is ", mean_val)
+            result_object = ResultObject(mean_val, keyword_set,
                                          DataType.array,
                                          CommandStatus.Success)
         else:

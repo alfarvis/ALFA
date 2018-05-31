@@ -36,14 +36,15 @@ class StatStdev(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_list = array_data.keyword_list
+        keyword_set = set(array_data.keyword_list)
+        self.addCommandToKeywords(keyword_set)
         array = array_data.data
         if numpy.issubdtype(array.dtype, numpy.number):
             std_val = numpy.std(array)
             print("Standard deviation of ", " ".join(
-                keyword_list), " is ", std_val)
+                keyword_set), " is ", std_val)
             result_object = ResultObject(
-                std_val, keyword_list, DataType.array, CommandStatus.Success)
+                std_val, keyword_set, DataType.array, CommandStatus.Success)
         else:
             print("The array is not of numeric type so cannot find stdev")
 

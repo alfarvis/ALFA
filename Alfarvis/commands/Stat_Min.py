@@ -36,13 +36,14 @@ class StatMin(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_list = array_data.keyword_list
+        keyword_set = set(array_data.keyword_list)
+        self.addCommandToKeywords(keyword_set)
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
             min_val = numpy.min(array)
-            print("Minimum of ", " ".join(keyword_list), " is ", min_val)
-            result_object = ResultObject(min_val, keyword_list,
+            print("Minimum of ", " ".join(keyword_set), " is ", min_val)
+            result_object = ResultObject(min_val, keyword_set,
                                          DataType.array,
                                          CommandStatus.Success)
         else:
