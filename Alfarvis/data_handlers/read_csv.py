@@ -8,7 +8,8 @@ import re
 class ReadCSV(AbstractReader):
     # This will split the sentence into multiple keywords using anything except
     # a-z,0-9 and + as a partition
-    pattern = re.compile('[^a-z0-9]+')
+    pattern = re.compile('[^a-zA-Z0-9]+')
+    all_caps_pattern = re.compile('^[^a-z]*$')
     col_head_pattern = re.compile('Unnamed: [0-9]+')
 
     @classmethod
@@ -34,10 +35,17 @@ class ReadCSV(AbstractReader):
         for column in data.columns:
             if self.col_head_pattern.match(column):
                 continue
+            elif self.all_caps_pattern.match(column):
+                col_split = [key_val.lower()
+                             for key_val in self.pattern.split(column)]
+            else:
+                # Add space before upper case
+                re.sub(r"([A-Z])", r" \1", column)
+                col_split = [key_val.lower()
+                             for key_val in self.pattern.split(column)]
+
             col_data = data[column].values
-            # TODO process column to remove capitals, special characters
-            # and split the text
-            col_keyword_list = self.pattern.split(column) + keyword_list
+            col_keyword_list = col_split + keyword_list
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status)
             result_objects.append(result_object)
