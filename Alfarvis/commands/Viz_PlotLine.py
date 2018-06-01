@@ -49,16 +49,6 @@ class VizPlotLine(AbstractCommand):
        
         plt.show(block=False)
             
-        
-#        kl2 = set(kl1)
-#        keyword_list = list(kl2)
-#        array = np.array(arrays)
-#        
-#        #plt.plot(np.transpose(array))
-#        #Plot the legend to the right of the box
-#        plt.legend()
-#        plt.show(block=False)
-            
         result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
         return result_object
