@@ -29,20 +29,24 @@ class KeywordSearch(object):
         keywords
         """
         self.keyword_dict = dict()
-        # If the length of the word is less than this,
-        # double typos will not be considered
-        self.min_wordlength_double_typo = 4
+        # If the length of the word is greater than equal,
+        # stringent double typos will be considered
+        self.min_wordlength_double_typo = 5
+        # If the length of the word is greater than this,
+        # single typos will be considered
+        self.min_wordlength_typo = 2
 
     def correctTypo(self, word):
         """
         Check if some combinations of word slices match the dictionary keys
         """
         w = Word(word)
-        s1 = self.known(w.typos())
-        if not s1 and len(word) >= self.min_wordlength_double_typo:
-            return (s1 or self.known(w.double_typos()))
-        else:
-            return s1
+        s1 = set()
+        if len(word) > self.min_wordlength_typo:
+            s1 = self.known(w.typos())
+            if not s1 and len(word) >= self.min_wordlength_double_typo:
+                s1 = self.known(w.stringent_double_typos())
+        return s1
 
     def known(self, word_set):
         return (word_set & self.keyword_dict.keys())

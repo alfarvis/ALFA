@@ -1,30 +1,31 @@
 # here we will import the libraries used for machine learning
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv), data manipulation as in SQL
-import matplotlib.pyplot as plt # this is used for the plot the graph
-import seaborn as sns # used for plot interactive graph. I like it most for plot
 
-from sklearn.linear_model import LogisticRegression # to apply the Logistic regression
-from sklearn.model_selection import train_test_split # to split the data into two parts
+from Alfarvis.basic_definitions import (DataType, CommandStatus,
+                                        ResultObject)
+#from sklearn.linear_model import LogisticRegression # to apply the Logistic regression
+#from sklearn.model_selection import train_test_split # to split the data into two parts
 from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import GridSearchCV# for tuning parameter
+#from sklearn.model_selection import GridSearchCV# for tuning parameter
 from sklearn.ensemble import RandomForestClassifier # for random forest classifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import svm # for Support Vector Machine
+#from sklearn.naive_bayes import GaussianNB
+#from sklearn.neighbors import KNeighborsClassifier
+#from sklearn.tree import DecisionTreeClassifier
+#from sklearn import svm # for Support Vector Machine
 from sklearn import metrics # for the check the error and accuracy of the model
 from sklearn import preprocessing
 from sklearn.model_selection import LeaveOneOut
 
-class MLAnalyze:
+class DataGuru:
 
     """
-    Run machine learning algorithm on any structured dataset
+    Run data analytics (exploration and mining) on any structured dataset
     Has the following functionality
         - Find the best algorithm
         - Find the top features
         - k-fold cross validation accuracy
+        - transform an array of arrays to a dataframe
     Has the following models
         - Support Vector Machine
         - Random Forest
@@ -32,23 +33,36 @@ class MLAnalyze:
         - k Nearest Neighbor
         - Feed Forward Neural Network
     """
-    def __init__(self,data_path,label_header):
-        """
-         Constructor
-        """
-        self.data = pd.read_csv(data_path)
-
-        self.label_header = label_header
-        self.default_model = svm.SVC()
-
-        datas = pd.DataFrame(self.data)
-        datas.columns = list(self.data.columns)
-        data_drop = datas.drop(label_header,axis=1)
-        self.X = data_drop.values
-        self.Y =  datas[label_header]
-        self.columnList = self.data.columns[1:]
-        # Cleaning and standardizing data
-
+    @classmethod
+    def transformArray_to_dataFrame(self,array_datas):
+        #Create a combined array and keyword list
+        kl1 =[]
+        arrays = []
+        array_size = 0
+        command_status = CommandStatus.Success
+        
+        for array_data in array_datas:
+            kl1.append(" ".join(array_data.keyword_list))
+            arrays.append(array_data.data)
+            if array_size == 0:
+                array_size = array_data.data.size
+                if array_size==1:
+                    df = pd.DataFrame({(" ".join(array_data.keyword_list)):[array_data.data]})
+                else:
+                    df = pd.DataFrame({(" ".join(array_data.keyword_list)):array_data.data})
+            else:
+                if array_size != array_data.data.size:
+                    print("The arrays to be plotted are not of the same dimensions")
+                    command_status = CommandStatus.Error
+                    break
+                df[(" ".join(array_data.keyword_list))] = pd.Series(array_data.data)
+            if (np.issubdtype(array_data.data.dtype, np.number))==False:  
+                print("Please provide numeric arrays")
+                command_status = CommandStatus.Error
+                break
+            
+        return command_status, df, kl1
+            
     # Create a generic classification model to work with any classifier
     def classification_model(self,model,num_folds,topFeatures=0):
         X = self.X

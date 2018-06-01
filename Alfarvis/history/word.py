@@ -66,6 +66,12 @@ class Word(object):
                 for a, b in self.slices
                 for c in ALPHABET}
 
+    def stringent_typos(self):
+        """letter combinations one typo away from word
+           Only additions/transposes allowed"""
+        return (self._transposes() | self._deletes() |
+                self._inserts())
+
     def typos(self):
         """letter combinations one typo away from word"""
         return (self._deletes() | self._transposes() |
@@ -75,3 +81,8 @@ class Word(object):
         """letter combinations two typos away from word"""
         return {e2 for e1 in self.typos()
                 for e2 in Word(e1).typos()}
+
+    def stringent_double_typos(self):
+        """letter combinations two typos away from word"""
+        return {e2 for e1 in self.stringent_typos()
+                for e2 in Word(e1).stringent_typos()}
