@@ -3,8 +3,6 @@ from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
 import numpy as np
-# if this file already is in the history, do not load it.
-# TODO: The code is trying to find arguments even if they are optional
 
 
 class AlfaDataParser:
