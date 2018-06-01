@@ -82,7 +82,10 @@ class AlfaDataParser:
         elif len(res) == 1:
             self.foundCommand(res[0])
         else:
-            if len(self.command_search_result) > 0:
+            closest_match = self.findClosestMatch(res)
+            if closest_match is not None:
+                self.foundCommand(closest_match)
+            elif len(self.command_search_result) > 0:
                 intersection_set = self.findIntersection(
                     self.command_search_result, res)
                 if len(intersection_set) == 0:
@@ -132,6 +135,13 @@ class AlfaDataParser:
                 out.append(i)
         return out
 
+    def findClosestMatch(self, match_res):
+        data_len_list = [data.length for data in match_res]
+        idx = self.getMinIndices(data_len_list)
+        if len(idx) == 1:
+            return match_res[idx[0]]
+        return None
+
     def fillClosestArguments(self, argument_search_result,
                              argumentsFound, argumentTypes):
         """
@@ -155,10 +165,9 @@ class AlfaDataParser:
             if (arg_name in argument_search_result and
                     arg_number == 1):
                 match_res = argument_search_result[arg_name]
-                data_len_list = [data.length for data in match_res]
-                idx = self.getMinIndices(data_len_list)
-                if len(idx) == 1:
-                    argumentsFound[arg_name] = match_res[idx[0]]
+                closest_match = self.findClosestMatch(match_res)
+                if closest_match is not None:
+                    argumentsFound[arg_name] = closest_match
 
     def fillOptionalArguments(self, argumentsFound, argumentTypes):
         """
