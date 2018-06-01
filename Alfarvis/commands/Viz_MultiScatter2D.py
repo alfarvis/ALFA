@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Plot multiple arrays in a single line plot
+Plot multiple arrays in a multidimensional scatterplot
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -12,16 +12,17 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
+from Alfarvis.Toolboxes.DataGuru import DataGuru
 
 
 class VizMultiScatter2D(AbstractCommand):
     """
-    Plot multiple arrays against each other in a scatterplot
+    Plot multiple arrays against each other in a multidimensional scatterplot
     """
 
     def commandTags(self):
         """
-        Tags to identify the scatterplot command
+        Tags to identify the multidimensional scatterplot command
         """
         return ["multiscatterplot","multi","multiple","scatter","plot"]
 
@@ -39,37 +40,18 @@ class VizMultiScatter2D(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        
-        #Create a combined array and keyword list
-        kl1 =[]
-        arrays = []
-        array_size = 0
         sns.set(color_codes=True)
-        for array_data in array_datas:
-            kl1.append(array_data.keyword_list)
-            arrays.append(array_data.data)
-            if array_size == 0:
-                array_size = array_data.data.size
-                df = pd.DataFrame({(" ".join(array_data.keyword_list)):array_data.data})
-            else:
-                if array_size != array_data.data.size:
-                    print("The arrays to be plotted are not of the same dimensions")
-                    result_object = ResultObject(None, None, None, CommandStatus.Error)
-                    return result_object
-                df[(" ".join(array_data.keyword_list))] = pd.Series(array_data.data)
-            if (np.issubdtype(array_data.data.dtype, np.number))==False:  
-                print("Please provide numeric arrays")
-                result_object = ResultObject(None, None, None, CommandStatus.Error)
-                return result_object
-                    
+        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        if command_status == CommandStatus.Error:
+            return ResultObject(None, None, None, CommandStatus.Error)
         
         
         if StatContainer.ground_truth is None:
-            pd.scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal='kde')
+            pd.scatter_matrix(df, alpha=0.2, diagonal='kde')
             #sns.jointplot(x=" ".join(kl1[0]),y=" ".join(kl1[1]),data=array)
         else:
             #sns.jointplot(x=" ".join(kl1[0]),y=" ".join(kl1[1]),data=array,color = StatContainer.ground_truth.data)
-            pd.scatter_matrix(df, alpha=0.2, figsize=(6, 6), diagonal='kde',c = StatContainer.ground_truth.data,cmap = "jet")
+            pd.scatter_matrix(df, alpha=0.2, diagonal='kde',c = StatContainer.ground_truth.data,cmap = "jet")
         #plt.xlabel(" ".join(kl1[0]))
         #plt.ylabel(" ".join(kl1[1]))
         #plt.legend()
