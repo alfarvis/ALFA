@@ -3,13 +3,6 @@ from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus
 import numpy as np
-# TODO: When in the function add result to history,
-# if the command has given an error, the code gets stuck in
-# an infinite loop. Correct this
-# TODO: The same file keeps getting loaded again and again.
-# The code needs to check
-# if this file already is in the history, do not load it.
-# TODO: The code is trying to find arguments even if they are optional
 
 
 class AlfaDataParser:
@@ -87,7 +80,10 @@ class AlfaDataParser:
         elif len(res) == 1:
             self.foundCommand(res[0])
         else:
-            if len(self.command_search_result) > 0:
+            closest_match = self.findClosestMatch(res)
+            if closest_match is not None:
+                self.foundCommand(closest_match)
+            elif len(self.command_search_result) > 0:
                 intersection_set = self.findIntersection(
                     self.command_search_result, res)
                 if len(intersection_set) == 0:
@@ -137,6 +133,13 @@ class AlfaDataParser:
                 out.append(i)
         return out
 
+    def findClosestMatch(self, match_res):
+        data_len_list = [data.length for data in match_res]
+        idx = self.getMinIndices(data_len_list)
+        if len(idx) == 1:
+            return match_res[idx[0]]
+        return None
+
     def fillClosestArguments(self, argument_search_result,
                              argumentsFound, argumentTypes):
         """
@@ -160,10 +163,9 @@ class AlfaDataParser:
             if (arg_name in argument_search_result and
                     arg_number == 1):
                 match_res = argument_search_result[arg_name]
-                data_len_list = [data.length for data in match_res]
-                idx = self.getMinIndices(data_len_list)
-                if len(idx) == 1:
-                    argumentsFound[arg_name] = match_res[idx[0]]
+                closest_match = self.findClosestMatch(match_res)
+                if closest_match is not None:
+                    argumentsFound[arg_name] = closest_match
 
     def fillOptionalArguments(self, argumentsFound, argumentTypes):
         """
@@ -176,6 +178,9 @@ class AlfaDataParser:
             if (argument.optional and
                 (arg_name not in argumentsFound) and
                     (arg_name not in self.argument_search_result)):
+                if not argument.fill_from_cache:
+                    argumentsFound[arg_name] = None
+                    continue
                 if arg_number > 1:
                     print("Arguments with multi-input cannot be optional")
                     continue
@@ -302,7 +307,7 @@ class AlfaDataParser:
             # TODO Add a new function to add result to history
             if (result.data_type is not None):
                 self.history.add(result.data_type, result.keyword_list,
-                                 result.data)
+                                 result.data, result.add_to_cache)
             self.currentState = ParserStates.command_unknown
             self.clearCommandSearchResults()
 
