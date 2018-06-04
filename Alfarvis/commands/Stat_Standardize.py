@@ -42,13 +42,13 @@ class Stat_Standardize(AbstractCommand):
         data = csv_data.data
 
         #if numpy.issubdtype(data.dtype, numpy.number):
-        for iter in range (0,data.shape[1]):
-            col_data = data[data.columns[iter]]
+        for column in data.columns:
+            col_data = data[column]
             uniqVals = numpy.unique(col_data)
             percCutoff_for_categorical = 0.1
-            if (len(uniqVals)/len(col_data)) > percCutoff_for_categorical:
+            if (len(uniqVals)/len(col_data)) > percCutoff_for_categorical and isinstance(col_data[0],str)==False:
                 col_data = (col_data-numpy.mean(col_data))/numpy.std(col_data)
-            data[data.columns[iter]] = col_data
+            data[column] = col_data
         
 
         print("Saving the scaled data...")
