@@ -15,7 +15,7 @@ class Argument(object):
     """
 
     def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[],
-                 number=1):
+                 number=1, fill_from_cache=True):
         """
         Constructor
         """
@@ -29,3 +29,6 @@ class Argument(object):
         self.keyword = keyword
         # The number of arguments of this argument type
         self.number = number
+        # If optional is true, fill from cache fills the argument
+        # based on the last element in history
+        self.fill_from_cache = fill_from_cache

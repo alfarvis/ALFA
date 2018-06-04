@@ -27,6 +27,24 @@ class DummyCommand(AbstractCommand):
         return ResultObject(dummy.data, ["dummy", "result"], DataType.string)
 
 
+class DummyCommandWithFillCache(AbstractCommand):
+
+    def commandTags(self):
+        return ["dummy", "test", "fill", "cache"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="dummy", optional=True,
+                         argument_type=DataType.string, fill_from_cache=False)]
+
+    def evaluate(self, dummy):
+        if dummy is None:
+            res_string = "default string"
+        else:
+            res_string = dummy.data
+
+        return ResultObject(res_string, ["dummy", "result"], DataType.string, add_to_cache=True)
+
+
 class CommandWithMultiArgNumber(AbstractCommand):
 
     def commandTags(self):
@@ -299,6 +317,40 @@ class TestParserMethods(unittest.
                                ["dummy", "result"], DataType.string)
         self.assertTrue(out)
 
+    def test_execute_command_test_cache(self):
+        command = DummyCommand()
+        # Add a result to history and cache
+        self.history.add(DataType.string, ["previous", "result"],
+                         "previous result")
+        dummy_input = DataObject("How are you", ["question"])
+        self.parser.executeCommand(command, {"dummy": dummy_input})
+        # Check result in history
+        out = self.checkResult(self.history, "How are you",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+        # Check cache did not get modified
+        cache_result = self.history.getLastObject(DataType.string)
+        self.assertEqual(cache_result.data, "previous result")
+
+    def test_execute_command_update_cache(self):
+        command = DummyCommandWithFillCache()
+        # Add a result to history and cache
+        self.history.add(DataType.string, ["previous", "result"],
+                         "previous result")
+        dummy_input = DataObject("How are you", ["question"])
+        self.parser.executeCommand(command, {"dummy": dummy_input})
+        # Check result in history
+        out = self.checkResult(self.history, "How are you",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+        # Check cache is updated
+        cache_result = self.history.getLastObject(DataType.string)
+        self.assertEqual(cache_result.data, "How are you")
+
     def test_arg_reparse_quit(self):
         self.parser.currentState = ParserStates.command_known_data_unknown
         self.parser.arg_reparse('please quit')
@@ -349,6 +401,18 @@ class TestParserMethods(unittest.
         out = self.checkResult(self.history, "your dummy input",
                                ["dummy", "result"], DataType.string)
         self.assertTrue(out)
+
+    def test_command_parse_pure_optional(self):
+        self.parser.command_parse("call the dummy function with fill cache")
+        out = self.checkResult(self.history, "default string",
+                               ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+        # Check cache is updated
+        cache_result = self.history.getLastObject(DataType.string)
+        self.assertEqual(cache_result.data, "default string")
+
 
 if __name__ == '__main__':
     unittest.main()

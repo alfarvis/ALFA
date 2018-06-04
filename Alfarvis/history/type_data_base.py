@@ -20,7 +20,7 @@ class TypeDatabase:
         for data_type in DataType:
             self._argument_database[data_type] = Database(cache_len)
 
-    def add(self, data_type, keyword_list, data_object):
+    def add(self, data_type, keyword_list, data_object, add_to_cache=True):
         """
         Add an object with specified keyword list and data type to database
         Parameters:
@@ -29,7 +29,8 @@ class TypeDatabase:
             keyword_list - A list of strings used to identify the data object
             data_object - Data to be stored in the database
         """
-        self._argument_database[data_type].add(keyword_list, data_object)
+        self._argument_database[data_type].add(
+            keyword_list, data_object, add_to_cache)
 
     def search(self, data_type, keyword_list):
         """

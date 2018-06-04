@@ -1,7 +1,6 @@
 # here we will import the libraries used for machine learning
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv), data manipulation as in SQL
-
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 #from sklearn.linear_model import LogisticRegression # to apply the Logistic regression
