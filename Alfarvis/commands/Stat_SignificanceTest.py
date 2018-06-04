@@ -13,7 +13,10 @@ from .argument import Argument
 from .abstract_command import AbstractCommand
 from .Stat_Container import StatContainer
 import scipy
-
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class StatSigTest(AbstractCommand):
     """
@@ -41,6 +44,45 @@ class StatSigTest(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        arr = array_data.data
+        if np.issubdtype(arr.dtype, np.number):
+            if StatContainer.ground_truth is not None:
+                gt1 = (StatContainer.ground_truth.data)
+                uniqVals = np.unique(gt1)
+                pVals = []
+                startFlag = 1
+                # TODO COmplete this: Idea is to create a heatmap like the one
+                # we did for correlation
+                for uniV in uniqVals:
+                    
+                    stTitle = " ".join(["group ",str(uniV)])
+                    a = arr[gt1 == uniV]
+                    allp = []
+                    for iter in range(len(uniqVals)):                        
+                        b = arr[gt1 == uniqVals[iter]]
+                        if uniV==uniqVals[iter]:
+                            allp.append(0)
+                        else:                            
+                            ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
+                            allp.append(ttest_val.pvalue)                        
+                    if startFlag == 1:
+                        pVals = pd.DataFrame({stTitle:allp})
+                        startFlag = 0
+                    else:
+                        pVals[stTitle] = allp
+            else:
+                print("Please set ground truth before running this command")
+                return result_object
+        else:
+            print("Please provide numerical array for ttest")
+            return result_object
+                
+        print("Displaying the result as a heatmap")
+        sns.heatmap(pVals, cbar = True,  square = True, annot=True, fmt= '.2f',annot_kws={'size': 15},
+           xticklabels= pVals.columns, yticklabels= pVals.columns,
+           cmap= 'jet')
+        plt.show(block=False)
+        result_object = ResultObject(None, None, None,CommandStatus.Success)        
         return result_object
         # Debug this @Vishwa
         # keyword_list = array_data.keyword_list

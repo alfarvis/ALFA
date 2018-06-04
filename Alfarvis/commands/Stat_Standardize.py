@@ -10,9 +10,9 @@ from .argument import Argument
 import numpy
 from sklearn import preprocessing
 import copy
+from Alfarvis.Toolboxes.DataGuru import DataGuru
 
-
-class StatMax(AbstractCommand):
+class Stat_Standardize(AbstractCommand):
     """
     Transform a csv to its standardized values
     """
@@ -41,19 +41,22 @@ class StatMax(AbstractCommand):
         self.addCommandToKeywords(keyword_set)
         data = csv_data.data
 
-        if numpy.issubdtype(data.dtype, numpy.number):
-            scaler = preprocessing.StandardScaler().fit(data)
-            X_train = scaler.transform(data)
-            scaled_data = copy.copy(csv_data.data)
-            for i, column in enumerate(csv_data.columns):
-                scaled_data[column] = X_train[:, i]
+        #if numpy.issubdtype(data.dtype, numpy.number):
+        for iter in range (0,data.shape[1]):
+            col_data = data[data.columns[iter]]
+            uniqVals = numpy.unique(col_data)
+            percCutoff_for_categorical = 0.1
+            if (len(uniqVals)/len(col_data)) > percCutoff_for_categorical:
+                col_data = (col_data-numpy.mean(col_data))/numpy.std(col_data)
+            data[data.columns[iter]] = col_data
+        
 
-            print("Saving the scaled data...")
-            result_object = ResultObject(scaled_data, keyword_set,
-                                         DataType.array,
-                                         CommandStatus.Success)
-        else:
-            print("The array is not of numeric type so cannot normalize.",
-                  " The data might contain some non-numeric types")
+        print("Saving the scaled data...")
+        result_object = ResultObject(data, keyword_set,
+                                     DataType.csv,
+                                     CommandStatus.Success)
+        #else:
+         #   print("The array is not of numeric type so cannot normalize.",
+         #         " The data might contain some non-numeric types")
 
         return result_object
