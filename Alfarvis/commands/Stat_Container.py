@@ -16,8 +16,10 @@ class StatContainer(object):
         """
         Check if a array is categorical
         """
-        uniqVals = np.unique(array)
-        if ((len(uniqVals) / len(array)) < self.percCutoff_for_categorical and
-                np.issubdtype(array.dtype, np.number)):
+        try:
+            uniqVals = np.unique(array)
+        except:
+            return False
+        if (len(uniqVals) / len(array)) < self.percCutoff_for_categorical:
             return True
         return False

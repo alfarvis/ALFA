@@ -39,7 +39,8 @@ class StatListColumns(AbstractCommand):
         row_format = "{:>30} {:>15} {:>20}"
         if hasattr(data, 'columns'):
             print("Statistics for", " ".join(array_data.keyword_list))
-            print(row_format.format("Column_name", "Column_type", "Column_range"))
+            print(row_format.format("Column_name",
+                                    "Column_type", "Column_range"))
             for column in data.columns:
                 data_column = data[column]
                 is_categorical = StatContainer.isCategorical(data_column)
@@ -53,10 +54,16 @@ class StatListColumns(AbstractCommand):
                     column_type = "Unknown"
                 if is_categorical:
                     unique_vals = np.unique(data_column)
-                    column_range = str(unique_vals)
+                    if len(unique_vals) < 5:
+                        column_range = str(unique_vals)
+                    else:
+                        column_range = ('[' + str(unique_vals[0]) + '...' +
+                                        str(unique_vals[-1]) + ']')
                 elif np.issubdtype(data_column.dtype, np.number):
                     column_range = "[{:.2f}, {:.2f}]".format(
                         np.min(data_column), np.max(data_column))
+                else:
+                    column_range = ""
                 print(row_format.format(column, column_type, column_range))
             result_object = ResultObject(None, None, None,
                                          CommandStatus.Success)
