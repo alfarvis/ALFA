@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Create a bar plot with multiple variables
+Create a pie plot with multiple categories
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -16,7 +16,7 @@ import pandas as pd
 
 class VizBarPlots(AbstractCommand):
     """
-    Plot multiple features on a single bar plot with error bars
+    Plot multiple categories on a single pie plot with error bars
     """
 
     def commandTags(self):
@@ -31,7 +31,7 @@ class VizBarPlots(AbstractCommand):
         executing the pie plot command
         """
         return [Argument(keyword="array_data", optional=True,
-                         argument_type=DataType.array,number=1)]
+                         argument_type=DataType.array)]
 
     def evaluate(self, array_data):
         """
@@ -40,7 +40,6 @@ class VizBarPlots(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        #df = pd.DataFrame({(" ".join(array_data.keyword_list)):array_data.data})
         stTitle = " ".join(array_data.keyword_list)
         col_data = array_data.data
         uniqVals = np.unique(col_data)

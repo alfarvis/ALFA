@@ -45,7 +45,6 @@ class VizMultiScatter2D(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
         
-        #plt.figure(figsize=(10,10))
         if StatContainer.ground_truth is None:
             df.boxplot(figsize=(10,10))
         else:
