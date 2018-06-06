@@ -47,14 +47,13 @@ class VizMultiScatter2D(AbstractCommand):
         
         
         if StatContainer.ground_truth is None:
-            pd.scatter_matrix(df, alpha=0.2, diagonal='kde')
-            #sns.jointplot(x=" ".join(kl1[0]),y=" ".join(kl1[1]),data=array)
+            pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde')
         else:
-            #sns.jointplot(x=" ".join(kl1[0]),y=" ".join(kl1[1]),data=array,color = StatContainer.ground_truth.data)
-            pd.scatter_matrix(df, alpha=0.2, diagonal='kde',c = StatContainer.ground_truth.data,cmap = "jet")
-        #plt.xlabel(" ".join(kl1[0]))
-        #plt.ylabel(" ".join(kl1[1]))
-        #plt.legend()
+            gt1 = pd.Series(StatContainer.ground_truth.data)
+            lut = dict(zip(gt1.unique(),np.linspace(0,1,gt1.unique().size)))
+            row_colors = gt1.map(lut)
+            pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde',c = row_colors,cmap = "jet")
+        
         plt.show(block=False)
             
         result_object = ResultObject(None, None, None,CommandStatus.Success)    
