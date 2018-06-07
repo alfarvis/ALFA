@@ -2,6 +2,7 @@
 from .abstract_reader import AbstractReader
 from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus
 from Alfarvis.commands.Stat_ListColumns import StatListColumns
+from Alfarvis.commands.Stat_Container import StatContainer
 import pandas as pd
 import re
 import numpy as np
@@ -55,25 +56,11 @@ class ReadCSV(AbstractReader):
                 add_to_cache=True)
             result_objects.append(result_object)
 
-            # Define a percentage cutoff for identifying a variable as a
-            # categorical variable
-            percCutoff_for_categorical = 0.1  # current cutoff is 10%
-            try:
-                # Checking if a column is categorical and transforming it into
-                # a bunch of logical arrays for ease of computation
-                uniqVals = np.unique(col_data)
-                found_unique_values = True
-            except:
-                # Cannot find unique values
-                found_unique_values = False
-
-            if found_unique_values:
-                unique_value_percentage = (len(uniqVals) / len(col_data))
-                # @Vishwa Why should categories be of string type?
-                if unique_value_percentage <= percCutoff_for_categorical:
-                    result_objects = self.add_categories_as_columns(
-                        uniqVals, col_data, col_split, keyword_list,
-                        result_objects, command_status)
+            unique_vals = StatContainer.isCategorical(col_data)
+            if unique_vals is not None:
+                result_objects = self.add_categories_as_columns(
+                    unique_vals, col_data, col_split, keyword_list,
+                    result_objects, command_status)
         # List the information about csv
         print("Loaded " + " ".join(keyword_list))
         self.list_command.evaluate(result_objects[0])

@@ -15,11 +15,13 @@ class StatContainer(object):
     def isCategorical(self, array):
         """
         Check if a array is categorical
+        and return the categorical values if unique
+        otherwise return None
         """
         try:
             uniqVals = np.unique(array)
         except:
-            return False
-        if (len(uniqVals) / len(array)) < self.percCutoff_for_categorical:
-            return True
-        return False
+            return None
+        if (len(uniqVals) / len(array)) > self.percCutoff_for_categorical:
+            return None
+        return uniqVals

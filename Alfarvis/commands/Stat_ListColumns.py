@@ -36,15 +36,16 @@ class StatListColumns(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         data = array_data.data
-        row_format = "{:>30} {:>15} {:>20}"
+        row_format = "{:>30} {:^15} {:^6} {:<40}"
         if hasattr(data, 'columns'):
             print("Statistics for", " ".join(array_data.keyword_list))
             print(row_format.format("Column_name",
-                                    "Column_type", "Column_range"))
+                                    "Column_type", "Size",
+                                    "Column_range"))
             for column in data.columns:
                 data_column = data[column]
-                is_categorical = StatContainer.isCategorical(data_column)
-                if is_categorical:
+                unique_vals = StatContainer.isCategorical(data_column)
+                if unique_vals is not None:
                     column_type = "Categorical"
                 elif np.issubdtype(data_column.dtype, np.number):
                     column_type = "Number"
@@ -52,8 +53,9 @@ class StatListColumns(AbstractCommand):
                     column_type = "String"
                 else:
                     column_type = "Unknown"
-                if is_categorical:
-                    unique_vals = np.unique(data_column)
+                n_unique_vals = str(len(data_column))
+                if unique_vals is not None:
+                    n_unique_vals = str(len(unique_vals))
                     if len(unique_vals) < 5:
                         column_range = str(unique_vals)
                     else:
@@ -64,7 +66,8 @@ class StatListColumns(AbstractCommand):
                         np.min(data_column), np.max(data_column))
                 else:
                     column_range = ""
-                print(row_format.format(column, column_type, column_range))
+                print(row_format.format(column, column_type, n_unique_vals,
+                                        column_range))
             result_object = ResultObject(None, None, None,
                                          CommandStatus.Success)
 
