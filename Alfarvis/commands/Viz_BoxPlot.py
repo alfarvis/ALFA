@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Plot a scatter plot between two arrays
+Plot multiple arrays as box plots
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -11,31 +11,32 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
-from Alfarvis.Toolboxes.DataGuru import DataGuru
 import pandas as pd
+from Alfarvis.Toolboxes.DataGuru import DataGuru
 
-class VizScatter2D(AbstractCommand):
+
+class VizMultiScatter2D(AbstractCommand):
     """
-    Plot two arrays against each other in a scatterplot
+    Plot multiple arrays as box plots
     """
 
     def commandTags(self):
         """
-        Tags to identify the scatterplot command
+        Tags to identify the box plot
         """
-        return ["scatterplot","scatter","plot"]
+        return ["boxplot","box","plot"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
-        executing the scatter plot command
+        executing the box plot command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=2)]
+                         argument_type=DataType.array,number=-1)]
 
     def evaluate(self, array_datas):
         """
-        Create a scatter plot between two variables
+        Create a box plot between multiple variables
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
@@ -44,17 +45,13 @@ class VizScatter2D(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
         
- 
-        array = df.values
         if StatContainer.ground_truth is None:
-            plt.scatter(array[:,0],array[:,1],edgecolor = "None", alpha=0.35)
+            df.boxplot(figsize=(10,10))
         else:
-            gt1 = pd.Series(StatContainer.ground_truth.data)
-            lut = dict(zip(gt1.unique(),np.linspace(0,1,gt1.unique().size)))
-            row_colors = gt1.map(lut)
-            plt.scatter(array[:,0],array[:,1],c = row_colors, cmap = "jet",edgecolor = "None", alpha=0.35)
-        plt.xlabel(" ".join(kl1[0]))
-        plt.ylabel(" ".join(kl1[1]))
+            ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
+            df[ground_truth] = StatContainer.ground_truth.data
+            df.boxplot(by=ground_truth,figsize=(10,10))
+        
         plt.show(block=False)
             
         result_object = ResultObject(None, None, None,CommandStatus.Success)    

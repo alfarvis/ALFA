@@ -1,7 +1,7 @@
 from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
-from Alfarvis.basic_definitions import CommandStatus
+from Alfarvis.basic_definitions import CommandStatus, DataType
 import numpy as np
 
 
@@ -230,6 +230,12 @@ class AlfaDataParser:
             arg_type = argument.argument_type
             arg_name = argument.keyword
             if arg_name in self.argumentsFound:
+                continue
+            if arg_type is DataType.user_conversation:
+                self.argumentsFound[arg_name] = key_words
+                continue
+            elif arg_type is DataType.history:
+                self.argumentsFound[arg_name] = self.history
                 continue
             data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)

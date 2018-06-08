@@ -18,7 +18,9 @@ class TypeDatabase:
         Initiate keyword data base for each data type
         """
         for data_type in DataType:
-            self._argument_database[data_type] = Database(cache_len)
+            if (data_type is not DataType.user_conversation and
+                    data_type is not DataType.history):
+                self._argument_database[data_type] = Database(cache_len)
 
     def add(self, data_type, keyword_list, data_object, add_to_cache=True):
         """
