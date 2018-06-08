@@ -302,6 +302,9 @@ class AlfaDataParser:
     def addResultToHistory(self, result):
         if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
+            print("\nFailed to execute command")
+            print("Please provide new arguments or "
+                  "Type Quit to change your command")
             # TODO Find which arguments are wrong and resolve only those data
         elif (result.command_status == CommandStatus.Success):
             # TODO Add a new function to add result to history
