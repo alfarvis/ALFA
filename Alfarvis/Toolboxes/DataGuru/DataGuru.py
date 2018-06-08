@@ -1,5 +1,6 @@
 # here we will import the libraries used for machine learning
 import numpy as np  # linear algebra
+from scipy.stats import mode
 # data processing, CSV file I/O (e.g. pd.read_csv), data manipulation as in SQL
 import pandas as pd
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -38,7 +39,14 @@ class DataGuru:
     def transformArray_to_dataFrame(self, array_datas):
         # Create a combined array and keyword list
         kl1 = []
-        array_size = 0
+        array_sizes = []
+        for array_data in array_datas:
+            if array_data.data.size != 1:
+                array_sizes.append(array_data.data.size)
+        if len(array_sizes) == 0:
+            array_sizes = [1]
+        array_size = mode(array_sizes)[0][0]
+        df = pd.DataFrame()
         command_status = CommandStatus.Success
         # TODO Remove outlier arrays using Ransac
         # rather than choosing the array size as the first
@@ -50,29 +58,20 @@ class DataGuru:
                       "\nThe array is not of numeric type")
                 continue
             kl1.append(" ".join(array_data.keyword_list))
-            if array_size == 0:
-                array_size = array_data.data.size
-                if array_size == 1:
-                    df = pd.DataFrame(
-                        {(" ".join(array_data.keyword_list)): [array_data.data]})
+            if array_size != array_data.data.size:
+                if array_data.data.size == 1:
+                    data = np.ones(array_size) * array_data.data
                 else:
-                    df = pd.DataFrame(
-                        {(" ".join(array_data.keyword_list)): array_data.data})
+                    print("Skipping array ",
+                          " ".join(array_data.keyword_list),
+                          " since its size does not match with",
+                          " other arrays in the frame")
+                    continue
+            elif array_data.data.size == 1:
+                data = [array_data.data]
             else:
-                if array_size != array_data.data.size:
-                    if array_data.data.size == 1:
-                        data = np.ones(array_size) * array_data.data
-                    else:
-                        print("Skipping array ",
-                              " ".join(array_data.keyword_list),
-                              " since its size does not match with",
-                              " other arrays in the frame")
-                        continue
-                elif array_data.data.size == 1:
-                    data = [array_data.data]
-                else:
-                    data = array_data.data
-                df[(" ".join(array_data.keyword_list))] = pd.Series(data)
+                data = array_data.data
+            df[(" ".join(array_data.keyword_list))] = pd.Series(data)
 
         return command_status, df, kl1
 
