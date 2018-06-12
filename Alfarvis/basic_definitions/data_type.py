@@ -47,3 +47,6 @@ class DataType(Enum):
 
     # Provide the history data base to command
     history = 13
+
+    # User provided string input
+    user_string = 14

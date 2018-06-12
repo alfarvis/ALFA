@@ -3,6 +3,7 @@
 Provides definition of argument for a command
 """
 from Alfarvis.basic_definitions import DataType
+from collections import namedtuple
 
 
 class Argument(object):
@@ -13,6 +14,12 @@ class Argument(object):
         - optional or not
         - keyword that is used in evaluation
     """
+    """
+    Tag defining the name and where the argument value is found relative
+    to the tag. The position argument can be -1, 0, 1 Where
+    -1 -> Before tag, 0 around tag, 1 -> After tag
+    """
+    Tag = namedtuple('Tag', ['name', 'position'])
 
     def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[],
                  number=1, fill_from_cache=True):
