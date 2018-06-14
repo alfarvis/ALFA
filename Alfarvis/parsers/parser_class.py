@@ -4,6 +4,9 @@ from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus, DataType, DataObject
 import numpy as np
 
+# TODO Remove/split based on commas and semicolumns etc
+# TODO Handle capitalization when user string input is used
+
 
 class AlfaDataParser:
 
@@ -242,6 +245,7 @@ class AlfaDataParser:
                 break
         return data_res
 
+    @classmethod
     def extractArgFromUser(self, key_words, argument):
         """
         Extract argument from user input if possible
@@ -249,22 +253,27 @@ class AlfaDataParser:
         data_res = []
         for tag in argument.tags:
             try:
-                index = key_words.index(tag)
+                index = key_words.index(tag.name)
             except:
                 continue
 
             if tag.position == 1:
                 search_scope = key_words[(index + 1):]
             elif tag.position == -1:
-                search_scope = key_words[:(index - 1)]
+                # Reverse list to be consistent with search
+                # order
+                search_scope = key_words[:index][::-1]
+            else:
+                search_scope = key_words
+
             if argument.argument_type is DataType.number:
-                res = self.findNumber(key_words[(index + 1):],
-                                      argument.number)
+                res = self.findNumbers(search_scope,
+                                       argument.number)
                 if len(res) != 0:
-                    data_res.append(res)
+                    data_res = data_res + res
                     break
             elif argument.argument_type is DataType.user_string:
-                res = DataObject(search_scope, search_scope)
+                res = DataObject(' '.join(search_scope), search_scope)
                 data_res.append(res)
                 break
             else:
