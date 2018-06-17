@@ -298,10 +298,12 @@ class AlfaDataParser:
             if arg_name in self.argumentsFound:
                 continue
             if arg_type is DataType.user_conversation:
-                self.argumentsFound[arg_name] = key_words
+                self.argumentsFound[arg_name] = DataObject(
+                    key_words, ['user', 'coversation'])
                 continue
             elif arg_type is DataType.history:
-                self.argumentsFound[arg_name] = self.history
+                self.argumentsFound[arg_name] = DataObject(self.history,
+                                                           ['history'])
                 continue
             # If argument is supposed to be extracted from user
             # as opposed to from history
@@ -356,7 +358,8 @@ class AlfaDataParser:
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
                 print("Argument ", arg, "found")
-                print("Matching argument: ", self.printArguments(arg))
+                print("Matching argument: ",
+                      self.printArguments([self.argumentsFound[arg]]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
                     print("\nMultiple arguments found for ", arg)
