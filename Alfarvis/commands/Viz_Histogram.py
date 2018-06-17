@@ -41,13 +41,19 @@ class VizHistogram(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas,1)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
         
         
         #TODO Create an argument for setting number of bins
-        df.plot.hist(stacked=True, bins=20)
+        if df.shape[1]==1:
+            if StatContainer.isCategorical(df[df.columns[0]]) is not None:
+                sns.countplot(x=kl1[0],data = df)
+            else:
+                df.plot.hist(stacked=True, bins=20)        
+        else:                
+            df.plot.hist(stacked=True, bins=20)
        
         plt.show(block=False)
             

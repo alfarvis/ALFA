@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Plot multiple arrays in a single line plot
+Plot multiple arrays on a violin plot
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -10,46 +10,44 @@ from .argument import Argument
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Stat_Container import StatContainer
+import pandas as pd
+from Alfarvis.Toolboxes.DataGuru import DataGuru
 
-class VizPlotLine(AbstractCommand):
+class Viz_VioloinPlot(AbstractCommand):
     """
-    Plot multiple arrays in a single line plot
+    Plot multiple arrays on a violin plot
     """
 
     def commandTags(self):
         """
-        Tags to identify the lineplot command
+        Tags to identify the violin command
         """
-        return ["lineplot", "line","plot"]
+        return ["violin","plot"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
-        executing the lineplot command
+        executing the violin plot command
         """
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array,number=-1)]
 
     def evaluate(self, array_datas):
         """
-        Create a line plot 
+        Create a violin plot for multiple variables
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
+        
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas,1)
+        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
-
-        if df.shape[1]==1:
-            if StatContainer.isCategorical(df[df.columns[0]]) is not None:
-                arr_data = df[df.columns[0]]
-                lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
-                df[df.columns[0]] = arr_data.map(lut)
-        df.plot()
+        
+        
+        #Code to create the violin plot
+        sns.violinplot(data=df)
        
         plt.show(block=False)
             
