@@ -4,7 +4,7 @@ data base with data type and keyword resolution capabilities
 """
 
 from .data_base import Database
-from Alfarvis.basic_definitions import DataType
+from Alfarvis.basic_definitions import DataType, DataObject
 
 
 class TypeDatabase:
@@ -12,6 +12,8 @@ class TypeDatabase:
     Database for storing values based on data type and keywords
     """
     _argument_database = dict()
+    last_data_type = None
+    last_data_object = None
 
     def __init__(self, cache_len=10):
         """
@@ -31,6 +33,8 @@ class TypeDatabase:
             keyword_list - A list of strings used to identify the data object
             data_object - Data to be stored in the database
         """
+        self.last_data_type = data_type
+        self.last_data_object = DataObject(data_object, keyword_list)
         self._argument_database[data_type].add(
             keyword_list, data_object, add_to_cache)
 
@@ -49,7 +53,7 @@ class TypeDatabase:
         """
         return self._argument_database[data_type].search(keyword_list)
 
-    def getLastObject(self, data_type, index=0):
+    def getLastObject(self, data_type=None, index=0):
         """
         Get the last object of data type from cache
         Parameters:
@@ -62,6 +66,12 @@ class TypeDatabase:
             The object corresponding to the index in cache. If cache is
             smaller than index, then returns None
         """
+        if data_type is None:
+            if self.last_data_type is None:
+                raise RuntimeError(
+                    "Cannot ask for last data type since nothing is present in history yet")
+            else:
+                return self.last_data_object
         return self._argument_database[data_type].getLastObject(index)
 
     def discard(self, data_type, keyword_list):
