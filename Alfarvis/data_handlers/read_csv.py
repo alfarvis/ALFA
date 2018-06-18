@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from .abstract_reader import AbstractReader
-from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus
+from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, DataObject
 from Alfarvis.commands.Stat_ListColumns import StatListColumns
 from Alfarvis.commands.Stat_Container import StatContainer
 import pandas as pd
@@ -37,6 +37,8 @@ class ReadCSV(AbstractReader):
         # Too many columns do not extract them individually
         if len(data.columns) > 5000:
             return result_object
+        num_unique = float("inf")
+        current_gt = None
         for column in data.columns:
             if self.col_head_pattern.match(column):
                 continue
@@ -57,12 +59,19 @@ class ReadCSV(AbstractReader):
             result_objects.append(result_object)
 
             unique_vals = StatContainer.isCategorical(col_data)
+            
             if unique_vals is not None:
+                if len(unique_vals)<num_unique:
+                    current_gt = DataObject(col_data,col_keyword_list)                    
+                    num_unique = len(unique_vals)
                 result_objects = self.add_categories_as_columns(
                     unique_vals, col_data, col_split, keyword_list,
                     result_objects, command_status)
         # List the information about csv
         print("Loaded " + " ".join(keyword_list))
+        if current_gt is not None:
+            StatContainer.ground_truth = current_gt
+            print ("Setting ground truth to ", " ".join(current_gt.keyword_list))
         self.list_command.evaluate(result_objects[0])
         return result_objects
 
