@@ -1,5 +1,6 @@
 from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
+from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import CommandStatus, DataType, DataObject
 import numpy as np
@@ -257,9 +258,9 @@ class AlfaDataParser:
             except:
                 continue
 
-            if tag.position == 1:
+            if tag.position == Argument.TagPosition.After:
                 search_scope = key_words[(index + 1):]
-            elif tag.position == -1:
+            elif tag.position == Argument.TagPosition.Before:
                 # Reverse list to be consistent with search
                 # order
                 search_scope = key_words[:index][::-1]

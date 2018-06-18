@@ -54,10 +54,12 @@ class CommandWithNumberInput(AbstractCommand):
     def argumentTypes(self):
         return [Argument(keyword="input1", optional=False,
                          argument_type=DataType.number,
-                         tags=[Argument.Tag('from', -1)]),
+                         tags=[Argument.Tag('from',
+                                            Argument.TagPosition.Before)]),
                 Argument(keyword='input2', optional=False,
                          argument_type=DataType.number,
-                         tags=[Argument.Tag('from', 1)])]
+                         tags=[Argument.Tag('from',
+                                            Argument.TagPosition.After)])]
 
     def evaluate(self, input1, input2):
         self.runCount = self.runCount + 1
@@ -74,7 +76,8 @@ class CommandWithStringInput(AbstractCommand):
     def argumentTypes(self):
         return [Argument(keyword="input1", optional=False,
                          argument_type=DataType.user_string,
-                         tags=[Argument.Tag('echo', 1)])]
+                         tags=[Argument.Tag('echo',
+                                            Argument.TagPosition.After)])]
 
     def evaluate(self, input1):
         return ResultObject(input1.data,
