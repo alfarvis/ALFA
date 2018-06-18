@@ -74,13 +74,19 @@ class VizBarPlots(AbstractCommand):
                             str(uniV)] = np.mean(array_vals[ind, :], 0)
                     df_errors['group ' +
                               str(uniV)] = np.std(array_vals[ind, :], 0)
+        f = plt.figure()
+        ax = f.add_subplot(111)
 
         df_mean.index = (kl1)
         df_errors.index = kl1
-        df_mean.plot.bar(yerr=df_errors, cmap="jet")
+        df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
 
         plt.show(block=False)
+        fig_keywords = ['bar', 'figure', str(f.number)]
+        # TODO Later try adding some room for error like its there in 70% of the arrays
+        common_kl = set.intersection(*[set(array_data.keyword_list) for array_data in array_datas])
+        fig_keywords = fig_keywords + list(common_kl)
 
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
+        result_object = ResultObject(f, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
 
         return result_object
