@@ -47,11 +47,8 @@ class VizHistogram(AbstractCommand):
         
         
         #TODO Create an argument for setting number of bins
-        if df.shape[1]==1:
-            if StatContainer.isCategorical(df[df.columns[0]]) is not None:
+        if df.shape[1]==1 and StatContainer.isCategorical(df[df.columns[0]]) is not None:
                 sns.countplot(x=kl1[0],data = df)
-            else:
-                df.plot.hist(stacked=True, bins=20)        
         else:                
             df.plot.hist(stacked=True, bins=20)
        

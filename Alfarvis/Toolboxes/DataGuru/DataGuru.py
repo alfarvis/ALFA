@@ -4,23 +4,23 @@ from scipy.stats import mode
 # data processing, CSV file I/O (e.g. pd.read_csv), data manipulation as in SQL
 import pandas as pd
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
-                                        ResultObject)
+                                        ResultObject, DataObject)
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 import collections
 # from sklearn.linear_model import LogisticRegression # to apply the Logistic regression
 # from sklearn.model_selection import train_test_split # to split the data into two parts
-#from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 # from sklearn.model_selection import GridSearchCV# for tuning parameter
 # from sklearn.ensemble import RandomForestClassifier # for random forest classifier
 #from sklearn.naive_bayes import GaussianNB
 #from sklearn.neighbors import KNeighborsClassifier
 #from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm # for Support Vector Machine
-# from sklearn import metrics # for the check the error and accuracy of the model
-#from sklearn import preprocessing
-#from sklearn.model_selection import LeaveOneOut
-
+from sklearn import metrics # for the check the error and accuracy of the model
+from sklearn import preprocessing
+from sklearn.model_selection import LeaveOneOut
+import re
 
 class DataGuru:
 
@@ -68,7 +68,9 @@ class DataGuru:
                         # Map the array to numeric quantity
                         arr_data = pd.Series(array_data.data)
                         lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
-                        array_data.data = arr_data.map(lut)                        
+                        #Creating a new data object by mapping strings to numbers
+                        array_data = DataObject(arr_data.map(lut),array_data.keyword_list)
+                                           
             kl1.append(" ".join(array_data.keyword_list))
             #Check if all the arrays have the same size or not. Pick the largest 
             #set of arrays that have the same size
@@ -96,23 +98,3 @@ class DataGuru:
     def standardizeDataFrame(self, df):
         df = (df - df.mean()) / df.std()
         return df
-    
-    @classmethod
-    def readAlgorithm(self,file_path):
-        data = pd.read_csv(file_path)
-        model = eval(data['Model'][0])
-        for column in data.columns:
-            str1 = "model." + str(column)
-            str2 = str(data[column][0])
-            if str2 == 'TRUE':
-                str2 = 'True'
-            if str2 == 'FALSE':
-                str2 = 'False'
-            str_to_evaluate = str1 + " = " + str2
-            exec(str_to_evaluate)
-        return model
-                
-                    
-                    
-            
-        
