@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Plot multiple arrays on a histogram
+Plot multiple arrays on a violin plot
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -14,43 +14,40 @@ from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
-class VizHistogram(AbstractCommand):
+class Viz_VioloinPlot(AbstractCommand):
     """
-    Plot multiple array histograms on a single plot
+    Plot multiple arrays on a violin plot
     """
 
     def commandTags(self):
         """
-        Tags to identify the histogram command
+        Tags to identify the violin command
         """
-        return ["histogram","hist","plot"]
+        return ["violin","plot"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
-        executing the histogram command
+        executing the violin plot command
         """
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array,number=-1)]
 
     def evaluate(self, array_datas):
         """
-        Create a histogram for multiple variables
+        Create a violin plot for multiple variables
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas,1)
+        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
         
         
-        #TODO Create an argument for setting number of bins
-        if df.shape[1]==1 and StatContainer.isCategorical(df[df.columns[0]]) is not None:
-                sns.countplot(x=kl1[0],data = df)
-        else:                
-            df.plot.hist(stacked=True, bins=20)
+        #Code to create the violin plot
+        sns.violinplot(data=df)
        
         plt.show(block=False)
             

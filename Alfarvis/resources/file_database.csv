@@ -4,3 +4,6 @@ Most-Recent-Cohorts-Scorecard-Elements.csv,csv,cohorts scorecard,Random data obt
 U.S._Chronic_Disease_Indicators__CDI_.csv,csv,chronic disease indicators CDI,CDI indicators specifying indicators for chronic diseases
 image.jpg,image,hand parallel mirror illusion phone,A hand is holding phone which shows multiple pictures
 crime.csv,csv,crime data,crime data from denver
+kmeans.csv,csv,k means ,Model for running basic k means
+hierarchical_clustering.csv,csv,hierarchical clustering,Model for running basic ward linkage based hierarchical clustering
+SVM.csv,csv,svm support vector machine,SVM Model for training a classifier on the data

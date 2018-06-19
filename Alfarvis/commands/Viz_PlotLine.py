@@ -11,7 +11,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from Alfarvis.Toolboxes.DataGuru import DataGuru
-
+from .Stat_Container import StatContainer
 
 class VizPlotLine(AbstractCommand):
     """
@@ -40,11 +40,15 @@ class VizPlotLine(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas,1)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-                
+        if df.shape[1]==1:
+            if StatContainer.isCategorical(df[df.columns[0]]) is not None:
+                arr_data = df[df.columns[0]]
+                lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
+                df[df.columns[0]] = arr_data.map(lut)
         df.plot()
        
         plt.show(block=False)
