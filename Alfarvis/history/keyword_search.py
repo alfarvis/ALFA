@@ -35,6 +35,7 @@ class KeywordSearch(object):
         # If the length of the word is greater than this,
         # single typos will be considered
         self.min_wordlength_typo = 2
+        self.current_hit_count = 0
 
     def correctTypo(self, word):
         """
@@ -112,6 +113,7 @@ class KeywordSearch(object):
             else:
                 self.updateMaxHitSet(keyword, max_hit_word_set)
         backup_max_hit_set = max_hit_word_set.max_hit_set.copy()
+        self.current_hit_count = max_hit_word_set.max_hit_count
         # Rely on secondary keywords only if we did not find a unique max
         # hit word i.e max hit word set contains multiple words or no words
         N = len(max_hit_word_set.max_hit_set)
@@ -124,4 +126,5 @@ class KeywordSearch(object):
             max_hit_set = backup_max_hit_set
         else:
             max_hit_set = max_hit_word_set.max_hit_set
+            self.current_hit_count = max_hit_word_set.max_hit_count
         return list(max_hit_set)

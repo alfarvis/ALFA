@@ -306,6 +306,33 @@ class TestParserMethods(unittest.
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
 
+    def test_resolve_argument_overloading_max_hit(self):
+        self.history.add(DataType.string, ["input", "dummy"], "dummy input")
+        self.history.add(DataType.array, ["array", "dummy"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with dummy array".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, np.array([2, 3, 4]),
+                               ["overload", "result"], DataType.array)
+        self.assertTrue(out.all())
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_equal_hit(self):
+        self.history.add(DataType.string, [
+                         "input", "dummy", "string"], "dummy input")
+        self.history.add(DataType.array, ["input", "dummy", "array"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with dummy input".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, "dummy input",
+                               ["overload", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
     def test_resolve_argument_multi_arg_number(self):
         for i in range(4):
             input_val = "input" + str(i + 1)

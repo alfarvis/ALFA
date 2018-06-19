@@ -38,6 +38,13 @@ class TypeDatabase:
         self._argument_database[data_type].add(
             keyword_list, data_object, add_to_cache, data_type)
 
+    def getHitCount(self, data_type):
+        """
+        Current number of hits for data type based on the latest search. Should
+        be called after search function
+        """
+        return self._argument_database[data_type].getHitCount()
+
     def search(self, data_type, keyword_list):
         """
         Search for data object with specified data type and keyword list

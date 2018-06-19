@@ -35,6 +35,13 @@ class Database(object):
         if add_to_cache:
             self.cache.append(data_object)
 
+    def getHitCount(self):
+        """
+        Current number of hits based on the latest search. Should
+        be called after search function
+        """
+        return self.keyword_search.current_hit_count
+
     def search(self, keyword_list):
         """
         Search for data object with specified keyword list

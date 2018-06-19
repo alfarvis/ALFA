@@ -299,17 +299,27 @@ class AlfaDataParser:
         history.
         """
         arg_types = self.wrap(argument.argument_type)
+        hit_count = 0
+        data_res = []
         for arg_type in arg_types:
             # If argument is supposed to be extracted from user
             # as opposed to from history
             if (arg_type is DataType.number or
                     arg_type is DataType.user_string):
-                data_res = self.extractArgFromUser(key_words, argument)
-                break
-            else:
-                data_res = self.history.search(arg_type, key_words)
-                if len(data_res) >= argument.number:
+                current_res = self.extractArgFromUser(key_words, argument)
+                if len(current_res) != 0:
+                    data_res = current_res
                     break
+            else:
+                current_res = self.history.search(arg_type, key_words)
+                current_hits = self.history.getHitCount(arg_type)
+                if (len(current_res) >= argument.number and
+                        current_hits > hit_count):
+                    data_res = current_res
+                    hit_count = current_hits
+            # In the beginning add current res to make sure we have something
+            if hit_count == 0:
+                data_res = current_res
         return data_res
 
     def resolveArguments(self, key_words):
