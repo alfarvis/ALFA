@@ -36,7 +36,7 @@ class TypeDatabase:
         self.last_data_type = data_type
         self.last_data_object = DataObject(data_object, keyword_list)
         self._argument_database[data_type].add(
-            keyword_list, data_object, add_to_cache)
+            keyword_list, data_object, add_to_cache, data_type)
 
     def search(self, data_type, keyword_list):
         """
