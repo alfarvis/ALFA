@@ -17,7 +17,7 @@ import numpy as np
 class DummyCommand(AbstractCommand):
 
     def commandTags(self):
-        return ["dummy", "test"]
+        return ["dummy", "test", "function"]
 
     def argumentTypes(self):
         return [Argument(keyword="dummy", optional=False,
@@ -43,6 +43,69 @@ class DummyCommandWithFillCache(AbstractCommand):
             res_string = dummy.data
 
         return ResultObject(res_string, ["dummy", "result"], DataType.string, add_to_cache=True)
+
+
+class CommandWithNumberInput(AbstractCommand):
+    runCount = 0
+
+    def commandTags(self):
+        return ["number", "input"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="input1", optional=False,
+                         argument_type=DataType.number,
+                         tags=[Argument.Tag('from',
+                                            Argument.TagPosition.Before)]),
+                Argument(keyword='input2', optional=False,
+                         argument_type=DataType.number,
+                         tags=[Argument.Tag('from',
+                                            Argument.TagPosition.After)])]
+
+    def evaluate(self, input1, input2):
+        self.runCount = self.runCount + 1
+        return ResultObject(np.array([input2.data - input1.data]),
+                            ["subtract", "result", str(self.runCount)],
+                            DataType.array)
+
+
+class CommandWithStringInput(AbstractCommand):
+
+    def commandTags(self):
+        return ["string", "input"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="input1", optional=False,
+                         argument_type=DataType.user_string,
+                         tags=[Argument.Tag('echo',
+                                            Argument.TagPosition.After)])]
+
+    def evaluate(self, input1):
+        return ResultObject(input1.data,
+                            ["echo", "result"] + input1.keyword_list,
+                            DataType.string)
+
+
+class CommandWithArgOverloading(AbstractCommand):
+
+    def commandTags(self):
+        return ["overload", "function"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="input1", optional=False,
+                         argument_type=[DataType.string, DataType.array])]
+
+    def evaluate(self, input1):
+        if input1.data_type == DataType.string:
+            print("I received a string")
+            return ResultObject(input1.data,
+                                ["overload", "result"],
+                                DataType.string)
+        elif input1.data_type == DataType.array:
+            print("I received a number")
+            return ResultObject(input1.data + 1,
+                                ["overload", "result"],
+                                DataType.array)
+        return ResultObject(None, None, None, CommandStatus.Error)
 
 
 class CommandWithMultiArgNumber(AbstractCommand):
@@ -87,7 +150,7 @@ class TestParserMethods(unittest.
         self.history = self.parser.history
 
     def checkResult(self, history, expected_result, keywords, data_type):
-        res = self.history.search(DataType.string, keywords)
+        res = self.history.search(data_type, keywords)
         if len(res) != 1:
             print("Multiple entries found")
             return False
@@ -114,6 +177,30 @@ class TestParserMethods(unittest.
         array[-1] = -1
         idx = self.parser.getMinIndices(array)
         self.assertEqual(idx, [10])
+
+    def test_get_number(self):
+        self.assertEqual(self.parser.get_number('2.0'), 2.0)
+        self.assertEqual(self.parser.get_number('2'), 2)
+        self.assertEqual(self.parser.get_number('-1.0'), -1)
+        self.assertEqual(self.parser.get_number('100,000'), None)
+        self.assertEqual(self.parser.get_number('100R'), None)
+
+    def test_find_numbers(self):
+        res = self.parser.findNumbers(['2', 'and', '4'], 2)
+        self.assertEqual(res[0].data, 2)
+        self.assertEqual(res[1].data, 4)
+        res = self.parser.findNumbers(['2', 'and', '4'], 1)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0].data, 2)
+
+    def test_extract_arg_from_user(self):
+        key_words = 'find numbers between 2 and 4'.split(' ')
+        arg = Argument(DataType.number, tags=[Argument.Tag('between', 1)],
+                       number=2)
+        res = AlfaDataParser.extractArgFromUser(key_words, arg)
+        self.assertEqual(len(res), 2)
+        self.assertEqual(res[0].data, 2)
+        self.assertEqual(res[1].data, 4)
 
     def test_fill_closest_arguments(self):
         argument_types = [Argument(keyword="dummy1", optional=False,
@@ -192,6 +279,56 @@ class TestParserMethods(unittest.
         self.parser.resolveArguments(key_words)
         out = self.checkResult(self.history, "dummy input",
                                ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_string(self):
+        self.history.add(DataType.string, ["input", "dummy"], "dummy input")
+        key_words = "Call the overload function with dummy input".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, "dummy input",
+                               ["overload", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_array(self):
+        self.history.add(DataType.array, ["array", "my"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with my array".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, np.array([2, 3, 4]),
+                               ["overload", "result"], DataType.array)
+        self.assertTrue(out.all())
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_max_hit(self):
+        self.history.add(DataType.string, ["input", "dummy"], "dummy input")
+        self.history.add(DataType.array, ["array", "dummy"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with dummy array".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, np.array([2, 3, 4]),
+                               ["overload", "result"], DataType.array)
+        self.assertTrue(out.all())
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_equal_hit(self):
+        self.history.add(DataType.string, [
+                         "input", "dummy", "string"], "dummy input")
+        self.history.add(DataType.array, ["input", "dummy", "array"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with dummy input".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, "dummy input",
+                               ["overload", "result"], DataType.string)
         self.assertTrue(out)
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
@@ -412,6 +549,36 @@ class TestParserMethods(unittest.
         # Check cache is updated
         cache_result = self.history.getLastObject(DataType.string)
         self.assertEqual(cache_result.data, "default string")
+
+    def test_command_parse_number(self):
+        self.parser.command_parse("call the number input fun with 2 from 4")
+        out = self.checkResult(self.history, np.array([2]),
+                               ["subtract", "result"], DataType.array)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+        self.parser.command_parse("call the number input fun with 4 from 2")
+        out = self.checkResult(self.history, np.array([-2]),
+                               ["subtract", "result", "2"], DataType.array)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_command_parse_string(self):
+        self.parser.command_parse("call the string input function "
+                                  "echo How are you")
+        out = self.checkResult(self.history, "How are you",
+                               ["echo", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+        self.parser.command_parse("call the string input function "
+                                  "echo I am fine")
+        out = self.checkResult(self.history, "I am fine",
+                               ["echo", "result", "fine"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
 
 
 if __name__ == '__main__':

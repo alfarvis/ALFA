@@ -50,3 +50,6 @@ class DataType(Enum):
 
     # Figure returned by visualization
     figure = 14
+
+    # User provided string input
+    user_string = 15
