@@ -11,6 +11,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
@@ -83,10 +84,14 @@ class VizBarPlots(AbstractCommand):
 
         plt.show(block=False)
         fig_keywords = ['bar', 'figure', str(f.number)]
-        # TODO Later try adding some room for error like its there in 70% of the arrays
-        common_kl = set.intersection(*[set(array_data.keyword_list) for array_data in array_datas])
+        # TODO Later try adding some room for error like its there in 70% of
+        # the arrays
+        common_kl = set.intersection(
+            *[set(array_data.keyword_list) for array_data in array_datas])
         fig_keywords = fig_keywords + list(common_kl)
 
-        result_object = ResultObject(f, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
+        result_object = ResultObject(
+            f, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
+        VizContainer.current_figure = f
 
         return result_object
