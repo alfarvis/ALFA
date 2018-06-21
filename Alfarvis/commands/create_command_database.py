@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from Alfarvis.history import Database
 from . import abstract_command
+from Alfarvis.basic_definitions.get_subclasses import get_subclasses
 
 
 def create_command_database():
@@ -13,7 +14,7 @@ def create_command_database():
     Returns - a keyword searchable database of available commands
     """
     command_database = Database()
-    for i, cls in enumerate(abstract_command.AbstractCommand.__subclasses__()):
+    for cls in get_subclasses(abstract_command.AbstractCommand):
         cls_instance = cls()
         command_database.add(cls_instance.commandTags(), cls_instance)
     return command_database
