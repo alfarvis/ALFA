@@ -38,4 +38,5 @@ class SetGT(AbstractCommand):
 
         """
         StatContainer.ground_truth = array_data
+        print ("Setting ground truth to ", " ".join(array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
