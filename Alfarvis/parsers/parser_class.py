@@ -1,8 +1,12 @@
 from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
+from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
-from Alfarvis.basic_definitions import CommandStatus, DataType
+from Alfarvis.basic_definitions import CommandStatus, DataType, DataObject
 import numpy as np
+
+# TODO Remove/split based on commas and semicolumns etc
+# TODO Handle capitalization when user string input is used
 
 
 class AlfaDataParser:
@@ -216,6 +220,69 @@ class AlfaDataParser:
         return ((argument_number == -1 and data_res_len > 0) or
                 (data_res_len == argument_number))
 
+    @classmethod
+    def get_number(self, string_in):
+        """
+        Convert string to number if possible.
+        """
+        try:
+            res = float(string_in)
+        except:
+            res = None
+        return res
+
+    @classmethod
+    def findNumbers(self, keyword_list, N):
+        """
+        Find numbers from given keyword list. Will search for N
+        arguments
+        """
+        data_res = []
+        for keyword in keyword_list:
+            res = self.get_number(keyword)
+            if res is not None:
+                data_res.append(DataObject(res, []))
+            if len(data_res) == N:
+                break
+        return data_res
+
+    @classmethod
+    def extractArgFromUser(self, key_words, argument):
+        """
+        Extract argument from user input if possible
+        """
+        data_res = []
+        for tag in argument.tags:
+            try:
+                index = key_words.index(tag.name)
+            except:
+                continue
+
+            if tag.position == Argument.TagPosition.After:
+                search_scope = key_words[(index + 1):]
+            elif tag.position == Argument.TagPosition.Before:
+                # Reverse list to be consistent with search
+                # order
+                search_scope = key_words[:index][::-1]
+            else:
+                search_scope = key_words
+
+            if argument.argument_type is DataType.number:
+                res = self.findNumbers(search_scope,
+                                       argument.number)
+                if len(res) != 0:
+                    data_res = data_res + res
+                    break
+            elif argument.argument_type is DataType.user_string:
+                res = DataObject(' '.join(search_scope), search_scope)
+                data_res.append(res)
+                break
+            else:
+                print("Can only extract numbers and strings from user"
+                      "currently")
+                break
+        return data_res
+
     def resolveArguments(self, key_words):
         all_arg_names = set()
         argumentTypes = self.currentCommand.argumentTypes()
@@ -223,7 +290,6 @@ class AlfaDataParser:
             # TODO Try to use information from user when command gives error
             # TODO If user wants to substitute arguments in the process of
             # resolution then ask him for confirmation.
-            # TODO Handle arguments from keywords
             # TODO Handle composite commands (resolveCommands similar to
             # resolveArguments)
             assert(argument.number != 0)
@@ -232,12 +298,20 @@ class AlfaDataParser:
             if arg_name in self.argumentsFound:
                 continue
             if arg_type is DataType.user_conversation:
-                self.argumentsFound[arg_name] = key_words
+                self.argumentsFound[arg_name] = DataObject(
+                    key_words, ['user', 'coversation'])
                 continue
             elif arg_type is DataType.history:
-                self.argumentsFound[arg_name] = self.history
+                self.argumentsFound[arg_name] = DataObject(self.history,
+                                                           ['history'])
                 continue
-            data_res = self.history.search(arg_type, key_words)
+            # If argument is supposed to be extracted from user
+            # as opposed to from history
+            if (arg_type is DataType.number or
+                    arg_type is DataType.user_string):
+                data_res = self.extractArgFromUser(key_words, argument)
+            else:
+                data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)
             # If infinite args allowed and we found some args or
             # if finite args allowed and we found exactly those
@@ -284,7 +358,8 @@ class AlfaDataParser:
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
                 print("Argument ", arg, "found")
-                print("Matching argument: ", self.printArguments(arg))
+                print("Matching argument: ",
+                      self.printArguments([self.argumentsFound[arg]]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
                     print("\nMultiple arguments found for ", arg)

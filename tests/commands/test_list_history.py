@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import unittest
-from Alfarvis.basic_definitions import DataType, CommandStatus
+from Alfarvis.basic_definitions import DataType, DataObject, CommandStatus
 from Alfarvis import create_command_database
 from Alfarvis.commands.list_history import ListHistory
 from Alfarvis.history import TypeDatabase
@@ -30,7 +30,7 @@ class TestListHistory(unittest.TestCase):
         history.add(DataType.string, [
                     'my', 'favorite', 'quote'], 'Pen is sharper than knife')
         history.add(DataType.array, ['zero', 'array'], np.zeros(10))
-        arguments = {arg.keyword: history}
+        arguments = {arg.keyword: DataObject(history, 'history')}
         result_object = list_history_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)
         # Try no data
