@@ -11,7 +11,7 @@ class DataObject(object):
     in the data base
     """
 
-    def __init__(self, data, keyword_list):
+    def __init__(self, data, keyword_list, data_type=None):
         """
         Constructor. Also stores the time
         when the data is stored.
@@ -24,6 +24,7 @@ class DataObject(object):
         self.keyword_list = keyword_list
         self.time_stamp = datetime.datetime.now()
         self.length = len(keyword_list)
+        self.data_type = data_type
 
     def __hash__(self):
         return hash(' '.join(self.keyword_list))

@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from Alfarvis.data_handlers import create_reader_dictionary
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from .Viz_Container import VizContainer
 
 import os
 
@@ -24,7 +25,7 @@ class Load(AbstractCommand):
         """
         return tags that are used to identify load command
         """
-        return ["load", "import"]
+        return ["load", "import", "open"]
 
     def argumentTypes(self):
         """
@@ -32,7 +33,8 @@ class Load(AbstractCommand):
         executing the load command
         """
         return [Argument(keyword="file_name", optional=False,
-                         argument_type=DataType.file_name)]
+                         argument_type=[DataType.file_name,
+                                        DataType.figure])]
 
     def evaluate(self, file_name):
         """
@@ -43,6 +45,12 @@ class Load(AbstractCommand):
                 2. Type of the file to load
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        if file_name.data_type is DataType.figure:
+            print("Loading figure ", ' '.join(file_name.keyword_list))
+            VizContainer.current_figure = file_name.data
+            VizContainer.current_figure.show()
+            return ResultObject(None, None, None, CommandStatus.Success)
+
         if file_name.data.loaded:
             print("File already loaded!")
             return ResultObject(None, None, None, CommandStatus.Success)

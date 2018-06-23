@@ -25,4 +25,3 @@ class VizContainer(object):
         result_object = ResultObject(figure, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
         self.current_figure = figure
         return result_object
-

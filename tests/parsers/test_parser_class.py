@@ -85,6 +85,29 @@ class CommandWithStringInput(AbstractCommand):
                             DataType.string)
 
 
+class CommandWithArgOverloading(AbstractCommand):
+
+    def commandTags(self):
+        return ["overload", "function"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="input1", optional=False,
+                         argument_type=[DataType.string, DataType.array])]
+
+    def evaluate(self, input1):
+        if input1.data_type == DataType.string:
+            print("I received a string")
+            return ResultObject(input1.data,
+                                ["overload", "result"],
+                                DataType.string)
+        elif input1.data_type == DataType.array:
+            print("I received a number")
+            return ResultObject(input1.data + 1,
+                                ["overload", "result"],
+                                DataType.array)
+        return ResultObject(None, None, None, CommandStatus.Error)
+
+
 class CommandWithMultiArgNumber(AbstractCommand):
 
     def commandTags(self):
@@ -256,6 +279,56 @@ class TestParserMethods(unittest.
         self.parser.resolveArguments(key_words)
         out = self.checkResult(self.history, "dummy input",
                                ["dummy", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_string(self):
+        self.history.add(DataType.string, ["input", "dummy"], "dummy input")
+        key_words = "Call the overload function with dummy input".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, "dummy input",
+                               ["overload", "result"], DataType.string)
+        self.assertTrue(out)
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_array(self):
+        self.history.add(DataType.array, ["array", "my"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with my array".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, np.array([2, 3, 4]),
+                               ["overload", "result"], DataType.array)
+        self.assertTrue(out.all())
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_max_hit(self):
+        self.history.add(DataType.string, ["input", "dummy"], "dummy input")
+        self.history.add(DataType.array, ["array", "dummy"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with dummy array".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, np.array([2, 3, 4]),
+                               ["overload", "result"], DataType.array)
+        self.assertTrue(out.all())
+        self.assertEqual(self.parser.currentState,
+                         ParserStates.command_unknown)
+
+    def test_resolve_argument_overloading_equal_hit(self):
+        self.history.add(DataType.string, [
+                         "input", "dummy", "string"], "dummy input")
+        self.history.add(DataType.array, ["input", "dummy", "array"],
+                         np.array([1, 2, 3]))
+        key_words = "Call the overload function with dummy input".split(' ')
+        self.parser.currentCommand = CommandWithArgOverloading()
+        self.parser.resolveArguments(key_words)
+        out = self.checkResult(self.history, "dummy input",
+                               ["overload", "result"], DataType.string)
         self.assertTrue(out)
         self.assertEqual(self.parser.currentState,
                          ParserStates.command_unknown)
