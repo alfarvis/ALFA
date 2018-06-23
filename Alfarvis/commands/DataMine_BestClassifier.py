@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Run k fold cross validation using a classifier
+Find the best classifier using k fold cross validation
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -16,17 +16,16 @@ from sklearn.manifold import TSNE
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from sklearn import metrics # for the check the error and accuracy of the model
 from sklearn import preprocessing
-
-class DM_TrainClassifier(AbstractCommand):
+class DM_BestClassifier(AbstractCommand):
     """
-    Run k fold CV on a bunch of arrays
+    Find the best classifier using k fold cross validation
     """
 
     def commandTags(self):
         """
         Tags to identify the train a classifier command
         """
-        return ["cv","cross","validation","fold"]
+        return ["best","classifier"]
 
     def argumentTypes(self):
         """
@@ -36,10 +35,10 @@ class DM_TrainClassifier(AbstractCommand):
         #TODO Add an argument for k = number of clusters
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array,number=-1), 
-                         Argument(keyword="classifier_algo", optional=True,
-                         argument_type=DataType.algorithm_arg)]
+                         Argument(keyword="classifier_algos", optional=True,
+                         argument_type=DataType.algorithm_arg,number=-1)]
 
-    def evaluate(self, array_datas, classifier_algo):
+    def evaluate(self, array_datas, classifier_algos):
         """
         Train a classifier on multiple arrays
 
@@ -55,8 +54,14 @@ class DM_TrainClassifier(AbstractCommand):
         #remove ground truth from data
         if StatContainer.ground_truth is not None:
             df = DataGuru.removeGT(df,StatContainer.ground_truth)
-        # Get the classifier model
-        model = classifier_algo.data
+        
+        # Get all the classifier models to test against each other
+        modelList =[]
+        for classifier_algo in classifier_algos:
+            model = (classifier_algo.data)
+            model_keyword = " ".join(classifier_algo.keyword_list)
+            modelList.append({'Name':model_keyword,'Model':model})
+            
         
         #Code to run the classifier
         X = df.values
@@ -72,18 +77,22 @@ class DM_TrainClassifier(AbstractCommand):
             return result_object
         else:
             Y = StatContainer.ground_truth.data
-
         
         
         
-        print('Running k fold cross validation...')
         
         
-        cm, cvscores = DataGuru.runKFoldCV(X,Y,model,10)
+        print('Finding the best classifier using k fold cross validation...')
         
-        DataGuru.plot_confusion_matrix(cm,np.unique(Y),title="confusion matrix")
-        plt.show(block=False)
         
+        all_cv_scores, all_mean_cv_scores,all_confusion_matrices = DataGuru.FindBestClassifier(X,Y,modelList,10)
+        
+        print('\n\nPlotting the confusion matrices...\n')
+        for iter in range(len(modelList)):
+            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter],np.unique(Y),title=modelList[iter]['Name'])
+            plt.show(block=False)
+            
+        print("\n\nBest classifier is " + modelList[np.argmax(all_mean_cv_scores)]['Name'] +" with an accuracy of -  %.2f%% " % max(all_mean_cv_scores))
         #TODO Need to save the model
         #Ask user for a name for the model
         result_object = ResultObject(None, None, None,CommandStatus.Success)    

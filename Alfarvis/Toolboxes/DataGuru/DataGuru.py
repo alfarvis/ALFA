@@ -156,15 +156,26 @@ class DataGuru:
         #Spec = TN/(FP+TN)
         
         cm = metrics.confusion_matrix(allTrue,allPred)
-        DataGuru.plot_confusion_matrix(cm,np.unique(Y),title="confusion matrix")
-        plt.show(block=False)
         
-        print("%d-fold cross validation accuracy -  %.2f%% (+/- %.2f%%)" % (num_folds, np.mean(cvscores), np.std(cvscores)))
+        
+        #print("%d-fold cross validation accuracy -  %.2f%% (+/- %.2f%%)" % (num_folds, np.mean(cvscores), np.std(cvscores)))
         #print("%d-fold cross validation AUC -  %.2f (+/- %.2f)" % (num_folds, np.mean(aucscores), np.std(aucscores)))
         #print("%d-fold cross validation Sens -  %.2f " % (num_folds, Sens, ))
         #print("%d-fold cross validation Spec -  %.2f " % (num_folds, Spec, ))
 
-        return np.mean(cvscores)
+        return cm, cvscores
+
+    @classmethod    
+    def FindBestClassifier(self,X,Y,modelList,num_folds):
+        all_cv_scores = []
+        all_mean_cv_scores = []
+        all_confusion_matrices = []
+        for i in range(len(modelList)):
+            cm,cvscores = (DataGuru.runKFoldCV(X,Y,modelList[i]['Model'],num_folds))
+            all_cv_scores.append(cvscores)
+            all_mean_cv_scores.append(np.mean(cvscores))
+            all_confusion_matrices.append(cm)
+        return all_cv_scores, all_mean_cv_scores,all_confusion_matrices
     
     @classmethod
     def removeGT(self,data_frame, ground_truth):
