@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 
 class VizMultiScatter2D(AbstractCommand):
@@ -45,17 +46,17 @@ class VizMultiScatter2D(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
         
+        f = plt.figure()
+        ax = f.add_subplot(111)
         
         if StatContainer.ground_truth is None:
-            pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde')
+            pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde', ax=ax)
         else:
             gt1 = pd.Series(StatContainer.ground_truth.data)
             lut = dict(zip(gt1.unique(),np.linspace(0,1,gt1.unique().size)))
             row_colors = gt1.map(lut)
-            pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde',c = row_colors,cmap = "jet")
+            pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde',c = row_colors,cmap = "jet", ax=ax)
         
         plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['multiscatter'])

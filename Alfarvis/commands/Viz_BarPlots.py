@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 
 class VizBarPlots(AbstractCommand):
@@ -82,11 +83,5 @@ class VizBarPlots(AbstractCommand):
         df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
 
         plt.show(block=False)
-        fig_keywords = ['bar', 'figure', str(f.number)]
-        # TODO Later try adding some room for error like its there in 70% of the arrays
-        common_kl = set.intersection(*[set(array_data.keyword_list) for array_data in array_datas])
-        fig_keywords = fig_keywords + list(common_kl)
 
-        result_object = ResultObject(f, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
-
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['bar'])

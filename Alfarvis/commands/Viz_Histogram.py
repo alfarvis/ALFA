@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 class VizHistogram(AbstractCommand):
     """
@@ -39,6 +40,8 @@ class VizHistogram(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        f = plt.figure()
+        ax = f.add_subplot(111)
         
         sns.set(color_codes=True)
         command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas,1)
@@ -48,12 +51,10 @@ class VizHistogram(AbstractCommand):
         
         #TODO Create an argument for setting number of bins
         if df.shape[1]==1 and StatContainer.isCategorical(df[df.columns[0]]) is not None:
-                sns.countplot(x=kl1[0],data = df)
+                sns.countplot(x=kl1[0],data = df, ax=ax)
         else:                
-            df.plot.hist(stacked=True, bins=20)
+            df.plot.hist(stacked=True, bins=20, ax=ax)
        
         plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['histogram', 'hist'])

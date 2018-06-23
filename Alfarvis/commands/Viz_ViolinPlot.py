@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 class Viz_VioloinPlot(AbstractCommand):
     """
@@ -46,11 +47,10 @@ class Viz_VioloinPlot(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
         
         
+        f = plt.figure()
+        ax = f.add_subplot(111)
         #Code to create the violin plot
-        sns.violinplot(data=df)
+        sns.violinplot(data=df, ax=ax)
        
         plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
-
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['violin'])

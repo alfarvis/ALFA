@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 import pandas as pd
+from .Viz_Container import VizContainer
 
 class VizScatter2D(AbstractCommand):
     """
@@ -46,17 +47,17 @@ class VizScatter2D(AbstractCommand):
         
  
         array = df.values
+        f = plt.figure()
+        ax = f.add_subplot(111)
         if StatContainer.ground_truth is None:
             plt.scatter(array[:,0],array[:,1],edgecolor = "None", alpha=0.35)
         else:
             gt1 = pd.Series(StatContainer.ground_truth.data)
             lut = dict(zip(gt1.unique(),np.linspace(0,1,gt1.unique().size)))
             row_colors = gt1.map(lut)
-            plt.scatter(array[:,0],array[:,1],c = row_colors, cmap = "jet",edgecolor = "None", alpha=0.35)
-        plt.xlabel(" ".join(kl1[0]))
-        plt.ylabel(" ".join(kl1[1]))
+            ax.scatter(array[:,0],array[:,1],c = row_colors, cmap = "jet",edgecolor = "None", alpha=0.35)
+        ax.set_xlabel(" ".join(kl1[0]))
+        ax.set_ylabel(" ".join(kl1[1]))
         plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['scatter2d'])
