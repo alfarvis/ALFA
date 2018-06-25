@@ -1,7 +1,7 @@
 from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
 from Alfarvis.history import TypeDatabase
-from Alfarvis.basic_definitions import CommandStatus, DataType
+from Alfarvis.basic_definitions import CommandStatus, DataType, DataObject
 import numpy as np
 
 
@@ -42,7 +42,8 @@ class AlfaDataParser:
     # Keeping it different for commands and arguments for now in case we want
     # to add further intelligence in either which might have a different logic
     def printArguments(self, args):
-
+        if type(args) is DataObject:
+            args = [args]
         for arg in args:
             print(" ".join(arg.keyword_list))
 
@@ -232,10 +233,12 @@ class AlfaDataParser:
             if arg_name in self.argumentsFound:
                 continue
             if arg_type is DataType.user_conversation:
-                self.argumentsFound[arg_name] = key_words
+                self.argumentsFound[arg_name] = DataObject(
+                    key_words, ['user', 'coversation'])
                 continue
             elif arg_type is DataType.history:
-                self.argumentsFound[arg_name] = self.history
+                self.argumentsFound[arg_name] = DataObject(self.history,
+                                                           ['history'])
                 continue
             data_res = self.history.search(arg_type, key_words)
             all_arg_names.add(arg_name)
@@ -284,7 +287,8 @@ class AlfaDataParser:
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
                 print("Argument ", arg, "found")
-                print("Matching argument: ", self.printArguments(arg))
+                print("Matching argument: ",
+                      self.printArguments(self.argumentsFound[arg]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
                     print("\nMultiple arguments found for ", arg)
