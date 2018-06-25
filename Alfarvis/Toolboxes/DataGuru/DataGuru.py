@@ -260,5 +260,3 @@ class DataGuru:
                 TN += 1
             if y_hat[i] == 0 and y_actual[i] != y_hat[i]:    FN += 1
         return (TP, FP, TN, FN)               
-            
-        
