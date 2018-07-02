@@ -11,8 +11,10 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 
 class VizBarPlots(AbstractCommand):
@@ -74,13 +76,13 @@ class VizBarPlots(AbstractCommand):
                             str(uniV)] = np.mean(array_vals[ind, :], 0)
                     df_errors['group ' +
                               str(uniV)] = np.std(array_vals[ind, :], 0)
+        f = plt.figure()
+        ax = f.add_subplot(111)
 
         df_mean.index = (kl1)
         df_errors.index = kl1
-        df_mean.plot.bar(yerr=df_errors, cmap="jet")
+        df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
 
         plt.show(block=False)
 
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
-
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['bar'])

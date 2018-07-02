@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from .Viz_Container import VizContainer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ import pandas as pd
 
 
 
-class VizBarPlots(AbstractCommand):
+class VizPiePlots(AbstractCommand):
     """
     Plot multiple categories on a single pie plot with error bars
     """
@@ -52,13 +53,13 @@ class VizBarPlots(AbstractCommand):
         else: 
             print("Too many unique values to plot on a pie chart\n")
             print("Please select another chart type")
-        
-        df = pd.Series(freq_vals, index=uniqVals, name=stTitle)
-        
-        df.plot.pie(figsize=(8, 8))
-        
-        plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        df = pd.Series(freq_vals, index=uniqVals, name=stTitle)
+
+        f = plt.figure()
+        ax = f.add_subplot(111)
+
+        df.plot.pie(figsize=(8, 8), ax=ax)
+
+        plt.show(block=False)
+        return VizContainer.createResult(f, array_datas, ['pie'])

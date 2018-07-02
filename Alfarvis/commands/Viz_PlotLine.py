@@ -12,6 +12,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
 
 class VizPlotLine(AbstractCommand):
     """
@@ -49,10 +50,11 @@ class VizPlotLine(AbstractCommand):
                 arr_data = df[df.columns[0]]
                 lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
                 df[df.columns[0]] = arr_data.map(lut)
-        df.plot()
+
+        f = plt.figure()
+        ax = f.add_subplot(111)
+        df.plot(ax=ax)
        
         plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['line'])

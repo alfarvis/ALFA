@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 
 class VizMultiScatter2D(AbstractCommand):
@@ -42,18 +43,18 @@ class VizMultiScatter2D(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
         command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        f = plt.figure()
+        ax = f.add_subplot(111)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
         
         if StatContainer.ground_truth is None:
-            df.boxplot(figsize=(10,10))
+            df.boxplot(figsize=(10,10), ax=ax)
         else:
             ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
             df[ground_truth] = StatContainer.ground_truth.data
-            df.boxplot(by=ground_truth,figsize=(10,10))
-        
-        plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
+            df.boxplot(by=ground_truth,figsize=(10,10), ax=ax)
 
-        return result_object
+        plt.show(block=False)
+
+        return VizContainer.createResult(f, array_datas, ['box'])
