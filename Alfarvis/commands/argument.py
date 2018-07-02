@@ -2,7 +2,8 @@
 """
 Provides definition of argument for a command
 """
-from Alfarvis.basic_definitions import DataType
+from Alfarvis.basic_definitions import (DataType, Tag, TagPosition)
+from collections import namedtuple
 
 
 class Argument(object):
@@ -13,6 +14,8 @@ class Argument(object):
         - optional or not
         - keyword that is used in evaluation
     """
+    Tag = Tag
+    TagPosition = TagPosition
 
     def __init__(self, argument_type=DataType.string, optional=True, keyword="", tags=[],
                  number=1, fill_from_cache=True):

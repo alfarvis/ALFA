@@ -4,7 +4,7 @@ from scipy.stats import mode
 # data processing, CSV file I/O (e.g. pd.read_csv), data manipulation as in SQL
 import pandas as pd
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
-                                        ResultObject)
+                                        ResultObject, DataObject)
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 import collections
@@ -71,7 +71,8 @@ class DataGuru:
                         arr_data = pd.Series(array_data.data)
                         lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
                         #Creating a new data object by mapping strings to numbers
-                        array_data = DataObject(arr_data.map(lut),array_data.keyword_list)                      
+                        array_data = DataObject(arr_data.map(lut),array_data.keyword_list)
+                                           
             kl1.append(" ".join(array_data.keyword_list))
             #Check if all the arrays have the same size or not. Pick the largest 
             #set of arrays that have the same size

@@ -37,7 +37,7 @@ class ListHistory(AbstractCommand):
         row_format = "{:>35} {:>15}"
         print("History:")
         try:
-            for data_type, data_base in history._argument_database.items():
+            for data_type, data_base in history.data._argument_database.items():
                 for data_object in data_base.data_objects:
                     object_name = " ".join(data_object.keyword_list)
                     print(row_format.format(object_name, data_type.name))
