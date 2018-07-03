@@ -63,25 +63,24 @@ class VizBarPlots(AbstractCommand):
                     None, None, None, CommandStatus.Error)
                 return result_object
             if isinstance(uniqVals[0], str):
-                truncated_uniqVals,_ = StatContainer.removeCommonNames(
-                        uniqVals)
+                truncated_uniqVals, _ = StatContainer.removeCommonNames(
+                    uniqVals)
             else:
-                truncated_uniqVals = uniqVals
+                truncated_uniqVals = ['group ' + str(uniq_val)
+                                      for uniq_val in uniqVals]
             for i, uniV in enumerate(uniqVals):
                 ind = gtVals == uniV
                 array_vals = df.values
                 name = truncated_uniqVals[i]
                 if rFlag == 0:
                     df_mean = pd.DataFrame(
-                        {'group ' + str(name): np.mean(array_vals[ind, :], 0)})
+                        {name: np.mean(array_vals[ind, :], 0)})
                     df_errors = pd.DataFrame(
-                        {'group ' + str(name): np.std(array_vals[ind, :], 0)})
+                        {name: np.std(array_vals[ind, :], 0)})
                     rFlag = rFlag + 1
                 else:
-                    df_mean['group ' +
-                            str(name)] = np.mean(array_vals[ind, :], 0)
-                    df_errors['group ' +
-                              str(name)] = np.std(array_vals[ind, :], 0)
+                    df_mean[name] = np.mean(array_vals[ind, :], 0)
+                    df_errors[name] = np.std(array_vals[ind, :], 0)
         f = plt.figure()
         ax = f.add_subplot(111)
 
