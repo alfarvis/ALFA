@@ -62,26 +62,33 @@ class VizBarPlots(AbstractCommand):
                 result_object = ResultObject(
                     None, None, None, CommandStatus.Error)
                 return result_object
-            for uniV in uniqVals:
+            if isinstance(uniqVals[0], str):
+                truncated_uniqVals, _ = StatContainer.removeCommonNames(
+                    uniqVals)
+            else:
+                truncated_uniqVals = ['group ' + str(uniq_val)
+                                      for uniq_val in uniqVals]
+            for i, uniV in enumerate(uniqVals):
                 ind = gtVals == uniV
                 array_vals = df.values
+                name = truncated_uniqVals[i]
                 if rFlag == 0:
                     df_mean = pd.DataFrame(
-                        {'group ' + str(uniV): np.mean(array_vals[ind, :], 0)})
+                        {name: np.mean(array_vals[ind, :], 0)})
                     df_errors = pd.DataFrame(
-                        {'group ' + str(uniV): np.std(array_vals[ind, :], 0)})
+                        {name: np.std(array_vals[ind, :], 0)})
                     rFlag = rFlag + 1
                 else:
-                    df_mean['group ' +
-                            str(uniV)] = np.mean(array_vals[ind, :], 0)
-                    df_errors['group ' +
-                              str(uniV)] = np.std(array_vals[ind, :], 0)
+                    df_mean[name] = np.mean(array_vals[ind, :], 0)
+                    df_errors[name] = np.std(array_vals[ind, :], 0)
         f = plt.figure()
         ax = f.add_subplot(111)
 
-        df_mean.index = (kl1)
-        df_errors.index = kl1
+        kl1_trunc, common_name = StatContainer.removeCommonNames(kl1)
+        df_mean.index = (kl1_trunc)
+        df_errors.index = kl1_trunc
         df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
+        ax.set_title(common_name)
 
         plt.show(block=False)
 
