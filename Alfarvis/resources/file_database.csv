@@ -7,3 +7,4 @@ crime.csv,csv,crime data,crime data from denver
 kmeans.csv,csv,k means ,Model for running basic k means
 hierarchical_clustering.csv,csv,hierarchical clustering,Model for running basic ward linkage based hierarchical clustering
 SVM.csv,csv,svm support vector machine,SVM Model for training a classifier on the data
+vins_test_data.csv,csv,vins test calibration data,Calibration data for VINS and Mocap

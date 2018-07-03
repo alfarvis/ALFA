@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from .abstract_reader import AbstractReader
-from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, DataObject
+from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, DataObject, splitPattern
 from Alfarvis.commands.Stat_ListColumns import StatListColumns
 from Alfarvis.commands.Stat_Container import StatContainer
 import pandas as pd
@@ -9,12 +9,8 @@ import numpy as np
 
 
 class ReadCSV(AbstractReader):
-    # This will split the sentence into multiple keywords using anything except
-    # a-z,0-9 and + as a partition
-    pattern = re.compile('[^a-zA-Z0-9]+')
-    all_caps_pattern = re.compile('^[^a-z]*$')
-    col_head_pattern = re.compile('Unnamed: [0-9]+')
     list_command = StatListColumns()
+    col_head_pattern = re.compile('Unnamed: [0-9]+')
 
     @classmethod
     def data_type(self):
@@ -42,15 +38,8 @@ class ReadCSV(AbstractReader):
         for column in data.columns:
             if self.col_head_pattern.match(column):
                 continue
-            elif self.all_caps_pattern.match(column):
-                col_split = [key_val.lower()
-                             for key_val in self.pattern.split(column)]
             else:
-                # Add space before upper case
-                re.sub(r"([A-Z])", r" \1", column)
-                col_split = [key_val.lower()
-                             for key_val in self.pattern.split(column)]
-
+                col_split = splitPattern(column)
             col_data = data[column].values
             col_keyword_list = col_split + keyword_list
             result_object = ResultObject(
@@ -86,7 +75,7 @@ class ReadCSV(AbstractReader):
             categ_data = col_data == uniV
             categ_name = "group class " + str(uniV)
             category_split = [key_val.lower()
-                              for key_val in self.pattern.split(categ_name)]
+                              for key_val in splitPattern(categ_name)]
             category_keyword_list = category_split + col_split + keyword_list
             result_object = ResultObject(
                 categ_data * 1, category_keyword_list,
