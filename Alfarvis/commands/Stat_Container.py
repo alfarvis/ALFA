@@ -14,6 +14,9 @@ class StatContainer(object):
 
     @classmethod
     def removeCommonNames(self, input_names):
+        """
+        Remove common occurences between different strings
+        """
         name_set_list = [set(splitPattern(name)) for name in input_names]
         if len(input_names) == 1:
             out_names = ['']
