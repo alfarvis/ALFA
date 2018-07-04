@@ -8,11 +8,11 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Viz_Container import VizContainer
+from .Stat_Container import StatContainer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-
 
 
 class VizPiePlots(AbstractCommand):
@@ -24,7 +24,7 @@ class VizPiePlots(AbstractCommand):
         """
         Tags to identify the pie plot command
         """
-        return ["pie","chart","plot"]
+        return ["pie", "chart", "plot"]
 
     def argumentTypes(self):
         """
@@ -43,16 +43,16 @@ class VizPiePlots(AbstractCommand):
         sns.set(color_codes=True)
         stTitle = " ".join(array_data.keyword_list)
         col_data = array_data.data
-        uniqVals = np.unique(col_data)
-        percCutoff_for_categorical=0.1
-        if (len(uniqVals)/len(col_data)) < percCutoff_for_categorical:
+        uniqVals = StatContainer.isCategorical(col_data)
+        if uniqVals is not None:
             freq_vals = []
             for uniQ in uniqVals:
-                ind = (col_data==uniQ)
-                freq_vals.append(np.sum(ind*1))
-        else: 
+                ind = (col_data == uniQ)
+                freq_vals.append(np.sum(ind * 1))
+        else:
             print("Too many unique values to plot on a pie chart\n")
             print("Please select another chart type")
+            return result_object
 
         df = pd.Series(freq_vals, index=uniqVals, name=stTitle)
 
@@ -62,4 +62,4 @@ class VizPiePlots(AbstractCommand):
         df.plot.pie(figsize=(8, 8), ax=ax)
 
         plt.show(block=False)
-        return VizContainer.createResult(f, array_datas, ['pie'])
+        return VizContainer.createResult(f, array_data, ['pie'])

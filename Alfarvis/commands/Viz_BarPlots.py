@@ -43,7 +43,7 @@ class VizBarPlots(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(
+        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
             array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
@@ -84,11 +84,10 @@ class VizBarPlots(AbstractCommand):
         f = plt.figure()
         ax = f.add_subplot(111)
 
-        kl1_trunc, common_name = StatContainer.removeCommonNames(kl1)
-        df_mean.index = (kl1_trunc)
-        df_errors.index = kl1_trunc
+        df_mean.index = kl1
+        df_errors.index = kl1
         df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
-        ax.set_title(common_name)
+        ax.set_title(cname)
 
         plt.show(block=False)
 
