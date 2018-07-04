@@ -25,7 +25,7 @@ class VizMultiScatter2D(AbstractCommand):
         """
         Tags to identify the box plot
         """
-        return ["boxplot","box","plot"]
+        return ["boxplot", "box", "plot"]
 
     def argumentTypes(self):
         """
@@ -33,7 +33,7 @@ class VizMultiScatter2D(AbstractCommand):
         executing the box plot command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=-1)]
+                         argument_type=DataType.array, number=-1)]
 
     def evaluate(self, array_datas):
         """
@@ -42,18 +42,18 @@ class VizMultiScatter2D(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
         f = plt.figure()
         ax = f.add_subplot(111)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
-        
+
         if StatContainer.ground_truth is None:
-            df.boxplot(figsize=(10,10), ax=ax)
+            df.boxplot(figsize=(10, 10), ax=ax)
         else:
             ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
             df[ground_truth] = StatContainer.ground_truth.data
-            df.boxplot(by=ground_truth,figsize=(10,10), ax=ax)
+            df.boxplot(by=ground_truth, figsize=(10, 10), ax=ax)
 
         plt.show(block=False)
 
