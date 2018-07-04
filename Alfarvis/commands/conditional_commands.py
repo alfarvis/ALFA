@@ -51,7 +51,7 @@ class LessThan(AbstractCommand):
         keyword_set = set(array_data.keyword_list)
         self.addCommandToKeywords(keyword_set)
         return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success)
+                            CommandStatus.Success, True)
 
 
 class LessThanEqual(LessThan):
@@ -106,7 +106,7 @@ class Between(AbstractCommand):
         keyword_set = set(array_data.keyword_list)
         self.addCommandToKeywords(keyword_set)
         return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success)
+                            CommandStatus.Success, True)
 
 
 class Outside(AbstractCommand):
@@ -142,9 +142,7 @@ class Outside(AbstractCommand):
         keyword_set = set(array_data.keyword_list)
         self.addCommandToKeywords(keyword_set)
         return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success)
-
-# contains
+                            CommandStatus.Success, True)
 
 
 class Contains(AbstractCommand):
@@ -178,12 +176,73 @@ class Contains(AbstractCommand):
     def evaluate(self, array_data, target):
         split_target = splitPattern(target.data)
         out = np.array([self.containsWordList(
-            data, split_target) for data in array_data])
+            data, split_target) for data in array_data.data])
         keyword_set = set(array_data.keyword_list)
         keyword_set.update(split_target)
         return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success)
+                            CommandStatus.Success, True)
 
-# set condition for filtering data when plotting etc
+# Combine conditions
+
+
+class LogicalAnd(AbstractCommand):
+    """
+    combine two logical arrays
+    """
+
+    def __init__(self, add_tags=["and"], operator='&'):
+        self._add_tags = add_tags
+        self._operator = operator
+
+    def commandTags(self):
+        """
+        Tags to identify the condition
+        """
+        return self._add_tags + [self._operator, "logical", "logic", "create"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="array_data", optional=False,
+                argument_type=DataType.logical_array, number=-1)]
+
+    def evaluate(self, array_data):
+        N = len(array_data)
+        if N < 1:
+            return ResultObject(None, None, None, CommandStatus.Error)
+        out = array_data[0].data
+        keyword_set = set(array_data[0].keyword_list)
+        for arr_data in array_data[1:]:
+            if self._operator == '&':
+                out = np.logical_and(out, arr_data.data)
+            elif self._operator == '||':
+                out = np.logical_or(out, arr_data.data)
+            elif self._operator == '!':
+                out = np.logical_not(out, arr_data.data)
+            elif self._operator == '^':
+                out = np.logical_xor(out, arr_data.data)
+            else:
+                return ResultObject(None, None, None, CommandStatus.Error)
+            keyword_set.update(set(arr_data.keyword_list))
+        self.addCommandToKeywords(keyword_set)
+        return ResultObject(out, keyword_set, DataType.logical_array,
+                            CommandStatus.Success, True)
+
+
+class LogicalOr(LogicalAnd):
+
+    def __init__(self):
+        super(LogicalOr, self).__init__(["or"], '||')
+
+
+class LogicalNot(LogicalAnd):
+
+    def __init__(self):
+        super(LogicalNot, self).__init__(["not"], '!')
+
+
+class LogicalXor(LogicalAnd):
+
+    def __init__(self):
+        super(LogicalXor, self).__init__(["xor"], '^')
+
 
 # create categorical from conditional arrays

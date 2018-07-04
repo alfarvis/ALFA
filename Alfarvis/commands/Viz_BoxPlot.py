@@ -52,7 +52,7 @@ class VizMultiScatter2D(AbstractCommand):
             df.boxplot(figsize=(10, 10), ax=ax)
         else:
             ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
-            df[ground_truth] = StatContainer.ground_truth.data
+            df[ground_truth] = StatContainer.filterGroundTruth()
             df.boxplot(by=ground_truth, figsize=(10, 10), ax=ax)
 
         plt.show(block=False)

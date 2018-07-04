@@ -53,7 +53,7 @@ class VizBarPlots(AbstractCommand):
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
-            gtVals = StatContainer.ground_truth.data
+            gtVals = StatContainer.filterGroundTruth()
 
             uniqVals = StatContainer.isCategorical(gtVals)
             rFlag = 0
@@ -83,7 +83,6 @@ class VizBarPlots(AbstractCommand):
                     df_errors[name] = np.std(array_vals[ind, :], 0)
         f = plt.figure()
         ax = f.add_subplot(111)
-
         df_mean.index = kl1
         df_errors.index = kl1
         df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)

@@ -10,7 +10,19 @@ class StatContainer(object):
     output of commands etc
     """
     ground_truth = None
+    conditional_array = None
     percCutoff_for_categorical = 0.1
+
+    @classmethod
+    def filterGroundTruth(self):
+        if self.ground_truth is None:
+            return None
+        elif self.conditional_array is None:
+            return self.ground_truth.data
+        else:
+            inds = self.conditional_array.data
+            return self.ground_truth.data[inds]
+        return None
 
     @classmethod
     def removeCommonNames(self, input_names):
