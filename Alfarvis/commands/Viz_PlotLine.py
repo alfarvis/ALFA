@@ -43,7 +43,7 @@ class VizPlotLine(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
-                array_datas, useCategorical=True, exand_single=True)
+                array_datas, useCategorical=True, expand_single=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 

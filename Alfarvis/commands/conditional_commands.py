@@ -33,11 +33,14 @@ class LessThan(AbstractCommand):
                 Argument(keyword="target", optional=False,
                          tags=[Argument.Tag('than',
                                             Argument.TagPosition.After),
+                               Argument.Tag(self._condition[0],
+                                            Argument.TagPosition.After),
                                Argument.Tag(self._operator,
                                             Argument.TagPosition.After)],
                          argument_type=DataType.number)]
 
     def evaluate(self, array_data, target):
+        print("Target: ", target.data)
         if self._operator == '<':
             out = array_data.data < target.data
         elif self._operator == '<=':
@@ -69,7 +72,7 @@ class GreaterThan(LessThan):
 class GreaterThanEqual(LessThan):
 
     def __init__(self):
-        super(GreaterThanEqual, self).__init__(["greater", "equal"], '>=')
+        super(GreaterThanEqual, self).__init__(["greater", "bigger" "equal"], '>=')
 
 
 # in between
@@ -84,7 +87,7 @@ class Between(AbstractCommand):
         Tags to identify the condition
         TODO: Check if we can less and greater together?
         """
-        return ["between", "inside", "range", "(", ")", "condition",
+        return ["between", "inside", "range", "condition",
                 "conditional", "logical", "logic", "create"]
 
     def argumentTypes(self):
@@ -92,6 +95,8 @@ class Between(AbstractCommand):
                 argument_type=DataType.array),
                 Argument(keyword="target", optional=False,
                          tags=[Argument.Tag('between',
+                                            Argument.TagPosition.After),
+                               Argument.Tag('inside',
                                             Argument.TagPosition.After),
                                Argument.Tag('range',
                                             Argument.TagPosition.After),
@@ -101,8 +106,9 @@ class Between(AbstractCommand):
                          argument_type=DataType.number)]
 
     def evaluate(self, array_data, target):
+        print("Finding range between: ", target[0].data, target[1].data)
         out = (array_data.data > target[0].data)
-        out = np.logical_and(out, (array_data.data < target[0].data))
+        out = np.logical_and(out, (array_data.data < target[1].data))
         keyword_set = set(array_data.keyword_list)
         self.addCommandToKeywords(keyword_set)
         return ResultObject(out, keyword_set, DataType.logical_array,
@@ -210,6 +216,8 @@ class LogicalAnd(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
         out = array_data[0].data
         keyword_set = set(array_data[0].keyword_list)
+        print("Performing logical", self._add_tags[0], "on ")
+        print(" ".join(array_data[0].keyword_list))
         for arr_data in array_data[1:]:
             if self._operator == '&':
                 out = np.logical_and(out, arr_data.data)
@@ -221,6 +229,7 @@ class LogicalAnd(AbstractCommand):
                 out = np.logical_xor(out, arr_data.data)
             else:
                 return ResultObject(None, None, None, CommandStatus.Error)
+            print(" ".join(arr_data.keyword_list))
             keyword_set.update(set(arr_data.keyword_list))
         self.addCommandToKeywords(keyword_set)
         return ResultObject(out, keyword_set, DataType.logical_array,
