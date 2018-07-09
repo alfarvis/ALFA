@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
+
 
 class Viz_VioloinPlot(AbstractCommand):
     """
@@ -23,7 +25,7 @@ class Viz_VioloinPlot(AbstractCommand):
         """
         Tags to identify the violin command
         """
-        return ["violin","plot"]
+        return ["violin", "plot"]
 
     def argumentTypes(self):
         """
@@ -31,7 +33,7 @@ class Viz_VioloinPlot(AbstractCommand):
         executing the violin plot command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=-1)]
+                         argument_type=DataType.array, number=-1)]
 
     def evaluate(self, array_datas):
         """
@@ -39,18 +41,18 @@ class Viz_VioloinPlot(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        
+
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
+                array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
-        
-        
-        #Code to create the violin plot
-        sns.violinplot(data=df)
-       
-        plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        f = plt.figure()
+        ax = f.add_subplot(111)
+        # Code to create the violin plot
+        sns.violinplot(data=df, ax=ax)
+        ax.set_title(cname)
+
+        plt.show(block=False)
+        return VizContainer.createResult(f, array_datas, ['violin'])

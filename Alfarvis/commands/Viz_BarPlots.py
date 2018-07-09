@@ -11,8 +11,10 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Viz_Container import VizContainer
 
 
 class VizBarPlots(AbstractCommand):
@@ -41,7 +43,7 @@ class VizBarPlots(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(
+        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
             array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
@@ -51,7 +53,7 @@ class VizBarPlots(AbstractCommand):
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
-            gtVals = StatContainer.ground_truth.data
+            gtVals = StatContainer.filterGroundTruth()
 
             uniqVals = StatContainer.isCategorical(gtVals)
             rFlag = 0
@@ -60,27 +62,32 @@ class VizBarPlots(AbstractCommand):
                 result_object = ResultObject(
                     None, None, None, CommandStatus.Error)
                 return result_object
-            for uniV in uniqVals:
+            if isinstance(uniqVals[0], str):
+                truncated_uniqVals, _ = StatContainer.removeCommonNames(
+                    uniqVals)
+            else:
+                truncated_uniqVals = ['group ' + str(uniq_val)
+                                      for uniq_val in uniqVals]
+            for i, uniV in enumerate(uniqVals):
                 ind = gtVals == uniV
                 array_vals = df.values
+                name = truncated_uniqVals[i]
                 if rFlag == 0:
                     df_mean = pd.DataFrame(
-                        {'group ' + str(uniV): np.mean(array_vals[ind, :], 0)})
+                        {name: np.mean(array_vals[ind, :], 0)})
                     df_errors = pd.DataFrame(
-                        {'group ' + str(uniV): np.std(array_vals[ind, :], 0)})
+                        {name: np.std(array_vals[ind, :], 0)})
                     rFlag = rFlag + 1
                 else:
-                    df_mean['group ' +
-                            str(uniV)] = np.mean(array_vals[ind, :], 0)
-                    df_errors['group ' +
-                              str(uniV)] = np.std(array_vals[ind, :], 0)
-
-        df_mean.index = (kl1)
+                    df_mean[name] = np.mean(array_vals[ind, :], 0)
+                    df_errors[name] = np.std(array_vals[ind, :], 0)
+        f = plt.figure()
+        ax = f.add_subplot(111)
+        df_mean.index = kl1
         df_errors.index = kl1
-        df_mean.plot.bar(yerr=df_errors, cmap="jet")
+        df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
+        ax.set_title(cname)
 
         plt.show(block=False)
 
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
-
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['bar'])

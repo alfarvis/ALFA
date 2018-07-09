@@ -12,6 +12,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
+
 
 class VizPlotLine(AbstractCommand):
     """
@@ -22,7 +24,7 @@ class VizPlotLine(AbstractCommand):
         """
         Tags to identify the lineplot command
         """
-        return ["lineplot", "line","plot"]
+        return ["lineplot", "line", "plot"]
 
     def argumentTypes(self):
         """
@@ -30,7 +32,7 @@ class VizPlotLine(AbstractCommand):
         executing the lineplot command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=-1)]
+                         argument_type=DataType.array, number=-1)]
 
     def evaluate(self, array_datas):
         """
@@ -40,19 +42,22 @@ class VizPlotLine(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas,1)
+        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
+                array_datas, useCategorical=True, expand_single=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        if df.shape[1]==1:
+        if df.shape[1] == 1:
             if StatContainer.isCategorical(df[df.columns[0]]) is not None:
                 arr_data = df[df.columns[0]]
-                lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
+                lut = dict(zip(arr_data.unique(), np.linspace(0, 1, arr_data.unique().size)))
                 df[df.columns[0]] = arr_data.map(lut)
-        df.plot()
-       
-        plt.show(block=False)
-            
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
 
-        return result_object
+        f = plt.figure()
+        ax = f.add_subplot(111)
+        ax.set_title(cname)
+        df.plot(ax=ax)
+
+        plt.show(block=False)
+
+        return VizContainer.createResult(f, array_datas, ['line'])

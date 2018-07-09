@@ -28,7 +28,8 @@ class SavePreviousResult(AbstractCommand):
         return [Argument(keyword="history", optional=False,
                          argument_type=DataType.history),
                 Argument(keyword="name", optional=False,
-                         tags=[Argument.Tag('as', 1), Argument.Tag(
+                         tags=[Argument.Tag('as', Argument.TagPosition.After),
+                               Argument.Tag(
                              'into', Argument.TagPosition.After)],
                          argument_type=DataType.user_string)]
 

@@ -23,7 +23,7 @@ class Stat_Correl(AbstractCommand):
         """
         Tags to identify the correlation command
         """
-        return ["correlation","correlate"]
+        return ["correlation", "correlate"]
 
     def argumentTypes(self):
         """
@@ -31,7 +31,7 @@ class Stat_Correl(AbstractCommand):
         executing the correlation command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=-1)]
+                         argument_type=DataType.array, number=-1)]
 
     def evaluate(self, array_datas):
         """
@@ -39,26 +39,26 @@ class Stat_Correl(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        
-        if len(array_datas)<2:
+
+        if len(array_datas) < 2:
             print("Need atleast two arrays to compute correlation")
             return ResultObject(None, None, None, CommandStatus.Error)
-        
+
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        corr_res = df.corr();
-        
-        if len(array_datas)==2:
-            print ("The correlation between " , kl1[0] , " and ", kl1[1], " is ", str(corr_res.values[0][1]))
-        
+        corr_res = df.corr()
+
+        if len(array_datas) == 2:
+            print("The correlation between ", kl1[0], " and ", kl1[1], " is ", str(corr_res.values[0][1]))
+
         print("Displaying the result as a heatmap")
-        sns.heatmap(corr_res, cbar = True,  square = True, annot=True, fmt= '.2f',annot_kws={'size': 15},
-           xticklabels= df.columns, yticklabels= df.columns,
-           cmap= 'jet')
+        sns.heatmap(corr_res, cbar=True, square=True, annot=True, fmt='.2f', annot_kws={'size': 15},
+           xticklabels=df.columns, yticklabels=df.columns,
+           cmap='jet')
         plt.show(block=False)
-        result_object = ResultObject(None, None, None,CommandStatus.Success)    
+        result_object = ResultObject(None, None, None, CommandStatus.Success)
 
         return result_object

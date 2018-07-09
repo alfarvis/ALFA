@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Set ground truth
+Update conditional array in stat container
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -8,11 +8,9 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
-import numpy
-import re
 
 
-class SetGT(AbstractCommand):
+class SetConditionalArray(AbstractCommand):
     """
     Sets the ground truth for data guru operations
     """
@@ -21,15 +19,15 @@ class SetGT(AbstractCommand):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["setgt", "set", "ground", "truth"]
+        return ["setca", "set", "conditional", "format", "filter"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
         executing the set ground truth command
         """
-        return [Argument(keyword="array_data", optional=False,
-                         argument_type=DataType.array)]
+        return [Argument(keyword="array_data", optional=True,
+                         argument_type=DataType.logical_array)]
 
     def evaluate(self, array_data):
         """
@@ -37,12 +35,12 @@ class SetGT(AbstractCommand):
         Parameters:
 
         """
-        StatContainer.ground_truth = array_data
-        print("Setting ground truth to ", " ".join(array_data.keyword_list))
+        StatContainer.conditional_array = array_data
+        print("Setting filter to ", " ".join(array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
 
 
-class ClearGT(AbstractCommand):
+class ClearConditionalArray(AbstractCommand):
     """
     Clear the ground truth
     """
@@ -51,7 +49,7 @@ class ClearGT(AbstractCommand):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["cleargt", "clear", "ground", "truth"]
+        return ["clearca", "clear", "conditional", "format", "filter"]
 
     def argumentTypes(self):
         """
@@ -66,6 +64,6 @@ class ClearGT(AbstractCommand):
         Parameters:
 
         """
-        StatContainer.ground_truth = None
-        print("clearing ground truth")
+        StatContainer.conditional_array = None
+        print("clearing conditional array")
         return ResultObject(None, None, None, CommandStatus.Success)

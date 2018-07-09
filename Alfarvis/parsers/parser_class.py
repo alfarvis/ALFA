@@ -177,7 +177,7 @@ class AlfaDataParser:
         Fill optional arguments with last object from cache
         """
         for argument in argumentTypes:
-            arg_type = argument.argument_type
+            arg_types = self.wrap(argument.argument_type)
             arg_name = argument.keyword
             arg_number = argument.number
             if (argument.optional and
@@ -189,7 +189,7 @@ class AlfaDataParser:
                 if arg_number > 1:
                     print("Arguments with multi-input cannot be optional")
                     continue
-                cache_res = self.history.getLastObject(arg_type)
+                cache_res = self.history.getLastObject(arg_types[0])
                 if cache_res is not None:
                     # Use unwrap for infinite args
                     argumentsFound[arg_name] = cache_res
@@ -212,6 +212,16 @@ class AlfaDataParser:
         if len(in_list) == 1 and arg_number == 1:
             return in_list[0]
         return in_list
+
+    @classmethod
+    def wrap(self, in_object):
+        """
+        If input object is a single data type wraps
+        it into a list
+        """
+        if type(in_object) == DataType:
+            return [in_object]
+        return in_object
 
     def checkArgumentNumber(self, argument_number, data_res_len):
         """
@@ -284,6 +294,35 @@ class AlfaDataParser:
                 break
         return data_res
 
+    def searchHistory(self, argument, key_words):
+        """
+        Go through arg types and try to find the requested number from
+        history.
+        """
+        arg_types = self.wrap(argument.argument_type)
+        hit_count = 0
+        data_res = []
+        for arg_type in arg_types:
+            # If argument is supposed to be extracted from user
+            # as opposed to from history
+            if (arg_type is DataType.number or
+                    arg_type is DataType.user_string):
+                current_res = self.extractArgFromUser(key_words, argument)
+                if len(current_res) != 0:
+                    data_res = current_res
+                    break
+            else:
+                current_res = self.history.search(arg_type, key_words)
+                current_hits = self.history.getHitCount(arg_type)
+                if (len(current_res) >= argument.number and
+                        current_hits > hit_count):
+                    data_res = current_res
+                    hit_count = current_hits
+            # In the beginning add current res to make sure we have something
+            if hit_count == 0:
+                data_res = current_res
+        return data_res
+
     def resolveArguments(self, key_words):
         all_arg_names = set()
         argumentTypes = self.currentCommand.argumentTypes()
@@ -306,13 +345,7 @@ class AlfaDataParser:
                 self.argumentsFound[arg_name] = DataObject(self.history,
                                                            ['history'])
                 continue
-            # If argument is supposed to be extracted from user
-            # as opposed to from history
-            if (arg_type is DataType.number or
-                    arg_type is DataType.user_string):
-                data_res = self.extractArgFromUser(key_words, argument)
-            else:
-                data_res = self.history.search(arg_type, key_words)
+            data_res = self.searchHistory(argument, key_words)
             all_arg_names.add(arg_name)
             # If infinite args allowed and we found some args or
             # if finite args allowed and we found exactly those

@@ -5,6 +5,7 @@ from scipy.stats import mode
 import pandas as pd
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject, DataObject)
+from Alfarvis.commands.Stat_Container import StatContainer
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 import collections
@@ -24,6 +25,7 @@ import re
 import matplotlib.pyplot as plt
 import itertools
 
+
 class DataGuru:
 
     """
@@ -41,11 +43,10 @@ class DataGuru:
         - Feed Forward Neural Network
     """
     @classmethod
-    def transformArray_to_dataFrame(self, array_datas,useCategorical=0):
+    def transformArray_to_dataFrame(self, array_datas, useCategorical=False, expand_single=False):
         # Create a combined array and keyword list
-        kl1 = []
         array_sizes = []
-        #Check if array_datas is of length 1 or not
+        # Check if array_datas is of length 1 or not
         if not isinstance(array_datas, collections.Iterable):
             array_datas = [array_datas]
         for array_data in array_datas:
@@ -56,29 +57,37 @@ class DataGuru:
         array_size = mode(array_sizes)[0][0]
         df = pd.DataFrame()
         command_status = CommandStatus.Success
-        
+        kl1 = [" ".join(array_data.keyword_list) for array_data in array_datas]
+        truncated_kl1, common_name = StatContainer.removeCommonNames(kl1)
+        # Conditional filter
+        if StatContainer.conditional_array is not None:
+            inds = StatContainer.conditional_array.data
+            Nfiltered = np.sum(inds)
+            print("Nfiltered: ", Nfiltered)
+        else:
+            Nfiltered = array_size
+            inds = np.full(Nfiltered, True)
 
-        for array_data in array_datas:
-            #Check if the array is a numeric type or not
+        for i, array_data in enumerate(array_datas):
+            # Check if the array is a numeric type or not
             if (np.issubdtype(array_data.data.dtype, np.number)) == False:
-                if useCategorical==0:
+                if not useCategorical:
                     print("Skipping ", " ".join(array_data.keyword_list),
                           "\nThe array is not of numeric type")
                     continue
                 else:
-                    if len(array_datas)>1:
+                    if len(array_datas) > 1:
                         # Map the array to numeric quantity
-                        arr_data = pd.Series(array_data.data)
-                        lut = dict(zip(arr_data.unique(),np.linspace(0,1,arr_data.unique().size)))
-                        #Creating a new data object by mapping strings to numbers
-                        array_data = DataObject(arr_data.map(lut),array_data.keyword_list)
-                                           
-            kl1.append(" ".join(array_data.keyword_list))
-            #Check if all the arrays have the same size or not. Pick the largest 
-            #set of arrays that have the same size
+                        arr_data = pd.Series(array_data.data[inds])
+                        lut = dict(zip(arr_data.unique(), np.linspace(0, 1, arr_data.unique().size)))
+                        # Creating a new data object by mapping strings to numbers
+                        array_data = DataObject(arr_data.map(lut), array_data.keyword_list)
+
+            # Check if all the arrays have the same size or not. Pick the largest
+            # set of arrays that have the same size
             if array_size != array_data.data.size:
-                if array_data.data.size == 1:
-                    data = np.ones(array_size) * array_data.data
+                if array_data.data.size == 1 and expand_single:
+                    data = np.ones(Nfiltered) * array_data.data
                 else:
                     print("Skipping array ",
                           " ".join(array_data.keyword_list),
@@ -88,19 +97,19 @@ class DataGuru:
             elif array_data.data.size == 1:
                 data = [array_data.data]
             else:
-                data = array_data.data
-            df[(" ".join(array_data.keyword_list))] = pd.Series(data)
-        
+                data = array_data.data[inds]
+            df[truncated_kl1[i]] = pd.Series(data)
+
         if df.size == 0:
             print("No arrays found in the arguments provided")
             command_status = CommandStatus.Error
-        return command_status, df, kl1
+        return command_status, df, df.columns.values.tolist(), common_name
 
     @classmethod
     def standardizeDataFrame(self, df):
         df = (df - df.mean()) / df.std()
         return df
-    
+
     @classmethod
     def readAlgorithm(self,file_path):
         data = pd.read_csv(file_path)
@@ -260,4 +269,4 @@ class DataGuru:
             if y_actual[i] == y_hat[i] == 0:
                 TN += 1
             if y_hat[i] == 0 and y_actual[i] != y_hat[i]:    FN += 1
-        return (TP, FP, TN, FN)               
+        return (TP, FP, TN, FN)
