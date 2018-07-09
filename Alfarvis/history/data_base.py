@@ -23,17 +23,19 @@ class Database(object):
         self.cache_len = cache_len
         self.cache = deque(maxlen=cache_len)
 
-    def add(self, keyword_list, data_object, add_to_cache=True, data_type=None):
+    def add(self, keyword_list, data_object, add_to_cache=True,
+            data_type=None, name=None):
         """
         Add data with specified keyword list to database
         Parameters
             keyword_list - A list of strings to identify data object
         """
         self.keyword_search.add(keyword_list, len(self.data_objects))
-        data_object = DataObject(data_object, keyword_list, data_type)
+        data_object = DataObject(data_object, keyword_list, data_type, name)
         self.data_objects.append(data_object)
         if add_to_cache:
             self.cache.append(data_object)
+        return data_object
 
     def getHitCount(self):
         """

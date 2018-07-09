@@ -4,6 +4,8 @@ Defines a data object
 """
 import datetime
 
+# TODO Use name to compare two data objects makes it so much easier!!
+
 
 class DataObject(object):
     """
@@ -11,7 +13,7 @@ class DataObject(object):
     in the data base
     """
 
-    def __init__(self, data, keyword_list, data_type=None):
+    def __init__(self, data, keyword_list, data_type=None, name=None):
         """
         Constructor. Also stores the time
         when the data is stored.
@@ -21,6 +23,7 @@ class DataObject(object):
                            object
         """
         self.data = data
+        self.name = name
         self.keyword_list = keyword_list
         self.time_stamp = datetime.datetime.now()
         self.length = len(keyword_list)

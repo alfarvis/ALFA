@@ -12,6 +12,7 @@ class TypeDatabase:
     Database for storing values based on data type and keywords
     """
     _argument_database = dict()
+    _name_database = dict()
     last_data_type = None
     last_data_object = None
 
@@ -23,8 +24,9 @@ class TypeDatabase:
             if (data_type is not DataType.user_conversation and
                     data_type is not DataType.history):
                 self._argument_database[data_type] = Database(cache_len)
+                self._name_database[data_type] = dict()
 
-    def add(self, data_type, keyword_list, data_object, add_to_cache=True):
+    def add(self, data_type, keyword_list, data_object, add_to_cache=True, name=None):
         """
         Add an object with specified keyword list and data type to database
         Parameters:
@@ -34,9 +36,10 @@ class TypeDatabase:
             data_object - Data to be stored in the database
         """
         self.last_data_type = data_type
-        self.last_data_object = DataObject(data_object, keyword_list)
-        self._argument_database[data_type].add(
-            keyword_list, data_object, add_to_cache, data_type)
+        self.last_data_object = self._argument_database[data_type].add(
+            keyword_list, data_object, add_to_cache, data_type, name)
+        if name is not None:
+            self._name_database[data_type][name] = self.last_data_object
 
     def getHitCount(self, data_type):
         """
@@ -44,6 +47,14 @@ class TypeDatabase:
         be called after search function
         """
         return self._argument_database[data_type].getHitCount()
+
+    def nameSearch(self, data_type, name):
+        """
+        Search for data object with specified data type and var name
+        """
+        if name in self._name_database[data_type]:
+            return self._name_database[data_type][name]
+        return None
 
     def search(self, data_type, keyword_list):
         """
@@ -58,7 +69,12 @@ class TypeDatabase:
             A list of data structs. Each struct contains data and the
             keywords the data was added with
         """
-        return self._argument_database[data_type].search(keyword_list)
+        name_dict = self._name_database[data_type]
+        name_search_result = [name_dict[name] for name in keyword_list
+                              if name in name_dict]
+        if len(name_search_result) == 0:
+            return self._argument_database[data_type].search(keyword_list)
+        return name_search_result
 
     def getLastObject(self, data_type=None, index=0):
         """
