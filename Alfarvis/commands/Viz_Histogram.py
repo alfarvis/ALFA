@@ -45,7 +45,8 @@ class VizHistogram(AbstractCommand):
         ax = f.add_subplot(111)
 
         sns.set(color_codes=True)
-        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas, 1)
+        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(
+                array_datas, useCategorical=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 

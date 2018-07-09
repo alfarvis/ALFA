@@ -41,7 +41,7 @@ class DataGuru:
         - Feed Forward Neural Network
     """
     @classmethod
-    def transformArray_to_dataFrame(self, array_datas, useCategorical=0):
+    def transformArray_to_dataFrame(self, array_datas, useCategorical=False, expand_single=False):
         # Create a combined array and keyword list
         array_sizes = []
         # Check if array_datas is of length 1 or not
@@ -57,18 +57,26 @@ class DataGuru:
         command_status = CommandStatus.Success
         kl1 = [" ".join(array_data.keyword_list) for array_data in array_datas]
         truncated_kl1, common_name = StatContainer.removeCommonNames(kl1)
+        # Conditional filter
+        if StatContainer.conditional_array is not None:
+            inds = StatContainer.conditional_array.data
+            Nfiltered = np.sum(inds)
+            print("Nfiltered: ", Nfiltered)
+        else:
+            Nfiltered = array_size
+            inds = np.full(Nfiltered, True)
 
         for i, array_data in enumerate(array_datas):
             # Check if the array is a numeric type or not
             if (np.issubdtype(array_data.data.dtype, np.number)) == False:
-                if useCategorical == 0:
+                if not useCategorical:
                     print("Skipping ", " ".join(array_data.keyword_list),
                           "\nThe array is not of numeric type")
                     continue
                 else:
                     if len(array_datas) > 1:
                         # Map the array to numeric quantity
-                        arr_data = pd.Series(array_data.data)
+                        arr_data = pd.Series(array_data.data[inds])
                         lut = dict(zip(arr_data.unique(), np.linspace(0, 1, arr_data.unique().size)))
                         # Creating a new data object by mapping strings to numbers
                         array_data = DataObject(arr_data.map(lut), array_data.keyword_list)
@@ -76,8 +84,8 @@ class DataGuru:
             # Check if all the arrays have the same size or not. Pick the largest
             # set of arrays that have the same size
             if array_size != array_data.data.size:
-                if array_data.data.size == 1:
-                    data = np.ones(array_size) * array_data.data
+                if array_data.data.size == 1 and expand_single:
+                    data = np.ones(Nfiltered) * array_data.data
                 else:
                     print("Skipping array ",
                           " ".join(array_data.keyword_list),
@@ -87,13 +95,13 @@ class DataGuru:
             elif array_data.data.size == 1:
                 data = [array_data.data]
             else:
-                data = array_data.data
+                data = array_data.data[inds]
             df[truncated_kl1[i]] = pd.Series(data)
 
         if df.size == 0:
             print("No arrays found in the arguments provided")
             command_status = CommandStatus.Error
-        return command_status, df, truncated_kl1, common_name
+        return command_status, df, df.columns.values.tolist(), common_name
 
     @classmethod
     def standardizeDataFrame(self, df):

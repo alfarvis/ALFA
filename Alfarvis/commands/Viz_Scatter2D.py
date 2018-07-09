@@ -52,7 +52,7 @@ class VizScatter2D(AbstractCommand):
         if StatContainer.ground_truth is None:
             plt.scatter(array[:, 0], array[:, 1], edgecolor="None", alpha=0.35)
         else:
-            gt1 = pd.Series(StatContainer.ground_truth.data)
+            gt1 = pd.Series(StatContainer.filterGroundTruth())
             lut = dict(zip(gt1.unique(), np.linspace(0, 1, gt1.unique().size)))
             row_colors = gt1.map(lut)
             ax.scatter(array[:, 0], array[:, 1], c=row_colors, cmap="jet", edgecolor="None", alpha=0.35)
