@@ -25,11 +25,23 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
     name_components = []
     if command_name != '':
         name_components.append(command_name)
+        sid = 1
+    else:
+        sid = 0
     for keyword_list in [keyword_list1, keyword_list2]:
         if len(keyword_list) != 0:
             keyword = keyword_list[0]
             if name_pattern.match(keyword):
                 name_components.append(keyword)
+#    kid = 1
+#    if (command_name == '' and len(keyword_list2) == 0 and
+#        len(keyword_list1) >= 1):
+#            keyword = keyword_list1[1]
+#            if name_pattern.match(keyword):
+#                if len(name_components) == 0:
+#                    name_components = keyword
+#                else:
+#                name_components[0] = name_components[0] + keyword
     # Try adding second word also if available (Maybe not a good idea!)
     # for i, keyword_list in enumerate([keyword_list1, keyword_list2]):
     #    if len(keyword_list) >= 1:
@@ -45,12 +57,12 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
                                  fillvalue='-')
         for keywords in zip_object:
             if name_pattern.match(keywords[0]):
-                name_components[1] = name_components[1] + keywords[0]
+                name_components[sid] = name_components[sid] + "." + keywords[0]
                 name = '.'.join(name_components)
                 if checkName(name, name_dict):
                     return name, name_components
             if name_pattern.match(keywords[1]):
-                name_components[2] = name_components[2] + keywords[1]
+                name_components[sid + 1] = name_components[sid + 1] + "." + keywords[1]
                 name = '.'.join(name_components)
                 if checkName(name, name_dict):
                     return name, name_components
@@ -59,5 +71,5 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
         name = '.'.join(name_components)
         if name not in name_dict:
             return name, name_components
-        name_components[3] = str(i + 2)
+        name_components[-1] = str(i + 2)
     raise RuntimeError("Cannot find a unique name")
