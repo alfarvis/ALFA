@@ -22,13 +22,13 @@ class TestCreateName(unittest.TestCase):
         name_dict = {'mean.rms.rms': 'Hello'}
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'mean.rmsx.rms')
-        self.assertEqual(components, ['mean', 'rmsx', 'rms'])
+        self.assertEqual(name, 'mean.rms.x.rms')
+        self.assertEqual(components, ['mean', 'rms', 'x', 'rms'])
         name_dict[name] = 'Hello'
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'mean.rmsx.rmsy')
-        self.assertEqual(components, ['mean', 'rmsx', 'rmsy'])
+        self.assertEqual(name, 'mean.rms.x.rms.y')
+        self.assertEqual(components, ['mean', 'rms', 'x', 'rms', 'y'])
 
     def testCompositeName(self):
         command_name = 'mean'
@@ -43,26 +43,26 @@ class TestCreateName(unittest.TestCase):
         keyword_list2 = []
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'median.mean')
-        self.assertEqual(components, ['median', 'mean'])
+        self.assertEqual(name, 'median.mean.rms')
+        self.assertEqual(components, ['median', 'mean', 'rms'])
 
     def testLastResort(self):
         command_name = 'mean'
         keyword_list1 = ['rms', 'x']
         keyword_list2 = ['rms', 'y']
-        name_dict = {'mean.rms.rms': 'Hello', 'mean.rmsx.rms': 'Hello',
-                     'mean.rmsx.rmsy': 'Hello', 'mean.rmsx.rmsy': 'Hello'}
+        name_dict = {'mean.rms.rms': 'Hello', 'mean.rms.x.rms': 'Hello',
+                     'mean.rms.x.rms.y': 'Hello', 'mean.rms.x.rms.y': 'Hello'}
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'mean.rmsx.rmsy.1')
-        self.assertEqual(components, ['mean', 'rmsx', 'rmsy', '1'])
+        self.assertEqual(name, 'mean.rms.x.rms.y.1')
+        self.assertEqual(components, ['mean', 'rms', 'x', 'rms', 'y', '1'])
         name_dict[name] = 'Hello'
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'mean.rmsx.rmsy.2')
-        self.assertEqual(components, ['mean', 'rmsx', 'rmsy', '2'])
+        self.assertEqual(name, 'mean.rms.x.rms.y.2')
+        self.assertEqual(components, ['mean', 'rms', 'x', 'rms', 'y', '2'])
         for i in range(1000):
-            name_dict['mean.rmsx.rmsy.' + str(i + 1)] = 'Hello'
+            name_dict['mean.rms.x.rms.y.' + str(i + 1)] = 'Hello'
         self.assertRaises(RuntimeError, createName, name_dict,
                           keyword_list1, keyword_list2, command_name)
 

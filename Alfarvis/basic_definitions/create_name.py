@@ -18,58 +18,57 @@ def checkName(name, name_dict):
     return True
 
 
+def getName(name_list):
+    sum_name_list = sum(name_list, [])
+    return '.'.join(sum_name_list), sum_name_list
+
+
+def addKeyword(index, keyword_list, up_list):
+    if len(keyword_list) > index and name_pattern.match(keyword_list[index]):
+        up_list.append(keyword_list[index])
+
+
 def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
     """
     Create a unique name from given keyword lists
     """
-    name_components = []
+    foundName = False
+    command_name_list = []
+    first_keyword_list = []
+    second_keyword_list = []
     if command_name != '':
-        name_components.append(command_name)
-        sid = 1
+        command_name_list.append(command_name)
+    addKeyword(0, keyword_list1, first_keyword_list)
+    addKeyword(0, keyword_list2, second_keyword_list)
+    start_id_klist1 = 1
+    if len(keyword_list2) == 0:
+        addKeyword(1, keyword_list1, first_keyword_list)
+        start_id_klist1 = 2
+
+    comp_list = [command_name_list, first_keyword_list, second_keyword_list]
+    name, name_comp = getName(comp_list)
+    if not checkName(name, name_dict):
+        for keywords in zip_longest(keyword_list1[start_id_klist1:],
+                                    keyword_list2[1:], fillvalue='-'):
+            if foundName:
+                break
+            for i, keyword in enumerate(keywords):
+                if name_pattern.match(keyword):
+                    comp_list[i + 1].append(keyword)
+                    name, name_comp = getName(comp_list)
+                    if checkName(name, name_dict):
+                        foundName = True
+                        break
     else:
-        sid = 0
-    for keyword_list in [keyword_list1, keyword_list2]:
-        if len(keyword_list) != 0:
-            keyword = keyword_list[0]
-            if name_pattern.match(keyword):
-                name_components.append(keyword)
-#    kid = 1
-#    if (command_name == '' and len(keyword_list2) == 0 and
-#        len(keyword_list1) >= 1):
-#            keyword = keyword_list1[1]
-#            if name_pattern.match(keyword):
-#                if len(name_components) == 0:
-#                    name_components = keyword
-#                else:
-#                name_components[0] = name_components[0] + keyword
-    # Try adding second word also if available (Maybe not a good idea!)
-    # for i, keyword_list in enumerate([keyword_list1, keyword_list2]):
-    #    if len(keyword_list) >= 1:
-    #        keyword = keyword_list[1]
-    #        if name_pattern.match(keyword):
-    #            name_components[i+1] = name_components[i+1] + keyword
-    # If using above, change zip to start from 2: instead of 1:
-    name = '.'.join(name_components)
-    if checkName(name, name_dict):
-        return name, name_components
-    else:
-        zip_object = zip_longest(keyword_list1[1:], keyword_list2[1:],
-                                 fillvalue='-')
-        for keywords in zip_object:
-            if name_pattern.match(keywords[0]):
-                name_components[sid] = name_components[sid] + "." + keywords[0]
-                name = '.'.join(name_components)
-                if checkName(name, name_dict):
-                    return name, name_components
-            if name_pattern.match(keywords[1]):
-                name_components[sid + 1] = name_components[sid + 1] + "." + keywords[1]
-                name = '.'.join(name_components)
-                if checkName(name, name_dict):
-                    return name, name_components
-    name_components.append('1')
-    for i in range(1000):
-        name = '.'.join(name_components)
-        if name not in name_dict:
-            return name, name_components
-        name_components[-1] = str(i + 2)
+        foundName = True
+    if not foundName:
+        comp_list.append(['1'])
+        for i in range(1000):
+            name, name_comp = getName(comp_list)
+            if name not in name_dict:
+                foundName = True
+                break
+            comp_list[-1][0] = str(i + 2)
+    if foundName:
+        return name, name_comp
     raise RuntimeError("Cannot find a unique name")

@@ -36,6 +36,7 @@ class ReadCSV(AbstractReader):
             return result_object
         num_unique = float("inf")
         current_gt = None
+        new_column_names = []
         for column in data.columns:
             if self.col_head_pattern.match(column):
                 continue
@@ -47,6 +48,7 @@ class ReadCSV(AbstractReader):
                 col_data, col_keyword_list, DataType.array, command_status,
                 add_to_cache=True)
             result_object.createName(col_keyword_list)
+            new_column_names.append(result_object.name)
             result_objects.append(result_object)
 
             unique_vals = StatContainer.isCategorical(col_data)
@@ -55,9 +57,12 @@ class ReadCSV(AbstractReader):
                 if len(unique_vals) < num_unique:
                     current_gt = DataObject(col_data, col_keyword_list)
                     num_unique = len(unique_vals)
-                result_objects = self.add_categories_as_columns(
+                if len(unique_vals) < 5:
+                    result_objects = self.add_categories_as_columns(
                     unique_vals, col_data, col_split, keyword_list,
                     result_objects, command_status)
+        # Replace columns:
+        data.columns = new_column_names
         # List the information about csv
         print("Loaded " + " ".join(keyword_list))
         if current_gt is not None:
