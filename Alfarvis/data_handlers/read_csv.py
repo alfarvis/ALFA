@@ -57,6 +57,8 @@ class ReadCSV(AbstractReader):
                 if len(unique_vals) < num_unique:
                     current_gt = DataObject(col_data, col_keyword_list)
                     num_unique = len(unique_vals)
+                # Do not add unique values as columns unless they are only a
+                # few
                 if len(unique_vals) < 5:
                     result_objects = self.add_categories_as_columns(
                     unique_vals, col_data, col_split, keyword_list,
@@ -80,7 +82,7 @@ class ReadCSV(AbstractReader):
         """
         for uniV in uniqVals:
             categ_data = col_data == uniV
-            categ_name = "group class " + str(uniV)
+            categ_name = str(uniV)
             category_split = [key_val.lower()
                               for key_val in splitPattern(categ_name)]
             category_keyword_list = category_split + col_split + keyword_list

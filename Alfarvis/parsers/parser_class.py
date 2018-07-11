@@ -411,6 +411,8 @@ class AlfaDataParser:
             for result in results:
                 self.addResultToHistory(result)
         else:
+            if results.name is not None:
+                print("Saving result to", results.name)
             self.addResultToHistory(results)
 
     def addResultToHistory(self, result):

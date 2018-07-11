@@ -73,7 +73,11 @@ class TypeDatabase:
         name_search_result = [name_dict[name] for name in keyword_list
                               if name in name_dict]
         if len(name_search_result) == 0:
-            return self._argument_database[data_type].search(keyword_list)
+            split_keyword_list = [keyword.split('.')
+                                  for keyword in keyword_list]
+            concat_keyword_list = sum(split_keyword_list, [])
+            new_keyword_list = list(filter(None, concat_keyword_list))
+            return self._argument_database[data_type].search(new_keyword_list)
         return name_search_result
 
     def getLastObject(self, data_type=None, index=0):

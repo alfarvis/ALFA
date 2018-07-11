@@ -3,7 +3,6 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject, splitPattern)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from .Viz_Container import VizContainer
 
 import numpy as np
 
@@ -51,10 +50,14 @@ class LessThan(AbstractCommand):
             out = array_data.data >= target.data
         else:
             return ResultObject(None, None, None, CommandStatus.Error)
-        keyword_set = set(array_data.keyword_list)
-        self.addCommandToKeywords(keyword_set)
-        return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success, True)
+        #keyword_set = set(array_data.keyword_list)
+        # self.addCommandToKeywords(keyword_set)
+        result = ResultObject(out, [], DataType.logical_array,
+                              CommandStatus.Success, True)
+        result.createName(array_data.keyword_list,
+                          command_name=self._condition[0],
+                          set_keyword_list=True)
+        return result
 
 
 class LessThanEqual(LessThan):
@@ -109,10 +112,13 @@ class Between(AbstractCommand):
         print("Finding range between: ", target[0].data, target[1].data)
         out = (array_data.data > target[0].data)
         out = np.logical_and(out, (array_data.data < target[1].data))
-        keyword_set = set(array_data.keyword_list)
-        self.addCommandToKeywords(keyword_set)
-        return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success, True)
+        #keyword_set = set(array_data.keyword_list)
+        # self.addCommandToKeywords(keyword_set)
+        result = ResultObject(out, [], DataType.logical_array,
+                              CommandStatus.Success, True)
+        result.createName(array_data.keyword_list, command_name='between',
+                          set_keyword_list=True)
+        return result
 
 
 class Outside(AbstractCommand):
@@ -145,10 +151,13 @@ class Outside(AbstractCommand):
     def evaluate(self, array_data, target):
         out = (array_data.data < target[0].data)
         out = np.logical_and(out, (array_data.data > target[0].data))
-        keyword_set = set(array_data.keyword_list)
-        self.addCommandToKeywords(keyword_set)
-        return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success, True)
+        #keyword_set = set(array_data.keyword_list)
+        # self.addCommandToKeywords(keyword_set)
+        result = ResultObject(out, [], DataType.logical_array,
+                              CommandStatus.Success, True)
+        result.createName(array_data.keyword_list, command_name='outside',
+                          set_keyword_list=True)
+        return result
 
 
 class Contains(AbstractCommand):
@@ -183,10 +192,13 @@ class Contains(AbstractCommand):
         split_target = splitPattern(target.data)
         out = np.array([self.containsWordList(
             data, split_target) for data in array_data.data])
-        keyword_set = set(array_data.keyword_list)
-        keyword_set.update(split_target)
-        return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success, True)
+        #keyword_set = set(array_data.keyword_list)
+        # keyword_set.update(split_target)
+        result = ResultObject(out, [], DataType.logical_array,
+                              CommandStatus.Success, True)
+        result.createName(array_data.keyword_list, split_target,
+                          command_name='contains', set_keyword_list=True)
+        return result
 
 # Combine conditions
 
@@ -215,9 +227,9 @@ class LogicalAnd(AbstractCommand):
         if N < 1:
             return ResultObject(None, None, None, CommandStatus.Error)
         out = array_data[0].data
-        keyword_set = set(array_data[0].keyword_list)
+        #keyword_set = set(array_data[0].keyword_list)
         print("Performing logical", self._add_tags[0], "on ")
-        print(" ".join(array_data[0].keyword_list))
+        print(array_data[0].name)
         for arr_data in array_data[1:]:
             if self._operator == '&':
                 out = np.logical_and(out, arr_data.data)
@@ -229,11 +241,19 @@ class LogicalAnd(AbstractCommand):
                 out = np.logical_xor(out, arr_data.data)
             else:
                 return ResultObject(None, None, None, CommandStatus.Error)
-            print(" ".join(arr_data.keyword_list))
-            keyword_set.update(set(arr_data.keyword_list))
-        self.addCommandToKeywords(keyword_set)
-        return ResultObject(out, keyword_set, DataType.logical_array,
-                            CommandStatus.Success, True)
+            print(arr_data.name)
+            # keyword_set.update(set(arr_data.keyword_list))
+        # self.addCommandToKeywords(keyword_set)
+        result = ResultObject(out, [], DataType.logical_array,
+                              CommandStatus.Success, True)
+        if len(array_data) > 1:
+            keyword_list2 = array_data[1].keyword_list
+        else:
+            keyword_list2 = []
+        result.createName(array_data[0].keyword_list, keyword_list2,
+                          command_name=self._add_tags[0],
+                          set_keyword_list=True)
+        return result
 
 
 class LogicalOr(LogicalAnd):
