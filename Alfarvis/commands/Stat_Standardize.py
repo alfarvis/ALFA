@@ -12,6 +12,7 @@ from sklearn import preprocessing
 import copy
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
+
 class Stat_Standardize(AbstractCommand):
     """
     Transform a csv to its standardized values
@@ -37,26 +38,23 @@ class Stat_Standardize(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        keyword_set = set(csv_data.keyword_list)
-        self.addCommandToKeywords(keyword_set)
         data = csv_data.data
 
-        #if numpy.issubdtype(data.dtype, numpy.number):
+        # if numpy.issubdtype(data.dtype, numpy.number):
         for column in data.columns:
             col_data = data[column]
             uniqVals = numpy.unique(col_data)
             percCutoff_for_categorical = 0.1
-            if (len(uniqVals)/len(col_data)) > percCutoff_for_categorical and isinstance(col_data[0],str)==False:
-                col_data = (col_data-numpy.mean(col_data))/numpy.std(col_data)
+            if (len(uniqVals) / len(col_data)) > percCutoff_for_categorical and isinstance(col_data[0], str) == False:
+                col_data = (col_data - numpy.mean(col_data)) / numpy.std(col_data)
             data[column] = col_data
-        
 
         print("Saving the scaled data...")
-        result_object = ResultObject(data, keyword_set,
+        result_object = ResultObject(data, [],
                                      DataType.csv,
                                      CommandStatus.Success)
-        #else:
-         #   print("The array is not of numeric type so cannot normalize.",
-         #         " The data might contain some non-numeric types")
+        result_object.createName(csv_data.keyword_list,
+                                 command_name=self.commandTags()[0],
+                                 set_keyword_list=True)
 
         return result_object

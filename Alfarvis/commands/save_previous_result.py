@@ -42,12 +42,13 @@ class SavePreviousResult(AbstractCommand):
             previous_result = history.data.getLastObject()
             name_lower = name.data.lower()
             keyword_list = name_lower.split(' ')
-            print("Saving ", ' '.join(previous_result.keyword_list), ' as ',
-                  ' '.join(keyword_list))
             result_object = ResultObject(
                 previous_result.data, keyword_list,
                 history.data.last_data_type,
                 CommandStatus.Success)
+            result_object.createName(keyword_list)
+            print("Saving ", ' '.join(previous_result.keyword_list), ' as ',
+                  result_object.name)
         except RuntimeError:
             print("Cannot find last object from history")
 
