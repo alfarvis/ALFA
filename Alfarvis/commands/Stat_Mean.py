@@ -47,7 +47,7 @@ class StatMean(AbstractCommand):
                     array_data.keyword_list,
                     command_name=self.commandTags()[0],
                     set_keyword_list=True)
-            print("Mean of", array_data.name, "is", max_val)
+            print("Mean of", array_data.name, "is", mean_val)
         else:
             print("The array is not of numeric type so cannot take mean")
 
