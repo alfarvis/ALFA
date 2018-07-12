@@ -43,7 +43,7 @@ class ReadCSV(AbstractReader):
             else:
                 col_split = splitPattern(column)
             col_data = data[column].values
-            col_keyword_list = col_split + keyword_list
+            col_keyword_list = col_split
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status,
                 add_to_cache=True)
@@ -61,7 +61,7 @@ class ReadCSV(AbstractReader):
                 # few
                 if len(unique_vals) < 5:
                     result_objects = self.add_categories_as_columns(
-                    unique_vals, col_data, col_split, keyword_list,
+                    unique_vals, col_data, col_split,
                     result_objects, command_status)
         # Replace columns:
         data.columns = new_column_names
@@ -74,7 +74,7 @@ class ReadCSV(AbstractReader):
         return result_objects
 
     def add_categories_as_columns(self, uniqVals, col_data, col_split,
-                                  keyword_list, result_objects,
+                                  result_objects,
                                   command_status):
         """
             Module to convert a categorical column into a bunch of logical
@@ -85,7 +85,7 @@ class ReadCSV(AbstractReader):
             categ_name = str(uniV)
             category_split = [key_val.lower()
                               for key_val in splitPattern(categ_name)]
-            category_keyword_list = category_split + col_split + keyword_list
+            category_keyword_list = category_split + col_split
             result_object = ResultObject(
                 categ_data * 1, category_keyword_list,
                 DataType.logical_array, command_status)
