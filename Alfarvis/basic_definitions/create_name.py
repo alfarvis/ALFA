@@ -33,6 +33,15 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
     Create a unique name from given keyword lists
     """
     foundName = False
+    # Remove common keywords
+    keyword_list1_mod = [keyword for keyword in keyword_list1 if keyword not in keyword_list2]
+    keyword_list2_mod = [keyword for keyword in keyword_list2 if keyword not in keyword_list1]
+    if keyword_list1_mod == [] and keyword_list2_mod == []:
+        # If both keyword lists are same remove one
+        keyword_list2 = []
+    else:
+        keyword_list1 = keyword_list1_mod
+        keyword_list2 = keyword_list2_mod
     command_name_list = []
     first_keyword_list = []
     second_keyword_list = []

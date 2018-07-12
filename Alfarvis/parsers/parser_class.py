@@ -41,7 +41,7 @@ class AlfaDataParser:
     def printCommands(self, command_list):
         print("Found multiple commands. Please select one of the commands")
         for command in command_list:
-            print(command.keyword_list[0])
+            print(command.name)
 
     # Keeping it different for commands and arguments for now in case we want
     # to add further intelligence in either which might have a different logic
@@ -103,7 +103,7 @@ class AlfaDataParser:
                 self.printCommands(self.command_search_result)
 
     def foundCommand(self, res):
-        print("Found command", res.keyword_list[0])
+        print("Found command", res.name)
         self.currentState = ParserStates.command_known
         self.currentCommand = res.data
         self.resolveArguments(self.keyword_list)

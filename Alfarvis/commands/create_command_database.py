@@ -2,6 +2,7 @@
 from Alfarvis.history import Database
 from . import abstract_command
 from Alfarvis.basic_definitions.get_subclasses import get_subclasses
+from Alfarvis.basic_definitions.create_name import createName
 
 
 def create_command_database():
@@ -13,8 +14,11 @@ def create_command_database():
 
     Returns - a keyword searchable database of available commands
     """
+    command_name_set = set()
     command_database = Database()
     for cls in get_subclasses(abstract_command.AbstractCommand):
         cls_instance = cls()
-        command_database.add(cls_instance.commandTags(), cls_instance)
+        name, _ = createName(command_name_set, cls_instance.commandTags())
+        command_database.add(cls_instance.commandTags(), cls_instance, name=name)
+        command_name_set.add(name)
     return command_database
