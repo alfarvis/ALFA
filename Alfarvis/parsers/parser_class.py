@@ -46,7 +46,8 @@ class AlfaDataParser:
     # Keeping it different for commands and arguments for now in case we want
     # to add further intelligence in either which might have a different logic
     def printArguments(self, args):
-
+        if type(args) is DataObject:
+            args = [args]
         for arg in args:
             print(" ".join(arg.keyword_list))
 
@@ -392,7 +393,7 @@ class AlfaDataParser:
             for arg in self.argumentsFound:
                 print("Argument ", arg, "found")
                 print("Matching argument: ",
-                      self.printArguments([self.argumentsFound[arg]]))
+                self.printArguments(self.argumentsFound[arg]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
                     print("\nMultiple arguments found for ", arg)

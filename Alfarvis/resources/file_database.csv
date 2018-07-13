@@ -4,7 +4,10 @@ Most-Recent-Cohorts-Scorecard-Elements.csv,csv,cohorts scorecard,Random data obt
 U.S._Chronic_Disease_Indicators__CDI_.csv,csv,chronic disease indicators CDI,CDI indicators specifying indicators for chronic diseases
 image.jpg,image,hand parallel mirror illusion phone,A hand is holding phone which shows multiple pictures
 crime.csv,csv,crime data,crime data from denver
-kmeans.csv,csv,k means ,Model for running basic k means
-hierarchical_clustering.csv,csv,hierarchical clustering,Model for running basic ward linkage based hierarchical clustering
-SVM.csv,csv,svm support vector machine,SVM Model for training a classifier on the data
+kmeans.csv,algorithm_arg,k means ,Model for running basic k means
+hierarchical_clustering.csv,algorithm_arg,hierarchical clustering,Model for running basic ward linkage based hierarchical clustering
+SVM.csv,algorithm_arg,svm support vector machine,SVM Model for training a classifier on the data
+RF.csv,algorithm_arg,rf random forest,random forest model for training a classifier on the data
+LR.csv,algorithm_arg,logisitic regression,logistic regression model for training a classifier
+DT.csv,algorithm_arg,dt decision tree,decision tree model for training a classifier
 vins_test_data.csv,csv,vins test calibration data,Calibration data for VINS and Mocap

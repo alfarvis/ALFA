@@ -1,0 +1,1 @@
+Model,C,cache_size,class_weight,coef0,decision_function_shape,degree,gamma,kernel,max_iter,probability,random_state,shrinking,tol,verbosesvm.SVC(),1,200,None,0, 'ovr',3, 'auto', 'rbf',-1,TRUE,None,TRUE,0.001,FALSE
