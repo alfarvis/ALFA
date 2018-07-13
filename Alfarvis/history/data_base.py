@@ -22,6 +22,7 @@ class Database(object):
         self.data_objects = []
         self.cache_len = cache_len
         self.cache = deque(maxlen=cache_len)
+        self.name_dict = dict()
 
     def add(self, keyword_list, data_object, add_to_cache=True,
             data_type=None, name=None):
@@ -30,7 +31,10 @@ class Database(object):
         Parameters
             keyword_list - A list of strings to identify data object
         """
-        self.keyword_search.add(keyword_list, len(self.data_objects))
+        i = len(self.data_objects)
+        self.keyword_search.add(keyword_list, i)
+        if name is not None:
+            self.name_dict[name] = i
         data_object = DataObject(data_object, keyword_list, data_type, name)
         self.data_objects.append(data_object)
         if add_to_cache:
@@ -44,6 +48,14 @@ class Database(object):
         """
         return self.keyword_search.current_hit_count
 
+    def nameSearch(self, name):
+        """
+        Search for data object with specified data type and var name
+        """
+        if name in self.name_dict:
+            return self.name_dict[name]
+        return None
+
     def search(self, keyword_list):
         """
         Search for data object with specified keyword list
@@ -55,8 +67,18 @@ class Database(object):
             A list of data structs. Each struct contains data and the
             keywords the data was added with
         """
-        index_list = self.keyword_search.search(keyword_list)
-        return [self.data_objects[index] for index in index_list]
+        name_search_result = [self.data_objects[self.name_dict[name]]
+                              for name in keyword_list
+                              if name in self.name_dict]
+        if len(name_search_result) == 0:
+            split_keyword_list = [keyword.split('.')
+                                  for keyword in keyword_list]
+            concat_keyword_list = sum(split_keyword_list, [])
+            new_keyword_list = list(filter(None, concat_keyword_list))
+            index_list = self.keyword_search.search(new_keyword_list)
+            return [self.data_objects[index] for index in index_list]
+        else:
+            return name_search_result
 
     def getLastObject(self, index=0):
         """
