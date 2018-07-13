@@ -11,6 +11,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 import pandas as pd
 
@@ -47,15 +48,16 @@ class Stat_Clustermap(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         print("Displaying heatmap")
+        f = plt.figure()
         if StatContainer.ground_truth is None:
-            sns.clustermap(df, cbar=True, square=False, annot=False, cmap='jet', standard_scale=1)
+            sns.clustermap(df, cbar=True, square=False, annot=False,
+                           cmap='jet', standard_scale=1)
         else:
             gt1 = pd.Series(StatContainer.ground_truth.data)
             lut = dict(zip(gt1.unique(), "rbg"))
             row_colors = gt1.map(lut)
-            sns.clustermap(df, standard_scale=1, row_colors=row_colors, cmap="jet")
+            sns.clustermap(df, standard_scale=1, row_colors=row_colors,
+                           cmap="jet")
 
         plt.show(block=False)
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
-
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['heatmap'])

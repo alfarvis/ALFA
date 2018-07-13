@@ -11,6 +11,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
+from .Viz_Container import VizContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
 
@@ -55,10 +56,10 @@ class Stat_Correl(AbstractCommand):
             print("The correlation between ", kl1[0], " and ", kl1[1], " is ", str(corr_res.values[0][1]))
 
         print("Displaying the result as a heatmap")
+        f = plt.figure()
+        ax = f.add_subplot(111)
         sns.heatmap(corr_res, cbar=True, square=True, annot=True, fmt='.2f', annot_kws={'size': 15},
            xticklabels=df.columns, yticklabels=df.columns,
-           cmap='jet')
+           cmap='jet', ax=ax)
         plt.show(block=False)
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
-
-        return result_object
+        return VizContainer.createResult(f, array_datas, ['correlation'])

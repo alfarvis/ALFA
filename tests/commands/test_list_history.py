@@ -17,24 +17,30 @@ class TestListHistory(unittest.TestCase):
     def testDataTypes(self):
         list_history_command = ListHistory()
         argument_types = list_history_command.argumentTypes()
-        self.assertEqual(len(argument_types), 1)
+        self.assertEqual(len(argument_types), 2)
         self.assertFalse(argument_types[0].optional)
         self.assertEqual(argument_types[0].argument_type, DataType.history)
         self.assertEqual(argument_types[0].tags, [])
+        self.assertFalse(argument_types[1].optional)
+        self.assertEqual(argument_types[1].argument_type,
+                         DataType.user_conversation)
+        self.assertEqual(argument_types[1].tags, [])
 
     def testEvaluate(self):
         list_history_command = ListHistory()
-        arg = list_history_command.argumentTypes()[0]
+        arg1 = list_history_command.argumentTypes()[0]
+        arg2 = list_history_command.argumentTypes()[1]
         history = TypeDatabase()
         history.add(DataType.number, ['my', 'lucky', 'number'], 10)
         history.add(DataType.string, [
                     'my', 'favorite', 'quote'], 'Pen is sharper than knife')
         history.add(DataType.array, ['zero', 'array'], np.zeros(10))
-        arguments = {arg.keyword: DataObject(history, 'history')}
+        arguments = {arg1.keyword: DataObject(history, 'history'),
+                     arg2.keyword: DataObject([], 'user_conv')}
         result_object = list_history_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)
         # Try no data
-        arguments = {arg.keyword: None}
+        arguments = {arg1.keyword: None, arg2.keyword: DataObject([], '')}
         result_object = list_history_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Error)
 
