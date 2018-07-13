@@ -95,7 +95,7 @@ class KeywordSearch(object):
             if intersect_empty and (current_hit == S.max_hit_count):
                 S.max_hit_set.add(elem)
 
-    def search(self, keyword_list):
+    def search(self, keyword_list, use_max_hit=True):
         """
         Return the indices which are common
         among all the keywords specified by
@@ -106,12 +106,20 @@ class KeywordSearch(object):
 
         max_hit_word_set = MaxHitKeywordSet()
         secondary_keyword_set = set()
+        out_set = set()  # Used only if use_max_hit = False
         for keyword in keyword_list:
             # Try correcting if not in dict
             if keyword not in self.keyword_dict:
                 secondary_keyword_set.update(self.correctTypo(keyword))
-            else:
+            elif use_max_hit:
                 self.updateMaxHitSet(keyword, max_hit_word_set)
+            else:
+                out_set.update(self.keyword_dict[keyword])
+        if not use_max_hit:
+            if len(out_set) == 0:
+                for keyword in secondary_keyword_set:
+                    out_set.update(self.keyword_dict[keyword])
+            return list(out_set)
         backup_max_hit_set = max_hit_word_set.max_hit_set.copy()
         self.current_hit_count = max_hit_word_set.max_hit_count
         # Rely on secondary keywords only if we did not find a unique max
