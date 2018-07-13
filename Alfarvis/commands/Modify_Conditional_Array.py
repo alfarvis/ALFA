@@ -36,7 +36,7 @@ class SetConditionalArray(AbstractCommand):
 
         """
         StatContainer.conditional_array = array_data
-        print("Setting filter to ", " ".join(array_data.keyword_list))
+        print("Setting filter to ", array_data.name)
         return ResultObject(None, None, None, CommandStatus.Success)
 
 
