@@ -5,7 +5,7 @@ Define load command
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
-from Alfarvis.history.keyword_search import KeywordSearch
+from Alfarvis.history.data_base import Database
 from .abstract_command import AbstractCommand
 from .argument import Argument
 
@@ -16,12 +16,12 @@ class ListHistory(AbstractCommand):
     """
 
     def __init__(self):
-        self.datatype_keyword_search = KeywordSearch()
-        data_types = DataType.__members__
-        self.data_keys = list(data_types.keys())
-        for i, key in enumerate(self.data_keys):
+        self.datatype_database = Database()
+        for key in DataType.__members__:
             if key not in ["history", "user_string", "user_conversation"]:
-                self.datatype_keyword_search.add(key.split('_'), i)
+                key_split = key.split('_')
+                self.datatype_database.add(key_split, DataType[key],
+                                           name=key)
 
     def commandTags(self):
         """
@@ -47,9 +47,8 @@ class ListHistory(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Success)
         row_format = "{:>15} {:>35} {:>15}"
         print(row_format.format("Name", "Keywords", "Type"))
-        user_data_indices = self.datatype_keyword_search.search(
-                user_conv.data, use_max_hit=False)
-        user_data_types = [DataType[self.data_keys[i]] for i in user_data_indices]
+        user_data_types = [data_object.data for data_object in
+                           self.datatype_database.search(user_conv.data)]
         try:
             for data_type, data_base in history.data._argument_database.items():
                 if user_data_types != [] and data_type not in user_data_types:
