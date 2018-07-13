@@ -48,7 +48,7 @@ class DM_Classify(AbstractCommand):
 
         # Get the data frame
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 

@@ -14,9 +14,8 @@ from .Stat_Container import StatContainer
 import pandas as pd
 from sklearn.manifold import TSNE
 from Alfarvis.Toolboxes.DataGuru import DataGuru
-from sklearn import metrics # for the check the error and accuracy of the model
+from sklearn import metrics  # for the check the error and accuracy of the model
 from sklearn import preprocessing
-
 
 
 class DM_TrainClassifier(AbstractCommand):
@@ -28,16 +27,16 @@ class DM_TrainClassifier(AbstractCommand):
         """
         Tags to identify the train a classifier command
         """
-        return ["train","classifier","learn"]
+        return ["train", "classifier", "learn"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
         executing the train classifier command
         """
-        #TODO Add an argument for k = number of clusters
+        # TODO Add an argument for k = number of clusters
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=-1), 
+                         argument_type=DataType.array, number=-1),
                          Argument(keyword="classifier_algo", optional=True,
                          argument_type=DataType.algorithm_arg)]
 
@@ -47,15 +46,15 @@ class DM_TrainClassifier(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        
+
         # Get the data frame
         sns.set(color_codes=True)
-        command_status, df, kl1 = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
-        
+
         if StatContainer.ground_truth is not None:
-            df = DataGuru.removeGT(df,StatContainer.ground_truth)
+            df = DataGuru.removeGT(df, StatContainer.ground_truth)
 
         if StatContainer.ground_truth is None:
             print("Please set a feature vector to ground truth by typing set ground truth before using this command")
@@ -69,39 +68,37 @@ class DM_TrainClassifier(AbstractCommand):
 
         # Get the classifier model
         model = classifier_algo.data
-        
-        #Code to run the classifier
+
+        # Code to run the classifier
         df_drop = df_remove_nan.drop('ground_truth', axis=1)
         X = df_drop.values
 
         Y = df_remove_nan['ground_truth']
-        
-        #Get a standard scaler for the extracted data X
+
+        # Get a standard scaler for the extracted data X
         scaler = preprocessing.StandardScaler().fit(X)
         X = scaler.transform(X)
 
-        #Train the classifier
-        print ("Training classifier using the following features:")
+        # Train the classifier
+        print("Training classifier using the following features:")
         print(df_drop.columns)
         model.fit(X, Y)
-        
-        
-        
-        #Print an update
-        print("The classifier", " ".join(classifier_algo.keyword_list),"has been trained")
-        
+
+        # Print an update
+        print("The classifier", " ".join(classifier_algo.keyword_list), "has been trained")
+
         predictions = model.predict(X)
         accuracy = metrics.accuracy_score(predictions, Y)
         print("Accuracy on training set : %s" % "{0:.3%}".format(accuracy))
         plt.show(block=False)
-        
-        trained_model = {'Scaler':scaler,'Model':model}
-        
-        #TODO Need to save the model
-        #Ask user for a name for the model
-        keyword_list = ["trained","model"]
+
+        trained_model = {'Scaler': scaler, 'Model': model}
+
+        # TODO Need to save the model
+        # Ask user for a name for the model
+        keyword_list = ["trained", "model"]
         keyword_list = keyword_list + classifier_algo.keyword_list
-        
-        result_object = ResultObject(trained_model, keyword_list,DataType.trained_model,CommandStatus.Success)    
+
+        result_object = ResultObject(trained_model, keyword_list, DataType.trained_model, CommandStatus.Success)
 
         return result_object
