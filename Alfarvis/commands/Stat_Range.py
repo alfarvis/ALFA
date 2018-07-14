@@ -39,8 +39,9 @@ class StatRange(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            max_val = numpy.max(array)
-            min_val = numpy.min(array)
+            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            max_val = numpy.max(array_filtered)
+            min_val = numpy.min(array_filtered)
             range_val = max_val - min_val
             result_object = ResultObject(range_val, [],
                                          DataType.array,

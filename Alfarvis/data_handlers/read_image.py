@@ -17,5 +17,7 @@ class ReadImage(AbstractReader):
             return ResultObject(None, None, None,
                                 command_status=CommandStatus.Error)
         # Initialize image manipulation command group
-        return ResultObject(data, keyword_list, DataType.image,
-                            CommandStatus.Success, add_to_cache=True)
+        result = ResultObject(data, keyword_list, DataType.image,
+                              CommandStatus.Success, add_to_cache=True)
+        result.createName(keyword_list)
+        return result

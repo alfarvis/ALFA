@@ -53,27 +53,22 @@ class DM_TrainClassifier(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        if StatContainer.ground_truth is not None:
-            df = DataGuru.removeGT(df, StatContainer.ground_truth)
-
         if StatContainer.ground_truth is None:
             print("Please set a feature vector to ground truth by typing set ground truth before using this command")
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
-            Y = StatContainer.ground_truth.data
+            df = DataGuru.removeGT(df, StatContainer.ground_truth)
+            Y = StatContainer.filterGroundTruth()
 
-        df['ground_truth'] = Y
-        df_remove_nan = df.dropna()
+        # Remove nans:
+        df, Y = DataGuru.removenan(df, Y)
 
         # Get the classifier model
         model = classifier_algo.data
 
         # Code to run the classifier
-        df_drop = df_remove_nan.drop('ground_truth', axis=1)
-        X = df_drop.values
-
-        Y = df_remove_nan['ground_truth']
+        X = df.values
 
         # Get a standard scaler for the extracted data X
         scaler = preprocessing.StandardScaler().fit(X)
@@ -81,7 +76,7 @@ class DM_TrainClassifier(AbstractCommand):
 
         # Train the classifier
         print("Training classifier using the following features:")
-        print(df_drop.columns)
+        print(df.columns)
         model.fit(X, Y)
 
         # Print an update

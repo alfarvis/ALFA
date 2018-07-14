@@ -18,6 +18,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
 class StatSigTest(AbstractCommand):
     """
     Calculates ttest for a predictor variable
@@ -51,22 +52,23 @@ class StatSigTest(AbstractCommand):
                 uniqVals = np.unique(gt1)
                 pVals = []
                 startFlag = 1
+                # TODO: Remove nans from arrays!!
                 # TODO COmplete this: Idea is to create a heatmap like the one
                 # we did for correlation
                 for uniV in uniqVals:
-                    
-                    stTitle = " ".join(["group ",str(uniV)])
+
+                    stTitle = " ".join(["group ", str(uniV)])
                     a = arr[gt1 == uniV]
                     allp = []
-                    for iter in range(len(uniqVals)):                        
+                    for iter in range(len(uniqVals)):
                         b = arr[gt1 == uniqVals[iter]]
-                        if uniV==uniqVals[iter]:
+                        if uniV == uniqVals[iter]:
                             allp.append(0)
-                        else:                            
+                        else:
                             ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
-                            allp.append(ttest_val.pvalue)                        
+                            allp.append(ttest_val.pvalue)
                     if startFlag == 1:
-                        pVals = pd.DataFrame({stTitle:allp})
+                        pVals = pd.DataFrame({stTitle: allp})
                         startFlag = 0
                     else:
                         pVals[stTitle] = allp
@@ -76,13 +78,13 @@ class StatSigTest(AbstractCommand):
         else:
             print("Please provide numerical array for ttest")
             return result_object
-                
+
         print("Displaying the result as a heatmap")
-        sns.heatmap(pVals, cbar = True,  square = True, annot=True, fmt= '.2f',annot_kws={'size': 15},
-           xticklabels= pVals.columns, yticklabels= pVals.columns,
-           cmap= 'jet')
+        sns.heatmap(pVals, cbar=True, square=True, annot=True, fmt='.2f', annot_kws={'size': 15},
+           xticklabels=pVals.columns, yticklabels=pVals.columns,
+           cmap='jet')
         plt.show(block=False)
-        result_object = ResultObject(None, None, None,CommandStatus.Success)        
+        result_object = ResultObject(None, None, None, CommandStatus.Success)
         return result_object
         # Debug this @Vishwa
         # keyword_list = array_data.keyword_list

@@ -44,7 +44,7 @@ class Viz_VioloinPlot(AbstractCommand):
 
         sns.set(color_codes=True)
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
-                array_datas)
+                array_datas, remove_nan=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 

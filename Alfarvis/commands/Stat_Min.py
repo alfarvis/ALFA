@@ -39,7 +39,8 @@ class StatMin(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            min_val = numpy.min(array)
+            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            min_val = numpy.min(array_filtered)
             result_object = ResultObject(min_val, [],
                                          DataType.array,
                                          CommandStatus.Success)

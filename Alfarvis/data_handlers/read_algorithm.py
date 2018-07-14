@@ -8,8 +8,8 @@ import re
 import numpy as np
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
+
 class ReadAlgo(AbstractReader):
-    
 
     @classmethod
     def data_type(self):
@@ -24,9 +24,9 @@ class ReadAlgo(AbstractReader):
 
         command_status = CommandStatus.Success
 
-        
         result_object = ResultObject(
             model, keyword_list, DataType.algorithm_arg, command_status,
             add_to_cache=True)
-        
+        result_object.createName(keyword_list)
+
         return result_object

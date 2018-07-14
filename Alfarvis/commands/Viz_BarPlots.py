@@ -54,6 +54,8 @@ class VizBarPlots(AbstractCommand):
             return result_object
         else:
             gtVals = StatContainer.filterGroundTruth()
+            # Remove nans:
+            df, gtVals = DataGuru.removenan(df, gtVals)
 
             uniqVals = StatContainer.isCategorical(gtVals)
             rFlag = 0

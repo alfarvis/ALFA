@@ -53,8 +53,13 @@ class StatContainer(object):
             return None
         Nunique = len(uniqVals)
         N = len(array)
-        if N > 0 and isinstance(array[0], str) and Nunique < 50:
-            return uniqVals
-        elif (Nunique / N) > self.percCutoff_for_categorical:
-            return None
-        return uniqVals
+        if N > 0:
+            if hasattr(array, 'iloc'):
+                first_val = array.iloc[0]
+            else:
+                first_val = array[0]
+            if ((isinstance(first_val, str) and Nunique < 50) or
+                (Nunique < 50 and
+                 (Nunique / N) <= self.percCutoff_for_categorical)):
+                return uniqVals
+        return None

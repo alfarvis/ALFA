@@ -39,7 +39,8 @@ class StatMax(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            max_val = numpy.max(array)
+            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            max_val = numpy.max(array_filtered)
             result_object = ResultObject(max_val, [],
                                          DataType.array,
                                          CommandStatus.Success)
