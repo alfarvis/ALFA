@@ -59,6 +59,7 @@ class StatContainer(object):
             else:
                 first_val = array[0]
             if ((isinstance(first_val, str) and Nunique < 50) or
-                (Nunique / N) <= self.percCutoff_for_categorical):
+                (Nunique < 50 and
+                 (Nunique / N) <= self.percCutoff_for_categorical)):
                 return uniqVals
         return None

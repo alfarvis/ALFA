@@ -40,14 +40,16 @@ class LessThan(AbstractCommand):
 
     def evaluate(self, array_data, target):
         print("Target: ", target.data)
+        idx = np.logical_not(np.isnan(array_data.data))
+        out = np.full(array_data.data.shape, False)
         if self._operator == '<':
-            out = array_data.data < target.data
+            out[idx] = array_data.data[idx] < target.data
         elif self._operator == '<=':
-            out = array_data.data <= target.data
+            out[idx] = array_data.data[idx] <= target.data
         elif self._operator == '>':
-            out = array_data.data > target.data
+            out[idx] = array_data.data[idx] > target.data
         elif self._operator == '>=':
-            out = array_data.data >= target.data
+            out[idx] = array_data.data >= target.data
         else:
             return ResultObject(None, None, None, CommandStatus.Error)
         result = ResultObject(out, [], DataType.logical_array,
@@ -108,8 +110,10 @@ class Between(AbstractCommand):
 
     def evaluate(self, array_data, target):
         print("Finding range between: ", target[0].data, target[1].data)
-        out = (array_data.data > target[0].data)
-        out = np.logical_and(out, (array_data.data < target[1].data))
+        idx = np.logical_not(np.isnan(array_data.data))
+        out = np.full(array_data.data.shape, False)
+        out[idx] = (array_data.data[idx] > target[0].data)
+        out[idx] = np.logical_and(out[idx], (array_data.data[idx] < target[1].data))
         result = ResultObject(out, [], DataType.logical_array,
                               CommandStatus.Success, True)
         result.createName(array_data.keyword_list, command_name='between',
@@ -145,8 +149,10 @@ class Outside(AbstractCommand):
                          argument_type=DataType.number)]
 
     def evaluate(self, array_data, target):
-        out = (array_data.data < target[0].data)
-        out = np.logical_and(out, (array_data.data > target[0].data))
+        idx = np.logical_not(np.isnan(array_data.data))
+        out = np.full(array_data.data.shape, False)
+        out[idx] = (array_data.data[idx] < target[0].data)
+        out[idx] = np.logical_and(out[idx], (array_data.data[idx] > target[0].data))
         result = ResultObject(out, [], DataType.logical_array,
                               CommandStatus.Success, True)
         result.createName(array_data.keyword_list, command_name='outside',
