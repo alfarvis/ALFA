@@ -39,7 +39,8 @@ class StatMean(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            mean_val = numpy.mean(array)
+            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            mean_val = numpy.mean(array_filtered)
             result_object = ResultObject(mean_val, [],
                                          DataType.array,
                                          CommandStatus.Success)

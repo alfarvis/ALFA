@@ -49,10 +49,12 @@ class VizMultiScatter2D(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         if StatContainer.ground_truth is None:
+            df.dropna(inplace=True)
             df.boxplot(figsize=(10, 10), ax=ax)
         else:
             ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
             df[ground_truth] = StatContainer.filterGroundTruth()
+            df.dropna(inplace=True)
             df.boxplot(by=ground_truth, figsize=(10, 10), ax=ax)
 
         plt.show(block=False)

@@ -46,7 +46,8 @@ class Stat_Correl(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         sns.set(color_codes=True)
-        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(
+                array_datas, remove_nan=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 

@@ -40,22 +40,30 @@ class VizScatter2D(AbstractCommand):
         Create a scatter plot between two variables
 
         """
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
-        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(array_datas)
+        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
+                array_datas)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        array = df.values
         f = plt.figure()
         ax = f.add_subplot(111)
         if StatContainer.ground_truth is None:
+            df.dropna(inplace=True)
+            if df.shape[0] == 0:
+                return ResultObject(None, None, None, CommandStatus.Error)
+            array = df.values
             plt.scatter(array[:, 0], array[:, 1], edgecolor="None", alpha=0.35)
         else:
             gt1 = pd.Series(StatContainer.filterGroundTruth())
+            df, gt1 = DataGuru.removenan(df, gt1)
+            if df.shape[0] == 0:
+                return ResultObject(None, None, None, CommandStatus.Error)
             lut = dict(zip(gt1.unique(), np.linspace(0, 1, gt1.unique().size)))
             row_colors = gt1.map(lut)
-            ax.scatter(array[:, 0], array[:, 1], c=row_colors, cmap="jet", edgecolor="None", alpha=0.35)
+            array = df.values
+            ax.scatter(array[:, 0], array[:, 1], c=row_colors, cmap="jet",
+                       edgecolor="None", alpha=0.35)
         ax.set_xlabel(kl1[0])
         ax.set_ylabel(kl1[1])
         ax.set_title(cname)

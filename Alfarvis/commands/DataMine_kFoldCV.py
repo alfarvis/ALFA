@@ -53,9 +53,18 @@ class DM_TrainClassifier(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        # remove ground truth from data
-        if StatContainer.ground_truth is not None:
+        # Get the ground truth array
+        if StatContainer.ground_truth is None:
+            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
+            result_object = ResultObject(None, None, None, CommandStatus.Error)
+            return result_object
+        else:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
+            Y = StatContainer.ground_truth.data
+
+        # Remove nans:
+        df, Y = DataGuru.removenan(df, Y)
+
         # Get the classifier model
         model = classifier_algo.data
 
@@ -65,14 +74,6 @@ class DM_TrainClassifier(AbstractCommand):
         # Get a standard scaler for the extracted data X
         scaler = preprocessing.StandardScaler().fit(X)
         X = scaler.transform(X)
-
-        # Get the ground truth array
-        if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
-            result_object = ResultObject(None, None, None, CommandStatus.Error)
-            return result_object
-        else:
-            Y = StatContainer.ground_truth.data
 
         print('Running k fold cross validation...')
 

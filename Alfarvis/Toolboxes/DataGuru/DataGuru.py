@@ -9,16 +9,16 @@ from Alfarvis.commands.Stat_Container import StatContainer
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 import collections
-from sklearn.linear_model import LogisticRegression # to apply the Logistic regression
+from sklearn.linear_model import LogisticRegression  # to apply the Logistic regression
 # from sklearn.model_selection import train_test_split # to split the data into two parts
 from sklearn.model_selection import StratifiedKFold
 # from sklearn.model_selection import GridSearchCV# for tuning parameter
-from sklearn.ensemble import RandomForestClassifier # for random forest classifier
+from sklearn.ensemble import RandomForestClassifier  # for random forest classifier
 #from sklearn.naive_bayes import GaussianNB
 #from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import svm # for Support Vector Machine
-from sklearn import metrics # for the check the error and accuracy of the model
+from sklearn import svm  # for Support Vector Machine
+from sklearn import metrics  # for the check the error and accuracy of the model
 from sklearn import preprocessing
 from sklearn.model_selection import LeaveOneOut
 import re
@@ -43,7 +43,8 @@ class DataGuru:
         - Feed Forward Neural Network
     """
     @classmethod
-    def transformArray_to_dataFrame(self, array_datas, useCategorical=False, expand_single=False):
+    def transformArray_to_dataFrame(self, array_datas, useCategorical=False, expand_single=False,
+                                    remove_nan=False):
         # Create a combined array and keyword list
         array_sizes = []
         # Check if array_datas is of length 1 or not
@@ -103,7 +104,17 @@ class DataGuru:
         if df.size == 0:
             print("No arrays found in the arguments provided")
             command_status = CommandStatus.Error
+        if remove_nan:
+            df.dropna(inplace=True)
         return command_status, df, df.columns.values.tolist(), common_name
+
+    @classmethod
+    def removenan(self, df, gt):
+        df['ground_truth'] = gt
+        df.dropna(inplace=True)
+        gt_mod = df['ground_truth']
+        df.drop('ground_truth', axis=1, inplace=True)
+        return df, gt_mod
 
     @classmethod
     def standardizeDataFrame(self, df):
@@ -111,7 +122,7 @@ class DataGuru:
         return df
 
     @classmethod
-    def readAlgorithm(self,file_path):
+    def readAlgorithm(self, file_path):
         data = pd.read_csv(file_path)
         model = eval(data['Model'][0])
         for column in data.columns:
@@ -124,29 +135,27 @@ class DataGuru:
             str_to_evaluate = str1 + " = " + str2
             exec(str_to_evaluate)
         return model
-                
-                    
+
     @classmethod
-    def runKFoldCV(self,X,Y,model,num_folds=10):
-        
+    def runKFoldCV(self, X, Y, model, num_folds=10):
+
         # Setting a seed for randomly splitting the data for k fold CV
         seed = 3
         np.random.seed(seed)
-        
-        #Getting the training and testing splits for CV
+
+        # Getting the training and testing splits for CV
         kfold = StratifiedKFold(n_splits=num_folds, shuffle=True, random_state=seed)
         cvscores = []
         aucscores = []
-
 
         allTrue = []
         allPred = []
         for train, test in kfold.split(X, Y):
 
-            #Get the training and test dataset for this run
+            # Get the training and test dataset for this run
             X_train = X[train]
             X_test = X[test]
-            
+
             # Fit the model
             model.fit(X_train, Y[train])
             # evaluate the model
@@ -155,19 +164,18 @@ class DataGuru:
             cvscores.append(scores * 100)
             #fpr, tpr, thresholds = metrics.roc_curve(Y[test], Y_Pr[:, 0], pos_label=1)
             #auc_val = metrics.auc(fpr, tpr)
-            #aucscores.append(auc_val)
+            # aucscores.append(auc_val)
 
             allTrue = allTrue + (list(Y[test]))
             allPred = allPred + (list(model.predict(X_test)))
-        allTrue = np.array(allTrue)-1
-        allPred = np.array(allPred)-1
+        allTrue = np.array(allTrue) - 1
+        allPred = np.array(allPred) - 1
         #TP,FP,TN,FN = self.perf_measure(self,allTrue,allPred)
         #Sens = TP/(TP+FN)
         #Spec = TN/(FP+TN)
-        
-        cm = metrics.confusion_matrix(allTrue,allPred)
-        
-        
+
+        cm = metrics.confusion_matrix(allTrue, allPred)
+
         #print("%d-fold cross validation accuracy -  %.2f%% (+/- %.2f%%)" % (num_folds, np.mean(cvscores), np.std(cvscores)))
         #print("%d-fold cross validation AUC -  %.2f (+/- %.2f)" % (num_folds, np.mean(aucscores), np.std(aucscores)))
         #print("%d-fold cross validation Sens -  %.2f " % (num_folds, Sens, ))
@@ -175,20 +183,20 @@ class DataGuru:
 
         return cm, cvscores
 
-    @classmethod    
-    def FindBestClassifier(self,X,Y,modelList,num_folds):
+    @classmethod
+    def FindBestClassifier(self, X, Y, modelList, num_folds):
         all_cv_scores = []
         all_mean_cv_scores = []
         all_confusion_matrices = []
         for i in range(len(modelList)):
-            cm,cvscores = (DataGuru.runKFoldCV(X,Y,modelList[i]['Model'],num_folds))
+            cm, cvscores = (DataGuru.runKFoldCV(X, Y, modelList[i]['Model'], num_folds))
             all_cv_scores.append(cvscores)
             all_mean_cv_scores.append(np.mean(cvscores))
             all_confusion_matrices.append(cm)
-        return all_cv_scores, all_mean_cv_scores,all_confusion_matrices
-    
+        return all_cv_scores, all_mean_cv_scores, all_confusion_matrices
+
     @classmethod
-    def removeGT(self,data_frame, ground_truth):
+    def removeGT(self, data_frame, ground_truth):
         pattern = re.compile('[^a-zA-Z0-9]+')
         all_caps_pattern = re.compile('^[^a-z]*$')
         col_head_pattern = re.compile('Unnamed: [0-9]+')
@@ -205,20 +213,20 @@ class DataGuru:
                 re.sub(r"([A-Z])", r" \1", column)
                 col_split = [key_val.lower()
                              for key_val in pattern.split(column)]
-            
+
             match_found = 0
             for str in col_split:
                 if str in kl:
-                    match_found = match_found+1
+                    match_found = match_found + 1
             if match_found == len(col_split):
                 col_to_drop.append(column)
-        if len(col_to_drop)>0:
-           data_frame = data_frame.drop(columns = col_to_drop)
-        
+        if len(col_to_drop) > 0:
+            data_frame = data_frame.drop(columns=col_to_drop)
+
         return data_frame
-    
+
     @classmethod
-    def plot_confusion_matrix(self,cm, classes,
+    def plot_confusion_matrix(self, cm, classes,
                           normalize=False,
                           title='Confusion matrix',
                           cmap=plt.cm.Blues):
@@ -228,34 +236,34 @@ class DataGuru:
         This method has been copied from scikit toolbox webpage
         http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
         """
-        #cm is confusion matrix
+        # cm is confusion matrix
         if normalize:
             cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
             print("Normalized confusion matrix")
         else:
             print('Confusion matrix, without normalization')
-    
+
         print(cm)
-    
+
         plt.imshow(cm, interpolation='nearest', cmap=cmap)
         plt.title(title)
         plt.colorbar()
         tick_marks = np.arange(len(classes))
         plt.xticks(tick_marks, classes, rotation=45)
         plt.yticks(tick_marks, classes)
-    
+
         fmt = '.2f' if normalize else 'd'
         thresh = cm.max() / 2.
         for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
             plt.text(j, i, format(cm[i, j], fmt),
                      horizontalalignment="center",
                      color="white" if cm[i, j] > thresh else "black")
-    
+
         plt.tight_layout()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
-    
-    def perf_measure(self,y_actual, y_hat):
+
+    def perf_measure(self, y_actual, y_hat):
         TP = 0
         FP = 0
         TN = 0
@@ -268,5 +276,6 @@ class DataGuru:
                 FP += 1
             if y_actual[i] == y_hat[i] == 0:
                 TN += 1
-            if y_hat[i] == 0 and y_actual[i] != y_hat[i]:    FN += 1
+            if y_hat[i] == 0 and y_actual[i] != y_hat[i]:
+                FN += 1
         return (TP, FP, TN, FN)

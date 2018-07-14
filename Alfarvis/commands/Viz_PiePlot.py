@@ -42,24 +42,27 @@ class VizPiePlots(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
         stTitle = " ".join(array_data.keyword_list)
-        col_data = array_data.data
+        col_data = pd.Series(array_data.data)
+        col_data.dropna(inplace=True)
         uniqVals = StatContainer.isCategorical(col_data)
         if uniqVals is not None:
             freq_vals = []
             for uniQ in uniqVals:
-                ind = (col_data == uniQ)
+                ind = (col_data.values == uniQ)
                 freq_vals.append(np.sum(ind * 1))
         else:
             print("Too many unique values to plot on a pie chart\n")
             print("Please select another chart type")
             return result_object
 
-        df = pd.Series(freq_vals, index=uniqVals, name=stTitle)
+        df = pd.Series(freq_vals, index=uniqVals, name='')
 
         f = plt.figure()
         ax = f.add_subplot(111)
 
         df.plot.pie(figsize=(8, 8), ax=ax)
+        ax.set_title(stTitle)
+        ax.set_xlabel('')
 
         plt.show(block=False)
         return VizContainer.createResult(f, array_data, ['pie'])

@@ -61,14 +61,9 @@ class DM_Classify(AbstractCommand):
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
             Y = StatContainer.ground_truth.data
 
-        # Remove NAN
-        df['ground_truth'] = Y
-        df_remove_nan = df.dropna()
-
-        # Get inputs
-        df_drop = df_remove_nan.drop('ground_truth', axis=1)
-        X = df_drop.values
-        Y = df_remove_nan['ground_truth']
+        # Remove nans:
+        df, Y = DataGuru.removenan(df, Y)
+        X = df.values
 
         # Get the classifier model
         trained_model = classifier_model.data

@@ -53,16 +53,28 @@ class DM_BestClassifier(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        # remove ground truth from data
-        if StatContainer.ground_truth is not None:
+        # Get the ground truth array
+        if StatContainer.ground_truth is None:
+            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
+            result_object = ResultObject(None, None, None, CommandStatus.Error)
+            return result_object
+        else:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
+            Y = StatContainer.ground_truth.data
+
+        # Remove nans:
+        df, Y = DataGuru.removenan(df, Y)
+
+        print("Training classifier using the following features:")
+        print(df.columns)
 
         # Get all the classifier models to test against each other
         modelList = []
+        print("Testing the following classifiers: ")
         for classifier_algo in classifier_algos:
             model = (classifier_algo.data)
-            model_keyword = " ".join(classifier_algo.keyword_list)
-            modelList.append({'Name': model_keyword, 'Model': model})
+            print(classifier_algo.name)
+            modelList.append({'Name': classifier_algo.name, 'Model': model})
 
         # Code to run the classifier
         X = df.values
@@ -70,14 +82,6 @@ class DM_BestClassifier(AbstractCommand):
         # Get a standard scaler for the extracted data X
         scaler = preprocessing.StandardScaler().fit(X)
         X = scaler.transform(X)
-
-        # Get the ground truth array
-        if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
-            result_object = ResultObject(None, None, None, CommandStatus.Error)
-            return result_object
-        else:
-            Y = StatContainer.ground_truth.data
 
         print('Finding the best classifier using k fold cross validation...')
 

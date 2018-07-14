@@ -39,18 +39,21 @@ class VizPlotLine(AbstractCommand):
         Create a line plot 
 
         """
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
-                array_datas, useCategorical=True, expand_single=True)
+                array_datas, useCategorical=True, expand_single=True,
+                remove_nan=True)
         if command_status == CommandStatus.Error:
+            return ResultObject(None, None, None, CommandStatus.Error)
+        elif df.shape[0] == 0:
+            print("No data left to plot after cleaning up!")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         if df.shape[1] == 1:
-            if StatContainer.isCategorical(df[df.columns[0]]) is not None:
+            uniqVals = StatContainer.isCategorical(df[df.columns[0]])
+            if uniqVals is not None:
                 arr_data = df[df.columns[0]]
-                lut = dict(zip(arr_data.unique(), np.linspace(0, 1, arr_data.unique().size)))
+                lut = dict(zip(uniqVals, np.linspace(0, 1, uniqVals.size)))
                 df[df.columns[0]] = arr_data.map(lut)
 
         f = plt.figure()

@@ -44,12 +44,14 @@ class StatListColumns(AbstractCommand):
                                     "Column_range"))
             for column in data.columns:
                 data_column = data[column]
+                data_column.dropna(inplace=True)
                 unique_vals = StatContainer.isCategorical(data_column)
                 if unique_vals is not None:
                     column_type = "Categorical"
                 elif np.issubdtype(data_column.dtype, np.number):
                     column_type = "Number"
-                elif isinstance(data_column[0], str):
+                elif (len(data_column) > 0 and
+                      isinstance(data_column.iloc[0], str)):
                     column_type = "String"
                 else:
                     column_type = "Unknown"

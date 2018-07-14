@@ -11,6 +11,7 @@ import numpy
 from sklearn import preprocessing
 import copy
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .Stat_Container import StatContainer
 
 
 class Stat_Standardize(AbstractCommand):
@@ -38,16 +39,17 @@ class Stat_Standardize(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-        data = csv_data.data
+        data = csv_data.data.copy()
 
         # if numpy.issubdtype(data.dtype, numpy.number):
         for column in data.columns:
-            col_data = data[column]
-            uniqVals = numpy.unique(col_data)
-            percCutoff_for_categorical = 0.1
-            if (len(uniqVals) / len(col_data)) > percCutoff_for_categorical and isinstance(col_data[0], str) == False:
-                col_data = (col_data - numpy.mean(col_data)) / numpy.std(col_data)
-            data[column] = col_data
+            col_data_drop = data[column].dropna()
+            uniqVals = StatContainer.isCategorical(col_data_drop)
+            if (uniqVals is None and
+                len(col_data_drop) > 0 and
+                isinstance(col_data_drop.iloc[0], str) == False):
+                data[column] = ((data[column] - numpy.mean(col_data_drop)) /
+                                numpy.std(col_data_drop))
 
         print("Saving the scaled data...")
         result_object = ResultObject(data, [],

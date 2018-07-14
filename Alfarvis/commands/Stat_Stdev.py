@@ -38,7 +38,8 @@ class StatStdev(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         array = array_data.data
         if numpy.issubdtype(array.dtype, numpy.number):
-            std_val = numpy.std(array)
+            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            std_val = numpy.std(array_filtered)
             result_object = ResultObject(
                 std_val, [], DataType.array, CommandStatus.Success)
             result_object.createName(

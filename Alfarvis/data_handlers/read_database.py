@@ -64,6 +64,7 @@ class ReadDatabase(AbstractReader):
                     keywords = row['keywords'].split(' ')
                     file_res = ResultObject(file_object, keywords,
                                             DataType.file_name)
+                    file_res.createName(keywords)
                     result_list.append(file_res)
                 result_object = result_list
             except:
