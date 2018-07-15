@@ -178,21 +178,6 @@ class TestParserMethods(unittest.
         idx = self.parser.getMinIndices(array)
         self.assertEqual(idx, [10])
 
-    def test_get_number(self):
-        self.assertEqual(self.parser.get_number('2.0'), 2.0)
-        self.assertEqual(self.parser.get_number('2'), 2)
-        self.assertEqual(self.parser.get_number('-1.0'), -1)
-        self.assertEqual(self.parser.get_number('100,000'), None)
-        self.assertEqual(self.parser.get_number('100R'), None)
-
-    def test_find_numbers(self):
-        res = self.parser.findNumbers(['2', 'and', '4'], 2)
-        self.assertEqual(res[0].data, 2)
-        self.assertEqual(res[1].data, 4)
-        res = self.parser.findNumbers(['2', 'and', '4'], 1)
-        self.assertEqual(len(res), 1)
-        self.assertEqual(res[0].data, 2)
-
     def test_extract_arg_from_user(self):
         key_words = 'find numbers between 2 and 4'.split(' ')
         arg = Argument(DataType.number, tags=[Argument.Tag('between', 1)],
