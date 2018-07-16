@@ -7,6 +7,25 @@ from .argument import Argument
 import pandas as pd
 import numpy as np
 
+
+class ConvertToDateTime(AbstractCommand):
+    def commandTags(self):
+        return ["convert", "extract", "date", "time"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="array_data", optional=True,
+                         argument_type=DataType.array)]
+
+    def evaluate(self, array_data):
+        try:
+            if isinstance(array_data.data[0], str):
+                date_time = pd.to_datetime(
+                    array_data.data, infer_datetime_format=True)
+                array_data.data = date_time
+        except:
+            print("Cannot transform data to date time")
+            return ResultObject(None, None, None, CommandStatus.Error)
+        return ResultObject(None, None, None, CommandStatus.Success)
 # Conditional commands
 
 
@@ -45,6 +64,7 @@ class LessThan(AbstractCommand):
             if isinstance(array_data.data[0], str):
                 date_time = pd.to_datetime(
                     array_data.data, infer_datetime_format=True)
+                array_data.data = date_time
                 in_data = date_time.year
             else:
                 in_data = array_data.data
@@ -54,6 +74,9 @@ class LessThan(AbstractCommand):
             if isinstance(array_data.data[0], str):
                 in_data = pd.to_datetime(
                     array_data.data, infer_datetime_format=True)
+                array_data.data = in_data
+            elif isinstance(array_data.data[0], pd.datetime):
+                in_data = array_data.data
             else:
                 print("Array data type not understood for comparing date time")
                 return ResultObject(None, None, None, CommandStatus.Error)
@@ -173,8 +196,10 @@ class Between(AbstractCommand):
                 print("Cannot find enough numbers. Please provide two numbers")
                 return ResultObject(None, None, None, CommandStatus.Error)
             if isinstance(array_data.data[0], str):
-                in_data = pd.to_datetime(
-                    array_data.data, infer_datetime_format=True).year
+                date_time = pd.to_datetime(
+                    array_data.data, infer_datetime_format=True)
+                array_data.data = date_time
+                in_data = date_time.year
             else:
                 in_data = array_data.data
             out1 = self.less_than.evaluateForNumbers(in_data, numbers[0],
@@ -187,6 +212,9 @@ class Between(AbstractCommand):
             if isinstance(array_data.data[0], str):
                 in_data = pd.to_datetime(array_data.data,
                                          infer_datetime_format=True)
+                array_data.data = in_data
+            elif isinstance(array_data.data[0], pd.datetime):
+                in_data = array_data.data
             else:
                 print("Array data type not understood for comparing date time")
                 return ResultObject(None, None, None, CommandStatus.Error)
