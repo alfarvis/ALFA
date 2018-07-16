@@ -16,7 +16,7 @@ class LessThan(AbstractCommand):
     specified value
     """
 
-    def __init__(self, condition=["less", "smaller", "before"], operator='<'):
+    def __init__(self, condition=["less", "before"], operator='<'):
         self._condition = condition
         self._operator = operator
 
@@ -107,7 +107,7 @@ class LessThan(AbstractCommand):
         return self.createResult(out, keyword_list)
 
     def evaluateForNumbers(self, array_data, target, keyword_list):
-        print("Target: ", target)
+        print("Target: ", target.data)
         out = np.full(array_data.shape, True)
         unresolved_idx = np.full(array_data.shape, True)
         self.updateOutput(out, array_data, target.data, unresolved_idx)
@@ -117,7 +117,7 @@ class LessThan(AbstractCommand):
 class LessThanEqual(LessThan):
 
     def __init__(self):
-        super(LessThanEqual, self).__init__(["less", "lesser", "equal"], '<=')
+        super(LessThanEqual, self).__init__(["less", "equal"], '<=')
 
 
 class GreaterThan(LessThan):

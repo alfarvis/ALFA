@@ -42,7 +42,12 @@ class VizPiePlots(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
         stTitle = " ".join(array_data.keyword_list)
-        col_data = pd.Series(array_data.data)
+        if StatContainer.conditional_array is not None:
+            inds = StatContainer.conditional_array.data
+            print("Nfiltered: ", np.sum(inds))
+        else:
+            inds = np.full(array_data.data.size, True)
+        col_data = pd.Series(array_data.data[inds])
         col_data.dropna(inplace=True)
         uniqVals = StatContainer.isCategorical(col_data)
         if uniqVals is not None:
