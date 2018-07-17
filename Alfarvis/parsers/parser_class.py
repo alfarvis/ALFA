@@ -2,7 +2,8 @@ from .parser_states import ParserStates
 from Alfarvis.commands import create_command_database
 from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
-from Alfarvis.basic_definitions import CommandStatus, DataType, DataObject
+from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
+                                        findNumbers)
 import numpy as np
 
 # TODO Remove/split based on commas and semicolumns etc
@@ -232,32 +233,6 @@ class AlfaDataParser:
                 (data_res_len == argument_number))
 
     @classmethod
-    def get_number(self, string_in):
-        """
-        Convert string to number if possible.
-        """
-        try:
-            res = float(string_in)
-        except:
-            res = None
-        return res
-
-    @classmethod
-    def findNumbers(self, keyword_list, N):
-        """
-        Find numbers from given keyword list. Will search for N
-        arguments
-        """
-        data_res = []
-        for keyword in keyword_list:
-            res = self.get_number(keyword)
-            if res is not None:
-                data_res.append(DataObject(res, []))
-            if len(data_res) == N:
-                break
-        return data_res
-
-    @classmethod
     def extractArgFromUser(self, key_words, argument):
         """
         Extract argument from user input if possible
@@ -279,8 +254,7 @@ class AlfaDataParser:
                 search_scope = key_words
 
             if argument.argument_type is DataType.number:
-                res = self.findNumbers(search_scope,
-                                       argument.number)
+                res = findNumbers(search_scope, argument.number)
                 if len(res) != 0:
                     data_res = data_res + res
                     break

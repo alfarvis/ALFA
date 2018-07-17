@@ -40,19 +40,22 @@ class StatRange(AbstractCommand):
 
         if numpy.issubdtype(array.dtype, numpy.number):
             array_filtered = array[numpy.logical_not(numpy.isnan(array))]
-            max_val = numpy.max(array_filtered)
-            min_val = numpy.min(array_filtered)
-            range_val = max_val - min_val
-            result_object = ResultObject(range_val, [],
-                                         DataType.array,
-                                         CommandStatus.Success)
-            result_object.createName(
-                    array_data.keyword_list,
-                    command_name=self.commandTags()[0],
-                    set_keyword_list=True)
-            print("Range of", array_data.name, "is", range_val,
-                   "from", min_val, "to", max_val)
+        elif numpy.issubdtype(array.dtype, numpy.datetime64):
+            array_filtered = array[numpy.logical_not(numpy.isnat(array))]
         else:
-            print("The array is not of numeric type so cannot find range")
+            print("The array is not supported type so cannot find max")
+            return result_object
+        max_val = numpy.max(array_filtered)
+        min_val = numpy.min(array_filtered)
+        range_val = max_val - min_val
+        result_object = ResultObject(range_val, [],
+                                     DataType.array,
+                                     CommandStatus.Success)
+        result_object.createName(
+                array_data.keyword_list,
+                command_name=self.commandTags()[0],
+                set_keyword_list=True)
+        print("Range of", array_data.name, "is", range_val,
+               "from", min_val, "to", max_val)
 
         return result_object
