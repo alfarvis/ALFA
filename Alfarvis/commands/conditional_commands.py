@@ -14,17 +14,33 @@ class ConvertToDateTime(AbstractCommand):
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
-                         argument_type=DataType.array)]
+                         argument_type=DataType.array),
+                Argument(keyword="user_conv", optional=False,
+                         argument_type=DataType.user_conversation)]
 
-    def evaluate(self, array_data):
+    def evaluate(self, array_data, user_conv):
         try:
             if isinstance(array_data.data[0], str):
                 date_time = pd.to_datetime(
                     array_data.data, infer_datetime_format=True)
                 array_data.data = date_time
+            if not isinstance(array_data.data[0], pd.datetime):
+                raise RuntimeError()
         except:
             print("Cannot transform data to date time")
             return ResultObject(None, None, None, CommandStatus.Error)
+        results = []
+        for word in ['day', 'year', 'month', 'hour', 'minute']:
+            if word in user_conv.data or word + 's' in user_conv.data:
+                out = getattr(date_time, word)
+                result = ResultObject(out, [], DataType.array)
+                result.createName(array_data.keyword_list, command_name=word,
+                                  set_keyword_list=True)
+                results.append(result)
+                print('Saving ', word, 'from ', array_data.name,
+                      ' as', result.name)
+        if results != []:
+            return results
         return ResultObject(None, None, None, CommandStatus.Success)
 # Conditional commands
 
