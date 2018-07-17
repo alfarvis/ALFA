@@ -71,11 +71,11 @@ class Database(object):
                               for name in keyword_list
                               if name in self.name_dict]
         if len(name_search_result) == 0:
-            split_keyword_list = [keyword.split('.')
-                                  for keyword in keyword_list]
-            concat_keyword_list = sum(split_keyword_list, [])
-            new_keyword_list = list(filter(None, concat_keyword_list))
-            index_list = self.keyword_search.search(new_keyword_list)
+            # split_keyword_list = [keyword.split('.')
+            #                      for keyword in keyword_list]
+            #concat_keyword_list = sum(split_keyword_list, [])
+            #new_keyword_list = list(filter(None, concat_keyword_list))
+            index_list = self.keyword_search.search(keyword_list)
             return [self.data_objects[index] for index in index_list]
         else:
             return name_search_result

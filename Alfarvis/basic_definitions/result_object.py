@@ -27,6 +27,10 @@ class ResultObject:
     def setDatabase(self, name_database):
         self._name_database = name_database
 
+    def removeName(self, name):
+        name_set = self._name_database[self.data_type]
+        name_set.discard(name)
+
     def createName(self, keyword_list1, keyword_list2=[], command_name='',
                    set_keyword_list=False):
         """

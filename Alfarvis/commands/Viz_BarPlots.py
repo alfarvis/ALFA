@@ -14,7 +14,6 @@ from .Stat_Container import StatContainer
 from .Viz_Container import VizContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
-from .Viz_Container import VizContainer
 
 
 class VizBarPlots(AbstractCommand):
