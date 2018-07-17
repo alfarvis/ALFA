@@ -10,7 +10,7 @@ import numpy as np
 
 class ConvertToDateTime(AbstractCommand):
     def commandTags(self):
-        return ["convert", "extract", "date", "time"]
+        return ["convert", "extract"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -24,6 +24,8 @@ class ConvertToDateTime(AbstractCommand):
                 date_time = pd.to_datetime(
                     array_data.data, infer_datetime_format=True)
                 array_data.data = date_time
+            else:
+                date_time = array_data.data
             if not isinstance(array_data.data[0], pd.datetime):
                 raise RuntimeError()
         except:
@@ -119,16 +121,19 @@ class LessThan(AbstractCommand):
         out[idx] = np.logical_and(out[idx], op_out)
         out[nan_idx] = False
 
-    def createResult(self, out, keyword_list):
+    def createResult(self, out, keyword_list, create_name=True):
         result = ResultObject(out, [], DataType.logical_array,
                               CommandStatus.Success, True)
-        result.createName(keyword_list,
-                          command_name=self._condition[0],
-                          set_keyword_list=True)
+        if create_name:
+            result.createName(keyword_list,
+                              command_name=self._condition[0],
+                              set_keyword_list=True)
+        else:
+            result.keyword_list = keyword_list
         return result
 
     def evaluateForDateTime(self, array_data, target_date_time_tup,
-                            keyword_list):
+                            keyword_list, create_name=True):
         days, months, years, hours, minutes = target_date_time_tup
         out = np.full(array_data.shape, True)
         unresolved_idx = np.full(array_data.shape, True)
@@ -143,14 +148,15 @@ class LessThan(AbstractCommand):
         if minutes != [] and np.any(unresolved_idx):
             self.updateOutput(out, array_data.minute, minutes[0],
                               unresolved_idx)
-        return self.createResult(out, keyword_list)
+        return self.createResult(out, keyword_list, create_name)
 
-    def evaluateForNumbers(self, array_data, target, keyword_list):
+    def evaluateForNumbers(self, array_data, target, keyword_list,
+                           create_name=True):
         print("Target: ", target.data)
         out = np.full(array_data.shape, True)
         unresolved_idx = np.full(array_data.shape, True)
         self.updateOutput(out, array_data, target.data, unresolved_idx)
-        return self.createResult(out, keyword_list)
+        return self.createResult(out, keyword_list, create_name)
 
 
 class LessThanEqual(LessThan):
@@ -218,11 +224,13 @@ class Between(AbstractCommand):
                 in_data = date_time.year
             else:
                 in_data = array_data.data
-            out1 = self.less_than.evaluateForNumbers(in_data, numbers[0],
-                                                   array_data.keyword_list)
+            out1 = self.less_than.evaluateForNumbers(in_data, numbers[1],
+                                                   array_data.keyword_list,
+                                                   create_name=False)
             out2 = self.greater_than.evaluateForNumbers(in_data, numbers[0],
-                                                      array_data.keyword_list)
-            out = np.logical_and(out1, out2)
+                                                      array_data.keyword_list,
+                                                      create_name=False)
+            out = np.logical_and(out1.data, out2.data)
             return self.createResult(out, array_data.keyword_list)
         else:
             if isinstance(array_data.data[0], str):
@@ -248,9 +256,11 @@ class Between(AbstractCommand):
                     date_time_list1.append([indiv_list[0]])
                     date_time_list2.append([indiv_list[1]])
             out1 = self.greater_than.evaluateForDateTime(
-                    in_data, date_time_list1, array_data.keyword_list)
+                    in_data, date_time_list1, array_data.keyword_list,
+                    create_name=False)
             out2 = self.less_than.evaluateForDateTime(
-                    in_data, date_time_list2, array_data.keyword_list)
+                    in_data, date_time_list2, array_data.keyword_list,
+                    create_name=False)
             out = np.logical_and(out1.data, out2.data)
             return self.createResult(out, array_data.keyword_list)
         return ResultObject(None, None, None, CommandStatus.Error)
@@ -279,6 +289,7 @@ class Outside(AbstractCommand):
 
     def evaluate(self, array_data, target):
         result = self.between.evaluate(array_data, target)
+        result.removeName(result.name)
         result.data = np.logical_not(result.data)
         result.createName(array_data.keyword_list, command_name='outside',
                           set_keyword_list=True)
@@ -392,6 +403,3 @@ class LogicalXor(LogicalAnd):
 
     def __init__(self):
         super(LogicalXor, self).__init__(["xor"], '^')
-
-
-# create categorical from conditional arrays
