@@ -25,7 +25,7 @@ class VizMultiScatter2D(AbstractCommand):
         """
         Tags to identify the box plot
         """
-        return ["boxplot", "box", "plot"]
+        return ["boxplot", "box plot"]
 
     def argumentTypes(self):
         """

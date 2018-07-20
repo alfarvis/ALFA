@@ -40,9 +40,13 @@ def searchDateTime(keyword_list):
                 if i < N - 1 and keyword_list[i + 1].isdigit():
                     years.append(int(keyword_list[i + 1]))
             elif i < N - 1 and keyword_list[i + 1].isdigit():
-                days.append(int(keyword_list[i + 1]))
-                if i < N - 2 and keyword_list[i + 2].isdigit():
-                    years.append(int(keyword_list[i + 2]))
+                number = int(keyword_list[i + 1])
+                if number <= 31:
+                    days.append(number)
+                    if i < N - 2 and keyword_list[i + 2].isdigit():
+                        years.append(int(keyword_list[i + 2]))
+                else:
+                    years.append(number)
 
         else:
             date_splits = None

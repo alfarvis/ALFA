@@ -19,7 +19,7 @@ class StatStdev(AbstractCommand):
         """
         return tags that are used to identify stdev command
         """
-        return ["stdev", "standard", "deviation"]
+        return ["stdev", "standard deviation"]
 
     def argumentTypes(self):
         """

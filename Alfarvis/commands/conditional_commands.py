@@ -10,7 +10,7 @@ import numpy as np
 
 class ConvertToDateTime(AbstractCommand):
     def commandTags(self):
-        return ["convert", "extract"]
+        return ["convert", "extract date", "to date", "date time"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -53,7 +53,8 @@ class LessThan(AbstractCommand):
     specified value
     """
 
-    def __init__(self, condition=["less", "before"], operator='<'):
+    def __init__(self, condition=["less than", "smaller than", "before"],
+                 operator='<'):
         self._condition = condition
         self._operator = operator
 
@@ -61,8 +62,8 @@ class LessThan(AbstractCommand):
         """
         Tags to identify the condition
         """
-        return self._condition + [self._operator, "condition", "conditional",
-                                  "logical", "logic", "create"]
+        return self._condition + [self._operator, "conditional array",
+                                  "logical array", "logic array", "create"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -84,6 +85,8 @@ class LessThan(AbstractCommand):
                     array_data.data, infer_datetime_format=True)
                 array_data.data = date_time
                 in_data = date_time.year
+            elif isinstance(array_data.data[0], pd.datetime):
+                in_data = array_data.data.year
             else:
                 in_data = array_data.data
             return self.evaluateForNumbers(in_data, numbers[0],
@@ -162,20 +165,24 @@ class LessThan(AbstractCommand):
 class LessThanEqual(LessThan):
 
     def __init__(self):
-        super(LessThanEqual, self).__init__(["less", "equal"], '<=')
+        super(LessThanEqual, self).__init__(["equal", "less than",
+                                             "smaller than", "before or"],
+                                            '<=')
 
 
 class GreaterThan(LessThan):
 
     def __init__(self):
-        super(GreaterThan, self).__init__(["greater", "bigger", "after"], '>')
+        super(GreaterThan, self).__init__(["greater than", "bigger than",
+                                           "after"], '>')
 
 
 class GreaterThanEqual(LessThan):
 
     def __init__(self):
         super(GreaterThanEqual, self).__init__(
-            ["greater", "bigger" "equal"], '>=')
+            ["equal",
+             "after or", "greater than", "bigger than"], '>=')
 
 
 # in between
@@ -192,8 +199,10 @@ class Between(AbstractCommand):
         Tags to identify the condition
         TODO: Check if we can less and greater together?
         """
-        return ["between", "inside", "range", "condition",
-                "conditional", "logical", "logic", "create"]
+        return ["between", "in between",
+                "inside", "inside range",
+                "in range", "conditional array",
+                "logical array", "logic array", "create"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -278,8 +287,9 @@ class Outside(AbstractCommand):
         Tags to identify the condition
         TODO: Check if we can less and greater together?
         """
-        return ["outside", "not", "range", "(", ")", "condition",
-                "conditional", "logical", "logic", "create"]
+        return ["outside", "not in",
+                "outside range", "conditional array",
+                "logical array", "logic array", "create"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -305,8 +315,8 @@ class Contains(AbstractCommand):
         """
         Tags to identify the command
         """
-        return ["contains", "condition",
-                "conditional", "logical", "logic", "create"]
+        return ["contains", "conditional array",
+                "logical array", "logic array", "create"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -350,7 +360,13 @@ class LogicalAnd(AbstractCommand):
         """
         Tags to identify the condition
         """
-        return self._add_tags + [self._operator, "logical", "logic", "create"]
+        tags = []
+        for tag in self._add_tags:
+            tags.append("logic " + tag)
+            tags.append("logical " + tag)
+        tags.append(self._operator)
+        tags = tags + ["conditional array", "create"]
+        return tags
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=False,

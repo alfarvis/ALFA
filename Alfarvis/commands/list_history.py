@@ -19,9 +19,10 @@ class ListHistory(AbstractCommand):
         self.datatype_database = Database()
         for key in DataType.__members__:
             if key not in ["history", "user_string", "user_conversation"]:
+                key_up = key.replace('_', '.')
                 key_split = key.split('_')
                 self.datatype_database.add(key_split, DataType[key],
-                                           name=key)
+                                           name=key_up)
 
     def commandTags(self):
         """
@@ -47,8 +48,12 @@ class ListHistory(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Success)
         row_format = "{:>15} {:>35} {:>15}"
         print(row_format.format("Name", "Keywords", "Type"))
+        user_input = user_conv.data
+        two_phrases = [" ".join(tup)for tup in
+                       zip(user_input[:-1], user_input[1:])]
+        user_input.extend(two_phrases)
         user_data_types = [data_object.data for data_object in
-                           self.datatype_database.search(user_conv.data)]
+                           self.datatype_database.search(user_input)]
         try:
             for data_type, data_base in history.data._argument_database.items():
                 if user_data_types != [] and data_type not in user_data_types:
@@ -62,7 +67,9 @@ class ListHistory(AbstractCommand):
                     else:
                         object_name = data_object.name
                     keywords = " ".join(data_object.keyword_list)
-                    print(row_format.format(object_name, keywords, data_type.name))
+                    data_type_name = data_type.name.replace('_', '.')
+                    print(row_format.format(object_name, keywords,
+                                            data_type_name))
         except:
             result_object = ResultObject(None, None, None, CommandStatus.Error)
 

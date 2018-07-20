@@ -25,7 +25,8 @@ class Stat_Clustermap(AbstractCommand):
         """
         Tags to identify the heatmap command
         """
-        return ["heatmap", "clustermap"]
+        return ["heatmap", "clustermap", "heat map",
+                "cluster map"]
 
     def argumentTypes(self):
         """
