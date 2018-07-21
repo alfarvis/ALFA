@@ -131,6 +131,7 @@ class LessThan(AbstractCommand):
             result.createName(keyword_list,
                               command_name=self._condition[0],
                               set_keyword_list=True)
+            print("Res_keyword_list: ", result.keyword_list)
         else:
             result.keyword_list = keyword_list
         return result
