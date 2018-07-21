@@ -70,14 +70,22 @@ class AlfaDataParser:
                    return
         """
         split_text = text.split(" ")
+        split_text = list(filter(None, split_text))  # Remove empty strings
+        ext_list = []
+        if len(split_text) >= 2:
+            two_phrases = [" ".join(tup)for tup in
+                           zip(split_text[:-1], split_text[1:])]
+            ext_list.extend(two_phrases)
         if len(self.command_search_result) > 0:
             # If old text is used, we will not be able to resolve command
             # Since there will be multiple commands always
-            res = self.command_database.search(split_text)
+            in_keyword_list = split_text + ext_list
+            res = self.command_database.search(in_keyword_list)
         else:
             # Tokenize text
-            self.keyword_list = self.keyword_list + split_text
-            res = self.command_database.search(self.keyword_list)
+            self.keyword_list.extend(split_text)
+            in_keyword_list = self.keyword_list + ext_list
+            res = self.command_database.search(in_keyword_list)
         if len(res) == 0:
             print("Command not found")
             print("If you would like to know about existing commands,"
@@ -114,6 +122,7 @@ class AlfaDataParser:
         # Tokenize text
         # Resolve arguments or data
         split_text = text.split(" ")
+        split_text = list(filter(None, split_text))  # Remove empty strings
         if 'quit' in split_text:
             self.clearCommandSearchResults()
         else:
@@ -410,6 +419,8 @@ class AlfaDataParser:
         Take input from user and resolve/run the instructions
         """
         textInput = textInput.lower()
+        textInput = textInput.replace('the ', '')
+        textInput = textInput.replace('a ', '')
         # Tokenizer and create keyword list
         if self.currentState == ParserStates.command_unknown:
             self.command_parse(textInput)

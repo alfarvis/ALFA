@@ -24,8 +24,10 @@ def getName(name_list):
 
 
 def addKeyword(index, keyword_list, up_list):
-    if len(keyword_list) > index and name_pattern.match(keyword_list[index]):
-        up_list.append(keyword_list[index])
+    if len(keyword_list) > index:
+        keyword = keyword_list[index].split(' ', 1)[0]
+        if name_pattern.match(keyword):
+            up_list.append(keyword)
 
 
 def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
@@ -46,7 +48,7 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
     first_keyword_list = []
     second_keyword_list = []
     if command_name != '':
-        command_name_list.append(command_name)
+        command_name_list = command_name.split(' ')
     addKeyword(0, keyword_list1, first_keyword_list)
     addKeyword(0, keyword_list2, second_keyword_list)
     start_id_klist1 = 1

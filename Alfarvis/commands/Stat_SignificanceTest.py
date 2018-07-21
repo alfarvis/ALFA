@@ -28,7 +28,7 @@ class StatSigTest(AbstractCommand):
         """
         return tags that are used to identify ttest command
         """
-        return ["ttest", "p", "value"]
+        return ["ttest", "p", "value", "t test"]
 
     def argumentTypes(self):
         """

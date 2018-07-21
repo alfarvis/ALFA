@@ -23,7 +23,10 @@ class VizSetXLabel(AbstractCommand):
         """
         Tags to identify the lineplot command
         """
-        return [self._axis_label, "change", "set"]
+        tags = []
+        for word in ["change", "set"]:
+            tags.append(word + " " + self._axis_label)
+        return tags
 
     def argumentTypes(self):
         """

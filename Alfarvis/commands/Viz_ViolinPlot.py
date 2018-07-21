@@ -25,7 +25,7 @@ class Viz_VioloinPlot(AbstractCommand):
         """
         Tags to identify the violin command
         """
-        return ["violin", "plot"]
+        return ["violin plot"]
 
     def argumentTypes(self):
         """

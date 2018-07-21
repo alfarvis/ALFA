@@ -24,7 +24,7 @@ class VizPiePlots(AbstractCommand):
         """
         Tags to identify the pie plot command
         """
-        return ["pie", "chart", "plot"]
+        return ["pie chart", "pie plot"]
 
     def argumentTypes(self):
         """
