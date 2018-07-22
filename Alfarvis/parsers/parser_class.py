@@ -420,8 +420,8 @@ class AlfaDataParser:
         Take input from user and resolve/run the instructions
         """
         textInput = textInput.lower()
-        textInput = textInput.replace('the ', '')
-        textInput = textInput.replace('a ', '')
+        textInput = textInput.replace(' the ', ' ')
+        textInput = textInput.replace(' a ', ' ')
         # Tokenizer and create keyword list
         if self.currentState == ParserStates.command_unknown:
             self.command_parse(textInput)
