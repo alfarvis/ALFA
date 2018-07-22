@@ -330,8 +330,9 @@ class Contains(AbstractCommand):
                          argument_type=DataType.user_string)]
 
     def containsWordList(self, target, word_list):
+        target_lower = target.lower()
         for word in word_list:
-            if word in target:
+            if word in target_lower:
                 return True
         return False
 
