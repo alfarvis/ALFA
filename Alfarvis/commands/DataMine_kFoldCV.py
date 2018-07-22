@@ -27,7 +27,7 @@ class DM_TrainClassifier(AbstractCommand):
         """
         Tags to identify the train a classifier command
         """
-        return ["cv", "cross", "validation", "fold"]
+        return ["cv", "cross validation", "fold"]
 
     def argumentTypes(self):
         """

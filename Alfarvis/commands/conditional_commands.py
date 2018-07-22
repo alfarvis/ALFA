@@ -88,6 +88,7 @@ class FilterTopN(AbstractCommand):
             idx = None
             unique_arr, inv, counts = np.unique(
                 non_nan_array, return_inverse=True, return_counts=True)
+            num = min(unique_arr.size, num)
             if self._condition[0] == "top":
                 print("Finding top", num)
                 best_idx = np.argpartition(counts, -num)[-num:]
