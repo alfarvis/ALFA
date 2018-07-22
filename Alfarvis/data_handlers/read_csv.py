@@ -70,7 +70,7 @@ class ReadCSV(AbstractReader):
         if current_gt is not None:
             StatContainer.ground_truth = current_gt
             print("Setting ground truth to ", " ".join(current_gt.keyword_list))
-        self.list_command.evaluate(result_objects[0])
+        self.list_command.evaluate(result_objects[0], DataObject([''], []))
         return result_objects
 
     def add_categories_as_columns(self, uniqVals, col_data, col_split,
