@@ -9,8 +9,9 @@ import numpy as np
 
 
 class ConvertToDateTime(AbstractCommand):
+
     def commandTags(self):
-        return ["convert", "extract date", "to date", "date time"]
+        return ["convert", "extract", "to date", "date time"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -331,7 +332,8 @@ class Contains(AbstractCommand):
 
     def containsWordList(self, target, word_list):
         for word in word_list:
-            if word in target:
+            target_lower = target.lower()
+            if word in target_lower:
                 return True
         return False
 
@@ -380,13 +382,15 @@ class LogicalAnd(AbstractCommand):
         out = array_data[0].data
         print("Performing logical", self._add_tags[0], "on ")
         print(array_data[0].name)
+        if self._operator == '!':
+            out = np.logical_not(arr_data.data)
+
         for arr_data in array_data[1:]:
+            print(", ", arr_data.name)
             if self._operator == '&':
                 out = np.logical_and(out, arr_data.data)
             elif self._operator == '||':
                 out = np.logical_or(out, arr_data.data)
-            elif self._operator == '!':
-                out = np.logical_not(out, arr_data.data)
             elif self._operator == '^':
                 out = np.logical_xor(out, arr_data.data)
             else:

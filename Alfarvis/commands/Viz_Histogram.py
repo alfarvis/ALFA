@@ -7,11 +7,9 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
-import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Viz_Container import VizContainer
 
@@ -40,7 +38,6 @@ class VizHistogram(AbstractCommand):
         Create a histogram for multiple variables
 
         """
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
         f = plt.figure()
         ax = f.add_subplot(111)
 
@@ -51,8 +48,14 @@ class VizHistogram(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         # TODO Create an argument for setting number of bins
-        if df.shape[1] == 1 and StatContainer.isCategorical(df[df.columns[0]]) is not None:
-            sns.countplot(x=kl1[0], data=df, ax=ax)
+        if isinstance(df[df.columns[0]][0], str):
+            uniq_vals = StatContainer.isCategorical(df[df.columns[0]])
+            if uniq_vals is None:
+                # If too many unique values, use top 10
+                order = df[kl1[0]].value_counts().iloc[:10].index
+            else:
+                order = None
+            sns.countplot(x=kl1[0], data=df, ax=ax, order=order)
         else:
             df.plot.hist(stacked=True, bins=20, ax=ax)
 
