@@ -93,14 +93,14 @@ class FilterTopN(AbstractCommand):
                 print("Finding top", num)
                 best_idx = np.argpartition(counts, -num)[-num:]
                 idx = np.isin(inv, best_idx)
-                if num <= 10:
+                if num <= 30:
                     print("Top values:")
                     print(unique_arr[best_idx])
             elif self._condition[0] == "bottom":
                 print("Finding bottom", num)
                 worst_idx = np.argpartition(counts, num)[:num]
                 idx = np.isin(inv, worst_idx)
-                if num <= 10:
+                if num <= 30:
                     print("Worst values:")
                     print(unique_arr[worst_idx])
             else:

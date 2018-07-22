@@ -11,6 +11,7 @@ import re
 class ReadCSV(AbstractReader):
     list_command = StatListColumns()
     col_head_pattern = re.compile('Unnamed: [0-9]+')
+    currency_dict = {ord('$'): None, ord(','): None}
 
     @classmethod
     def data_type(self):
@@ -44,6 +45,30 @@ class ReadCSV(AbstractReader):
                 col_split = splitPattern(column)
             col_data = data[column].values
             col_keyword_list = col_split
+
+            N = col_data.size
+            if N == 0:
+                continue
+            if isinstance(col_data[0], str):
+                if '%' in col_data[0]:
+                    try:
+                        col_data = data[column].str.rstrip('%').astype(float,
+                                       copy=False)
+                        data[column] = col_data
+                        if 'percent' not in col_keyword_list:
+                            col_keyword_list.append('percent')
+                    except ValueError:
+                        pass
+                elif '$' in col_data[0] or ',' in col_data[0]:
+                    try:
+                        col_data = data[
+                                column].str.translate(
+                                self.currency_dict).astype(float, copy=False)
+                        data[column] = col_data
+                        if '$' not in col_keyword_list:
+                            col_keyword_list.append('$')
+                    except ValueError:
+                        pass
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status,
                 add_to_cache=True)
