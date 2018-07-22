@@ -45,7 +45,80 @@ class ConvertToDateTime(AbstractCommand):
         if results != []:
             return results
         return ResultObject(None, None, None, CommandStatus.Success)
-# Conditional commands
+
+
+class FilterTopN(AbstractCommand):
+    """
+    Create a filter with top N values
+    """
+
+    def __init__(self, condition=["top", "best", "largest"]):
+        self._condition = condition
+
+    def commandTags(self):
+        """
+        Tags to identify the condition
+        """
+        return self._condition + ["create filter"]
+
+    def argumentTypes(self):
+        return [Argument(keyword="array_data", optional=True,
+                         argument_type=DataType.array),
+                Argument(keyword="target", optional=False,
+                         argument_type=DataType.user_conversation)]
+
+    def evaluate(self, array_data, target):
+        result = ResultObject(None, None, None, CommandStatus.Error)
+        in_array = array_data.data
+        N = in_array.shape[0]
+        if in_array.size == 0:
+            print("No data")
+            return result
+        if isinstance(array_data.data[0], pd.datetime):
+            nan_idx = np.isnat(in_array)
+        elif np.issubdtype(in_array.dtype, np.number):
+            nan_idx = np.isnan(in_array)
+        else:
+            nan_idx = np.full(N, False)
+        non_nan_idx = np.logical_not(nan_idx)
+        non_nan_array = in_array[non_nan_idx]
+        numbers = findNumbers(target.data, 1)
+        if numbers != [] and numbers[0].data > 0:
+            num = int(numbers[0].data)
+            idx = None
+            unique_arr, inv, counts = np.unique(
+                non_nan_array, return_inverse=True, return_counts=True)
+            if self._condition[0] == "top":
+                print("Finding top", num)
+                best_idx = np.argpartition(counts, -num)[-num:]
+                idx = np.isin(inv, best_idx)
+                if num <= 10:
+                    print("Top values:")
+                    print(unique_arr[best_idx])
+            elif self._condition[0] == "bottom":
+                print("Finding bottom", num)
+                worst_idx = np.argpartition(counts, num)[:num]
+                idx = np.isin(inv, worst_idx)
+                if num <= 10:
+                    print("Worst values:")
+                    print(unique_arr[worst_idx])
+            else:
+                print("Did not find the right condition")
+            if idx is not None:
+                out = np.full(N, False)
+                out[non_nan_idx] = idx
+                result = ResultObject(out, [], DataType.logical_array,
+                                     CommandStatus.Success, True)
+                result.createName(array_data.keyword_list,
+                        command_name=self._condition[0],
+                        set_keyword_list=True)
+        return result
+
+
+class FilterBottomN(FilterTopN):
+    def __init__(self):
+        super(FilterBottomN, self).__init__(["bottom", "worst", "smallest",
+             "last"])
 
 
 class LessThan(AbstractCommand):
