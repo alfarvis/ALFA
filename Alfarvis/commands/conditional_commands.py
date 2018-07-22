@@ -132,7 +132,6 @@ class LessThan(AbstractCommand):
             result.createName(keyword_list,
                               command_name=self._condition[0],
                               set_keyword_list=True)
-            print("Res_keyword_list: ", result.keyword_list)
         else:
             result.keyword_list = keyword_list
         return result
@@ -142,12 +141,12 @@ class LessThan(AbstractCommand):
         days, months, years, hours, minutes = target_date_time_tup
         out = np.full(array_data.shape, True)
         unresolved_idx = np.full(array_data.shape, True)
-        if days != []:
-            self.updateOutput(out, array_data.day, days[0], unresolved_idx)
+        if years != []:
+            self.updateOutput(out, array_data.year, years[0], unresolved_idx)
         if months != [] and np.any(unresolved_idx):
             self.updateOutput(out, array_data.month, months[0], unresolved_idx)
-        if years != [] and np.any(unresolved_idx):
-            self.updateOutput(out, array_data.year, years[0], unresolved_idx)
+        if days != [] and np.any(unresolved_idx):
+            self.updateOutput(out, array_data.day, days[0], unresolved_idx)
         if hours != [] and np.any(unresolved_idx):
             self.updateOutput(out, array_data.hour, hours[0], unresolved_idx)
         if minutes != [] and np.any(unresolved_idx):
@@ -383,7 +382,7 @@ class LogicalAnd(AbstractCommand):
         print("Performing logical", self._add_tags[0], "on ")
         print(array_data[0].name)
         if self._operator == '!':
-            out = np.logical_not(arr_data.data)
+            out = np.logical_not(array_data[0].data)
 
         for arr_data in array_data[1:]:
             print(", ", arr_data.name)
