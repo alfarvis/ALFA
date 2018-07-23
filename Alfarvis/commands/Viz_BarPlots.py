@@ -48,47 +48,53 @@ class VizBarPlots(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
-            result_object = ResultObject(None, None, None, CommandStatus.Error)
-            return result_object
+            gtVals = np.ones(df.shape[0])
         else:
             gtVals = StatContainer.filterGroundTruth()
-            # Remove nans:
-            df, gtVals = DataGuru.removenan(df, gtVals)
+        # Remove nans:
+        df['ground_truth'] = gtVals
+        df.dropna(inplace=True)
+        gtVals = df['ground_truth']
+        uniqVals = StatContainer.isCategorical(gtVals)
+        binned_ground_truth = False
 
-            uniqVals = StatContainer.isCategorical(gtVals)
-            rFlag = 0
-            if uniqVals is None:
-                print("Ground truth set is not categorical")
-                result_object = ResultObject(
-                    None, None, None, CommandStatus.Error)
-                return result_object
-            if isinstance(uniqVals[0], str):
+        if uniqVals is None and np.issubdtype(gtVals.dtype, np.number):
+            # Convert to categorical
+            df['ground_truth'] = pd.cut(gtVals, 10)
+            binned_ground_truth = True
+
+        if binned_ground_truth is True or uniqVals is not None:
+            gb = df.groupby('ground_truth')
+            df_mean = gb.mean()
+            df_errors = gb.std()
+            if uniqVals is not None and isinstance(uniqVals[0], str):
                 truncated_uniqVals, _ = StatContainer.removeCommonNames(
-                    uniqVals)
-            else:
-                truncated_uniqVals = ['group ' + str(uniq_val)
-                                      for uniq_val in uniqVals]
-            for i, uniV in enumerate(uniqVals):
-                ind = gtVals == uniV
-                array_vals = df.values
-                name = truncated_uniqVals[i]
-                if rFlag == 0:
-                    df_mean = pd.DataFrame(
-                        {name: np.mean(array_vals[ind, :], 0)})
-                    df_errors = pd.DataFrame(
-                        {name: np.std(array_vals[ind, :], 0)})
-                    rFlag = rFlag + 1
-                else:
-                    df_mean[name] = np.mean(array_vals[ind, :], 0)
-                    df_errors[name] = np.std(array_vals[ind, :], 0)
+                        df_mean.index)
+                df_mean.index = truncated_uniqVals
+                df_errors.index = truncated_uniqVals
+            # Number of uniq_vals x number of arrs
+            df_mean_shape = df_mean.shape
+            if (not binned_ground_truth and
+                df_mean_shape[1] >= df_mean_shape[0]):
+                df_mean = df_mean.T
+                df_errors = df_errors.T
+        else:
+            print("Ground truth could not be mapped to categorical array\n")
+            print("Please clear or select appropriate ground truth")
+            return result_object
+
         f = plt.figure()
         ax = f.add_subplot(111)
-        df_mean.index = kl1
-        df_errors.index = kl1
-        df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax)
+        if (binned_ground_truth or
+            (uniqVals is not None and isinstance(uniqVals[0], str) and
+             len(uniqVals[0]) > 8)):
+            df_mean.plot.barh(xerr=df_errors, cmap="jet", ax=ax)
+        else:
+            df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax, rot=10)
+        if binned_ground_truth:
+            ax.set_ylabel(StatContainer.ground_truth.name)
+            ax.set_xlabel('')
         ax.set_title(cname)
-
         plt.show(block=False)
 
         return VizContainer.createResult(f, array_datas, ['bar'])
