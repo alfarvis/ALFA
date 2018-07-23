@@ -79,15 +79,19 @@ class FilterTopN(AbstractCommand):
         elif np.issubdtype(in_array.dtype, np.number):
             nan_idx = np.isnan(in_array)
         else:
-            nan_idx = np.full(N, False)
+            nan_idx = pd.isnull(pd.Series(in_array))
+            #nan_idx = np.full(N, False)
         non_nan_idx = np.logical_not(nan_idx)
         non_nan_array = in_array[non_nan_idx]
         numbers = findNumbers(target.data, 1)
+        try:
+            unique_arr, inv, counts = np.unique(
+                non_nan_array, return_inverse=True, return_counts=True)
+        except:
+            return result
         if numbers != [] and numbers[0].data > 0:
             num = int(numbers[0].data)
             idx = None
-            unique_arr, inv, counts = np.unique(
-                non_nan_array, return_inverse=True, return_counts=True)
             num = min(unique_arr.size, num)
             if self._condition[0] == "top":
                 print("Finding top", num)
@@ -103,6 +107,9 @@ class FilterTopN(AbstractCommand):
                 if num <= 30:
                     print("Worst values:")
                     print(unique_arr[worst_idx])
+            elif self._condition[0] == "first":
+                print(array_data.data[:num])
+                result = ResultObject(None, None, None, CommandStatus.Success)
             else:
                 print("Did not find the right condition")
             if idx is not None:
@@ -113,6 +120,12 @@ class FilterTopN(AbstractCommand):
                 result.createName(array_data.keyword_list,
                         command_name=self._condition[0],
                         set_keyword_list=True)
+        elif self._condition[0] == "first":
+            if unique_arr.size < 50:
+                print(unique_arr)
+            else:
+                print(non_nan_array[:10])
+            result = ResultObject(None, None, None, CommandStatus.Success)
         return result
 
 
@@ -120,6 +133,11 @@ class FilterBottomN(FilterTopN):
     def __init__(self):
         super(FilterBottomN, self).__init__(["bottom", "worst", "smallest",
              "last"])
+
+
+class FilterFirstN(FilterTopN):
+    def __init__(self):
+        super(FilterFirstN, self).__init__(["first", "print"])
 
 
 class LessThan(AbstractCommand):
