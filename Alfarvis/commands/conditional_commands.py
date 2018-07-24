@@ -80,7 +80,6 @@ class FilterTopN(AbstractCommand):
             nan_idx = np.isnan(in_array)
         else:
             nan_idx = pd.isnull(pd.Series(in_array))
-            #nan_idx = np.full(N, False)
         non_nan_idx = np.logical_not(nan_idx)
         non_nan_array = in_array[non_nan_idx]
         numbers = findNumbers(target.data, 1)

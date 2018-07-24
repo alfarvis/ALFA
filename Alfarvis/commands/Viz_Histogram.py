@@ -46,10 +46,19 @@ class VizHistogram(AbstractCommand):
                 array_datas, useCategorical=True, remove_nan=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
+        uniqVals = StatContainer.isCategorical(df[df.columns[0]])
+        if uniqVals is not None and isinstance(uniqVals[0], str):
+            max_len = max([len(uniqVal) for uniqVal in uniqVals])
+        else:
+            max_len = 0
 
         # TODO Create an argument for setting number of bins
-        if isinstance(df[df.columns[0]][0], str):
-            sns.countplot(x=kl1[0], data=df, ax=ax)
+        if (isinstance(df[df.columns[0]][0], str) or
+            uniqVals is not None):
+            if len(uniqVals) > 5 and max_len > 8:
+                sns.countplot(y=kl1[0], data=df, ax=ax)
+            else:
+                sns.countplot(x=kl1[0], data=df, ax=ax)
         else:
             df.plot.hist(stacked=True, bins=20, ax=ax)
 

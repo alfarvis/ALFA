@@ -20,7 +20,7 @@ class CreateCategoricalFromLogical(AbstractCommand):
 
     def commandTags(self):
         """
-        Tags to identify the bar plot command
+        Tags to identify the create categorical command
         """
         return ["create", "categorical", "combine"]
 

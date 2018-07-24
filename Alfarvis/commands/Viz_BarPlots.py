@@ -85,9 +85,12 @@ class VizBarPlots(AbstractCommand):
 
         f = plt.figure()
         ax = f.add_subplot(111)
+        if uniqVals is not None and isinstance(uniqVals[0], str):
+            max_len = max([len(uniqVal) for uniqVal in uniqVals])
+        else:
+            max_len = 0
         if (binned_ground_truth or
-            (uniqVals is not None and isinstance(uniqVals[0], str) and
-             len(uniqVals[0]) > 8)):
+            (uniqVals is not None and len(uniqVals) > 5 and max_len > 8)):
             df_mean.plot.barh(xerr=df_errors, cmap="jet", ax=ax)
         else:
             df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax, rot=10)
