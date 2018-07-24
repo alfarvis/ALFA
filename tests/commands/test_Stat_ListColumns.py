@@ -17,10 +17,13 @@ class TestStatListColumns(unittest.TestCase):
     def testDataTypes(self):
         list_columns_command = StatListColumns()
         argument_types = list_columns_command.argumentTypes()
-        self.assertEqual(len(argument_types), 1)
+        self.assertEqual(len(argument_types), 2)
         self.assertTrue(argument_types[0].optional)
         self.assertEqual(argument_types[0].argument_type, DataType.csv)
         self.assertEqual(argument_types[0].tags, [])
+        self.assertFalse(argument_types[1].optional)
+        self.assertEqual(argument_types[1].argument_type,
+                         DataType.user_conversation)
 
     def testEvaluate(self):
         list_columns_command = StatListColumns()
@@ -29,7 +32,9 @@ class TestStatListColumns(unittest.TestCase):
             package_directory, 'resources', 'data.csv')
         data = pd.read_csv(file_path)
         data_object = DataObject(data, ['random', 'dataset'])
-        arguments = {arg.keyword: data_object}
+        user_conv = DataObject('list categorical columns'.split(' '),
+                               ['user', 'conv'])
+        arguments = {arg.keyword: data_object, 'user_conv': user_conv}
         result_object = list_columns_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)
         # Try false data

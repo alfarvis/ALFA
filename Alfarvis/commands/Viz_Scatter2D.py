@@ -25,7 +25,7 @@ class VizScatter2D(AbstractCommand):
         """
         Tags to identify the scatterplot command
         """
-        return ["scatterplot", "scatter plot"]
+        return ["scatterplot", "scatter plot", "scatter 2d", "scatter"]
 
     def argumentTypes(self):
         """

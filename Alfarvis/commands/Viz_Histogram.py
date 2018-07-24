@@ -7,11 +7,10 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 from .Stat_Container import StatContainer
-import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Viz_Container import VizContainer
 
@@ -40,20 +39,33 @@ class VizHistogram(AbstractCommand):
         Create a histogram for multiple variables
 
         """
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
-        f = plt.figure()
-        ax = f.add_subplot(111)
 
         sns.set(color_codes=True)
         command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(
                 array_datas, useCategorical=True, remove_nan=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
+        uniqVals = StatContainer.isCategorical(df[df.columns[0]])
+        if uniqVals is not None and isinstance(uniqVals[0], str):
+            max_len = max([len(uniqVal) for uniqVal in uniqVals])
+        else:
+            max_len = 0
+
+        if (uniqVals is None and
+            not np.issubdtype(df[df.columns[0]].dtype, np.number)):
+            print("Too many unique values in non-numeric type data")
+            return ResultObject(None, None, None, CommandStatus.Error)
+
+        f = plt.figure()
+        ax = f.add_subplot(111)
 
         # TODO Create an argument for setting number of bins
-        if df.shape[1] == 1 and StatContainer.isCategorical(df[df.columns[0]]) is not None:
-            sns.countplot(x=kl1[0], data=df, ax=ax)
-        else:
+        if uniqVals is not None:
+            if len(uniqVals) > 5 and max_len > 8:
+                sns.countplot(y=kl1[0], data=df, ax=ax)
+            else:
+                sns.countplot(x=kl1[0], data=df, ax=ax)
+        elif np.issubdtype(df[df.columns[0]].dtype, np.number):
             df.plot.hist(stacked=True, bins=20, ax=ax)
 
         plt.show(block=False)

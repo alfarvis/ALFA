@@ -295,7 +295,8 @@ class AlfaDataParser:
                     data_res = current_res
                     break
             else:
-                current_res = self.history.search(arg_type, key_words)
+                key_word_set = set(key_words)
+                current_res = self.history.search(arg_type, key_word_set)
                 current_hits = self.history.getHitCount(arg_type)
                 if (len(current_res) >= argument.number and
                         current_hits > hit_count):
@@ -419,8 +420,8 @@ class AlfaDataParser:
         Take input from user and resolve/run the instructions
         """
         textInput = textInput.lower()
-        textInput = textInput.replace('the ', '')
-        textInput = textInput.replace('a ', '')
+        textInput = textInput.replace(' the ', ' ')
+        textInput = textInput.replace(' a ', ' ')
         # Tokenizer and create keyword list
         if self.currentState == ParserStates.command_unknown:
             self.command_parse(textInput)

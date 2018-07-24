@@ -28,7 +28,7 @@ class ListHistory(AbstractCommand):
         """
         return tags that are used to identify load command
         """
-        return ["list", "history", "variables"]
+        return ["list", "history", "variables", "array", "file"]
 
     def argumentTypes(self):
         """

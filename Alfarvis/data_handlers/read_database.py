@@ -68,5 +68,5 @@ class ReadDatabase(AbstractReader):
                     result_list.append(file_res)
                 result_object = result_list
             except:
-                result_object = ResultObject(None, None, None, command_status)
+                result_object = ResultObject(None, None, None, CommandStatus.Error)
         return result_object
