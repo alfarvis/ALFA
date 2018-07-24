@@ -63,7 +63,7 @@ class VizHistogram(AbstractCommand):
         if uniqVals is not None:
             if len(uniqVals) > 5 and max_len > 8:
                 sns.countplot(y=kl1[0], data=df, ax=ax)
-            elif uniqVals is n:
+            else:
                 sns.countplot(x=kl1[0], data=df, ax=ax)
         elif np.issubdtype(df[df.columns[0]].dtype, np.number):
             df.plot.hist(stacked=True, bins=20, ax=ax)
