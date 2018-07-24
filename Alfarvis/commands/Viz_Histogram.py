@@ -9,6 +9,7 @@ from .abstract_command import AbstractCommand
 from .argument import Argument
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 from .Stat_Container import StatContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Viz_Container import VizContainer
@@ -38,8 +39,6 @@ class VizHistogram(AbstractCommand):
         Create a histogram for multiple variables
 
         """
-        f = plt.figure()
-        ax = f.add_subplot(111)
 
         sns.set(color_codes=True)
         command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(
@@ -52,14 +51,21 @@ class VizHistogram(AbstractCommand):
         else:
             max_len = 0
 
+        if (uniqVals is None and
+            not np.issubdtype(df[df.columns[0]].dtype, np.number)):
+            print("Too many unique values in non-numeric type data")
+            return ResultObject(None, None, None, CommandStatus.Error)
+
+        f = plt.figure()
+        ax = f.add_subplot(111)
+
         # TODO Create an argument for setting number of bins
-        if (isinstance(df[df.columns[0]][0], str) or
-            uniqVals is not None):
+        if uniqVals is not None:
             if len(uniqVals) > 5 and max_len > 8:
                 sns.countplot(y=kl1[0], data=df, ax=ax)
-            else:
+            elif uniqVals is n:
                 sns.countplot(x=kl1[0], data=df, ax=ax)
-        else:
+        elif np.issubdtype(df[df.columns[0]].dtype, np.number):
             df.plot.hist(stacked=True, bins=20, ax=ax)
 
         plt.show(block=False)
