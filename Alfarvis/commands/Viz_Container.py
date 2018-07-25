@@ -13,7 +13,8 @@ class VizContainer(object):
     current_figure = None
 
     @classmethod
-    def createResult(self, figure, array_datas, in_keywords):
+    def createResult(self, window, array_datas, in_keywords):
+        figure = window.gcf()
         fig_keywords = []
         fig_keywords.append('figure')
         fig_keywords.append(str(figure.number))
@@ -24,7 +25,7 @@ class VizContainer(object):
         common_kl = set.intersection(*[set(array_data.keyword_list) for array_data in array_datas])
         fig_keywords = fig_keywords + list(common_kl)
 
-        result_object = ResultObject(figure, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
+        result_object = ResultObject(window, fig_keywords, DataType.figure, CommandStatus.Success, add_to_cache=True)
         result_object.createName(fig_keywords)
         self.current_figure = figure
         return result_object

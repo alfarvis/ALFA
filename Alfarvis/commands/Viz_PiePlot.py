@@ -10,6 +10,7 @@ from .argument import Argument
 from .Viz_Container import VizContainer
 from .Stat_Container import StatContainer
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -66,12 +67,13 @@ class VizPiePlots(AbstractCommand):
             Printer.Print("Please select another chart type")
             return result_object
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
 
         ds.plot.pie(figsize=(8, 8), ax=ax)
         ax.set_title(stTitle)
         ax.set_xlabel('')
 
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_data, ['pie'])
+        win.show()
+        return VizContainer.createResult(win, array_data, ['pie'])

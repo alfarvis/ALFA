@@ -8,8 +8,8 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import seaborn as sns
-import matplotlib.pyplot as plt
 import numpy as np
 from .Stat_Container import StatContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
@@ -57,7 +57,8 @@ class VizHistogram(AbstractCommand):
             Printer.Print("Too many unique values in non-numeric type data")
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
 
         # TODO Create an argument for setting number of bins
@@ -69,6 +70,6 @@ class VizHistogram(AbstractCommand):
         elif np.issubdtype(df[df.columns[0]].dtype, np.number):
             df.plot.hist(stacked=True, bins=20, ax=ax)
 
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['histogram', 'hist'])
+        return VizContainer.createResult(win, array_datas, ['histogram', 'hist'])

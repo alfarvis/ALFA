@@ -8,11 +8,14 @@ import re
 from Alfarvis import create_alpha_module_dictionary
 from Alfarvis.printers import Printer
 from Alfarvis.printers.kernel_printer import KernelPrinter
+from Alfarvis.windows import Window
+from Alfarvis.windows.regular_window import RegularWindow
 
 if __name__ == "__main__":  # pragma: no cover
     # Create alpha module dictionary
     alpha_module_dictionary = create_alpha_module_dictionary()
     Printer.selectPrinter(KernelPrinter())
+    Window.selectWindowType(RegularWindow)
     print("Input a text to receive response from Alfarvis")
     print("Enter Bye to close the program")
     #print(">", end=" ")

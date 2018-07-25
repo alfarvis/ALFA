@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -52,11 +53,12 @@ class VizPlotLine(AbstractCommand):
             Printer.Print("No data left to plot after cleaning up!")
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
         ax.set_title(cname)
         df.plot(ax=ax)
 
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['line'])
+        return VizContainer.createResult(win, array_datas, ['line'])

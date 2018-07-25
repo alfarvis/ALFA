@@ -9,6 +9,7 @@ from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Viz_Container import VizContainer
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import matplotlib.pyplot as plt
 
 

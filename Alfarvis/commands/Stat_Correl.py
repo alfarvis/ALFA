@@ -14,6 +14,7 @@ from .Stat_Container import StatContainer
 from .Viz_Container import VizContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 
 
 class Stat_Correl(AbstractCommand):
@@ -59,11 +60,12 @@ class Stat_Correl(AbstractCommand):
                           " is ", str(corr_res.values[0][1]))
 
         Printer.Print("Displaying the result as a heatmap")
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
         sns.heatmap(corr_res, cbar=True, square=True, annot=True, fmt='.2f',
                     annot_kws={'size': 15},
                     xticklabels=df.columns, yticklabels=df.columns,
                     cmap='jet', ax=ax)
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_datas, ['correlation'])
+        win.show()
+        return VizContainer.createResult(win, array_datas, ['correlation'])

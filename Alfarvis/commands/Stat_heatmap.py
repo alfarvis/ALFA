@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -51,7 +52,8 @@ class Stat_Clustermap(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         Printer.Print("Displaying heatmap")
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         if StatContainer.ground_truth is None:
             sns.clustermap(df, cbar=True, square=False, annot=False,
                            cmap='jet', standard_scale=1)
@@ -62,5 +64,5 @@ class Stat_Clustermap(AbstractCommand):
             sns.clustermap(df, standard_scale=1, row_colors=row_colors,
                            cmap="jet")
 
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_datas, ['heatmap'])
+        win.show()
+        return VizContainer.createResult(win, array_datas, ['heatmap'])

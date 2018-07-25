@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -85,7 +86,8 @@ class VizBarPlots(AbstractCommand):
             Printer.Print("Please clear or select appropriate ground truth")
             return result_object
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
         if uniqVals is not None and isinstance(uniqVals[0], str):
             max_len = max([len(uniqVal) for uniqVal in uniqVals])
@@ -100,6 +102,6 @@ class VizBarPlots(AbstractCommand):
             ax.set_ylabel(StatContainer.ground_truth.name)
             ax.set_xlabel('')
         ax.set_title(cname)
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['bar'])
+        return VizContainer.createResult(win, array_datas, ['bar'])

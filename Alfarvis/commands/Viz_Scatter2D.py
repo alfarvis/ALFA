@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -46,7 +47,8 @@ class VizScatter2D(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
         if StatContainer.ground_truth is None:
             df.dropna(inplace=True)
@@ -67,6 +69,6 @@ class VizScatter2D(AbstractCommand):
         ax.set_xlabel(kl1[0])
         ax.set_ylabel(kl1[1])
         ax.set_title(cname)
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['scatter2d'])
+        return VizContainer.createResult(win, array_datas, ['scatter2d'])
