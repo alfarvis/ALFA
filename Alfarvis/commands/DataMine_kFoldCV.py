@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -55,7 +56,8 @@ class DM_TrainClassifier(AbstractCommand):
 
         # Get the ground truth array
         if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
+            Printer.Print("Please set a feature vector to ground truth by",
+                          "typing set ground truth before using this command")
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
@@ -75,7 +77,7 @@ class DM_TrainClassifier(AbstractCommand):
         scaler = preprocessing.StandardScaler().fit(X)
         X = scaler.transform(X)
 
-        print('Running k fold cross validation...')
+        Printer.Print('Running k fold cross validation...')
 
         cm, cvscores = DataGuru.runKFoldCV(X, Y, model, 10)
 

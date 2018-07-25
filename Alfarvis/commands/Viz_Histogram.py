@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
@@ -53,7 +54,7 @@ class VizHistogram(AbstractCommand):
 
         if (uniqVals is None and
             not np.issubdtype(df[df.columns[0]].dtype, np.number)):
-            print("Too many unique values in non-numeric type data")
+            Printer.Print("Too many unique values in non-numeric type data")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         f = plt.figure()

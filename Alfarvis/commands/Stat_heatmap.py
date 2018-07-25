@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -49,7 +50,7 @@ class Stat_Clustermap(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        print("Displaying heatmap")
+        Printer.Print("Displaying heatmap")
         f = plt.figure()
         if StatContainer.ground_truth is None:
             sns.clustermap(df, cbar=True, square=False, annot=False,

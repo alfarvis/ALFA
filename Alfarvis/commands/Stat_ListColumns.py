@@ -9,6 +9,7 @@ from Alfarvis.history.data_base import Database
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import numpy as np
 
 
@@ -87,9 +88,9 @@ class StatListColumns(AbstractCommand):
                 column_strings[column_type].append(
                         row_format.format(column, column_type, n_unique_vals,
                                           column_range))
-            print("Statistics for", " ".join(array_data.keyword_list))
-            print(row_format.format("Column_name",
-                                    "Column_type", "Size",
+            Printer.Print("Showing Statistics for",
+                          " ".join(array_data.keyword_list))
+            print(row_format.format("Column_name", "Column_type", "Size",
                                     "Column_range"))
             for column_type in column_strings:
                 if column_strings[column_type] != []:

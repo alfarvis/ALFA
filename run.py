@@ -6,10 +6,13 @@ through command line
 """
 import re
 from Alfarvis import create_alpha_module_dictionary
+from Alfarvis.printers import Printer
+from Alfarvis.printers.kernel_printer import KernelPrinter
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     # Create alpha module dictionary
     alpha_module_dictionary = create_alpha_module_dictionary()
+    Printer.selectPrinter(KernelPrinter())
     print("Input a text to receive response from Alfarvis")
     print("Enter Bye to close the program")
     #print(">", end=" ")

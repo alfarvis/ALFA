@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -48,7 +49,7 @@ class VizPlotLine(AbstractCommand):
         elif (df.shape[0] == 0 or
               (df.shape[1] == 1 and
                np.issubdtype(array_datas[0].data.dtype, np.number) == False)):
-            print("No data left to plot after cleaning up!")
+            Printer.Print("No data left to plot after cleaning up!")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         f = plt.figure()

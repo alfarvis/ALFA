@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Viz_Container import VizContainer
+from Alfarvis.printers import Printer
 import matplotlib.pyplot as plt
 
 
@@ -47,12 +48,13 @@ class VizSetXLabel(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         if VizContainer.current_figure is None:
-            print("No figure available to set x label")
+            Printer.Print("No figure available to set x label")
             return result_object
         ax_list = VizContainer.current_figure.axes
         for ax in ax_list:
             if not hasattr(ax_list[0], 'set_' + self._axis_label):
-                print("Not able to set ", self._axis_label, " for the figure")
+                Printer.Print("Not able to set ", self._axis_label,
+                              " for the figure")
                 return result_object
             else:
                 getattr(ax_list[0], 'set_' +

@@ -10,6 +10,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import numpy as np
 import collections
 
@@ -38,9 +39,9 @@ class CreateCategoricalFromLogical(AbstractCommand):
         N = array_datas[0].data.size
         out = np.full(N, 'Unknown', dtype='U40')
         out_filter = np.full(N, False)
-        print("Creating a categorical array from: ")
+        Printer.Print("Creating a categorical array from: ")
         for array_data in array_datas:
-            print(array_data.name)
+            Printer.Print(array_data.name)
             if array_data.data.size == N:
                 out[array_data.data] = array_data.name
                 out_filter[array_data.data] = True
@@ -59,6 +60,6 @@ class CreateCategoricalFromLogical(AbstractCommand):
                                      CommandStatus.Success, True)
         result_filter.createName(common_name_list, command_name='filter',
                                  set_keyword_list=True)
-        print('Saving categorical array as', result.name)
-        print('Saving filter as', result_filter.name)
+        Printer.Print('Saving categorical array as', result.name)
+        Printer.Print('Saving filter as', result_filter.name)
         return [result, result_filter]

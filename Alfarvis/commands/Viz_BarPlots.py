@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -79,8 +80,9 @@ class VizBarPlots(AbstractCommand):
                 df_mean = df_mean.T
                 df_errors = df_errors.T
         else:
-            print("Ground truth could not be mapped to categorical array\n")
-            print("Please clear or select appropriate ground truth")
+            Printer.Print("Ground truth could not be mapped to",
+                          "categorical array\n")
+            Printer.Print("Please clear or select appropriate ground truth")
             return result_object
 
         f = plt.figure()

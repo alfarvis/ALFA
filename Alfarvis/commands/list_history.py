@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from Alfarvis.history.data_base import Database
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 
 
 class ListHistory(AbstractCommand):
@@ -47,7 +48,7 @@ class ListHistory(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Success)
         row_format = "{:>15} {:>35} {:>15}"
-        print(row_format.format("Name", "Keywords", "Type"))
+        Printer.Print(row_format.format("Name", "Keywords", "Type"))
         user_input = user_conv.data
         two_phrases = [" ".join(tup)for tup in
                        zip(user_input[:-1], user_input[1:])]
@@ -68,8 +69,8 @@ class ListHistory(AbstractCommand):
                         object_name = data_object.name
                     keywords = " ".join(data_object.keyword_list)
                     data_type_name = data_type.name.replace('_', '.')
-                    print(row_format.format(object_name, keywords,
-                                            data_type_name))
+                    Printer.Print(row_format.format(object_name, keywords,
+                                                    data_type_name))
         except:
             result_object = ResultObject(None, None, None, CommandStatus.Error)
 

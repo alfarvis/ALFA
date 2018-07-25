@@ -12,6 +12,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .argument import Argument
 from .abstract_command import AbstractCommand
 from .Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import scipy
 import numpy as np
 import pandas as pd
@@ -73,13 +74,14 @@ class StatSigTest(AbstractCommand):
                     else:
                         pVals[stTitle] = allp
             else:
-                print("Please set ground truth before running this command")
+                Printer.Print("Please set ground truth before running",
+                              "this command")
                 return result_object
         else:
-            print("Please provide numerical array for ttest")
+            Printer.Print("Please provide numerical array for ttest")
             return result_object
 
-        print("Displaying the result as a heatmap")
+        Printer.Print("Displaying the result as a heatmap")
         sns.heatmap(pVals, cbar=True, square=True, annot=True, fmt='.2f', annot_kws={'size': 15},
            xticklabels=pVals.columns, yticklabels=pVals.columns,
            cmap='jet')
@@ -95,7 +97,7 @@ class StatSigTest(AbstractCommand):
         #     a = array[ground_truth.data == 1]
         #     b = array[ground_truth.data == 2]
         #     ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
-        #     print("p value for prediction of ",
+        #     Printer.Print("p value for prediction of ",
         #           " ".join(ground_truth.keyword_list),
         #           "using ", " ".join(keyword_list), " is ", ttest_val.pvalue)
         #     result_object = ResultObject(ttest_val.pvalue, keyword_list,

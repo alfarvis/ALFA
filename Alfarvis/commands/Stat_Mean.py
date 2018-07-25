@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy
 
 
@@ -48,8 +49,9 @@ class StatMean(AbstractCommand):
                     array_data.keyword_list,
                     command_name=self.commandTags()[0],
                     set_keyword_list=True)
-            print("Mean of", array_data.name, "is", mean_val)
+            Printer.Print("Mean of", array_data.name, "is", mean_val)
         else:
-            print("The array is not of numeric type so cannot take mean")
+            Printer.Print("The array is not of numeric type so cannot",
+                          "take mean")
 
         return result_object

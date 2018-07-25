@@ -4,6 +4,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         findNumbers, searchDateTime)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import pandas as pd
 import numpy as np
 
@@ -30,7 +31,7 @@ class ConvertToDateTime(AbstractCommand):
             if not isinstance(array_data.data[0], pd.datetime):
                 raise RuntimeError()
         except:
-            print("Cannot transform data to date time")
+            Printer.Print("Cannot transform data to date time")
             return ResultObject(None, None, None, CommandStatus.Error)
         results = []
         for word in ['day', 'year', 'month', 'hour', 'minute']:
@@ -40,8 +41,8 @@ class ConvertToDateTime(AbstractCommand):
                 result.createName(array_data.keyword_list, command_name=word,
                                   set_keyword_list=True)
                 results.append(result)
-                print('Saving ', word, 'from ', array_data.name,
-                      ' as', result.name)
+                Printer.Print('Saving ', word, 'from ', array_data.name,
+                              ' as', result.name)
         if results != []:
             return results
         return ResultObject(None, None, None, CommandStatus.Success)
@@ -72,7 +73,7 @@ class FilterTopN(AbstractCommand):
         in_array = array_data.data
         N = in_array.shape[0]
         if in_array.size == 0:
-            print("No data")
+            Printer.Print("No data")
             return result
         if isinstance(array_data.data[0], pd.datetime):
             nan_idx = np.isnat(in_array)
@@ -93,24 +94,24 @@ class FilterTopN(AbstractCommand):
             idx = None
             num = min(unique_arr.size, num)
             if self._condition[0] == "top":
-                print("Finding top", num)
+                Printer.Print("Finding top", num)
                 best_idx = np.argpartition(counts, -num)[-num:]
                 idx = np.isin(inv, best_idx)
                 if num <= 30:
-                    print("Top values:")
-                    print(unique_arr[best_idx])
+                    Printer.Print("Top values:")
+                    Printer.Print(unique_arr[best_idx])
             elif self._condition[0] == "bottom":
-                print("Finding bottom", num)
+                Printer.Print("Finding bottom", num)
                 worst_idx = np.argpartition(counts, num)[:num]
                 idx = np.isin(inv, worst_idx)
                 if num <= 30:
-                    print("Worst values:")
-                    print(unique_arr[worst_idx])
+                    Printer.Print("Worst values:")
+                    Printer.Print(unique_arr[worst_idx])
             elif self._condition[0] == "first":
-                print(array_data.data[:num])
+                Printer.Print(array_data.data[:num])
                 result = ResultObject(None, None, None, CommandStatus.Success)
             else:
-                print("Did not find the right condition")
+                Printer.Print("Did not find the right condition")
             if idx is not None:
                 out = np.full(N, False)
                 out[non_nan_idx] = idx
@@ -121,9 +122,9 @@ class FilterTopN(AbstractCommand):
                         set_keyword_list=True)
         elif self._condition[0] == "first":
             if unique_arr.size < 50:
-                print(unique_arr)
+                Printer.Print(unique_arr)
             else:
-                print(non_nan_array[:10])
+                Printer.Print(non_nan_array[:10])
             result = ResultObject(None, None, None, CommandStatus.Success)
         return result
 
@@ -191,7 +192,8 @@ class LessThan(AbstractCommand):
             elif isinstance(array_data.data[0], pd.datetime):
                 in_data = array_data.data
             else:
-                print("Array data type not understood for comparing date time")
+                Printer.Print("Array data type not understood for",
+                              "comparing date time")
                 return ResultObject(None, None, None, CommandStatus.Error)
             return self.evaluateForDateTime(in_data, date_times,
                                             array_data.keyword_list)
@@ -247,7 +249,7 @@ class LessThan(AbstractCommand):
 
     def evaluateForNumbers(self, array_data, target, keyword_list,
                            create_name=True):
-        print("Target: ", target.data)
+        Printer.Print("Target: ", target.data)
         out = np.full(array_data.shape, True)
         unresolved_idx = np.full(array_data.shape, True)
         self.updateOutput(out, array_data, target.data, unresolved_idx)
@@ -316,7 +318,7 @@ class Between(AbstractCommand):
         if all([indiv_list == [] for indiv_list in date_times]):
             numbers = findNumbers(target.data, 2)
             if len(numbers) < 2:
-                print("Cannot find enough numbers. Please provide two numbers")
+                Printer.Print("Cannot find enough numbers. Please provide two numbers")
                 return ResultObject(None, None, None, CommandStatus.Error)
             if isinstance(array_data.data[0], str):
                 date_time = pd.to_datetime(
@@ -341,7 +343,7 @@ class Between(AbstractCommand):
             elif isinstance(array_data.data[0], pd.datetime):
                 in_data = array_data.data
             else:
-                print("Array data type not understood for comparing date time")
+                Printer.Print("Array data type not understood for comparing date time")
                 return ResultObject(None, None, None, CommandStatus.Error)
             # Expand date_times
             date_time_list1 = []
@@ -470,13 +472,13 @@ class LogicalAnd(AbstractCommand):
         if N < 1:
             return ResultObject(None, None, None, CommandStatus.Error)
         out = array_data[0].data
-        print("Performing logical", self._add_tags[0], "on ")
-        print(array_data[0].name)
+        Printer.Print("Performing logical", self._add_tags[0], "on ")
+        Printer.Print(array_data[0].name)
         if self._operator == '!':
             out = np.logical_not(array_data[0].data)
 
         for arr_data in array_data[1:]:
-            print(", ", arr_data.name)
+            Printer.Print(", ", arr_data.name)
             if self._operator == '&':
                 out = np.logical_and(out, arr_data.data)
             elif self._operator == '||':
@@ -485,7 +487,7 @@ class LogicalAnd(AbstractCommand):
                 out = np.logical_xor(out, arr_data.data)
             else:
                 return ResultObject(None, None, None, CommandStatus.Error)
-            print(arr_data.name)
+            Printer.Print(arr_data.name)
         result = ResultObject(out, [], DataType.logical_array,
                               CommandStatus.Success, True)
         if len(array_data) > 1:

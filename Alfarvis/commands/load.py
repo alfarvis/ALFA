@@ -9,6 +9,7 @@ from Alfarvis.data_handlers import create_reader_dictionary
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Viz_Container import VizContainer
+from Alfarvis.printers import Printer
 
 import os
 
@@ -46,13 +47,13 @@ class Load(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         if file_name.data_type is DataType.figure:
-            print("Loading figure ", ' '.join(file_name.keyword_list))
+            Printer.Print("Loading figure ", ' '.join(file_name.keyword_list))
             VizContainer.current_figure = file_name.data
             VizContainer.current_figure.show()
             return ResultObject(None, None, None, CommandStatus.Success)
 
         if file_name.data.loaded:
-            print("File already loaded!")
+            Printer.Print("File already loaded!")
             return ResultObject(None, None, None, CommandStatus.Success)
 
         if os.path.isfile(file_name.data.path):
@@ -61,12 +62,13 @@ class Load(AbstractCommand):
                 reader = self.reader_dictionary[data_type]
                 result_object = reader.read(file_name.data.path,
                                             file_name.keyword_list)
-                print("Loaded file: ", os.path.basename(file_name.data.path))
+                Printer.Print("Loaded file: ",
+                              os.path.basename(file_name.data.path))
                 file_name.data.loaded = True
             else:
-                print("We cannot load ", data_type,
-                      " yet! Please try again later")
+                Printer.Print("We cannot load ", data_type,
+                              " yet! Please try again later")
         else:
-            print("File not found.\n Please make sure the file exists "
-                  "in the specified location")
+            Printer.Print("File not found.\n Please make sure the file exists "
+                          "in the specified location")
         return result_object

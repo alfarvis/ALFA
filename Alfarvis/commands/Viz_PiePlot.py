@@ -9,6 +9,7 @@ from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Viz_Container import VizContainer
 from .Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -44,7 +45,7 @@ class VizPiePlots(AbstractCommand):
         stTitle = " ".join(array_data.keyword_list)
         if StatContainer.conditional_array is not None:
             inds = StatContainer.conditional_array.data
-            print("Nfiltered: ", np.sum(inds))
+            Printer.Print("Nfiltered: ", np.sum(inds))
         else:
             inds = np.full(array_data.data.size, True)
         col_data = pd.Series(array_data.data[inds], name='array')
@@ -61,8 +62,8 @@ class VizPiePlots(AbstractCommand):
             concat_df = pd.concat([counts, col_data], axis=1)
             ds = concat_df.groupby(col_data.name).sum()['count']
         else:
-            print("Too many unique values to plot on a pie chart\n")
-            print("Please select another chart type")
+            Printer.Print("Too many unique values to plot on a pie chart\n")
+            Printer.Print("Please select another chart type")
             return result_object
 
         f = plt.figure()

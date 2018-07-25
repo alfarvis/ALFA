@@ -4,6 +4,7 @@ from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
                                         findNumbers)
+from Alfarvis.printers import Printer
 import numpy as np
 
 # TODO Remove/split based on commas and semicolumns etc
@@ -40,9 +41,10 @@ class AlfaDataParser:
         return set(list1).union(set(list2))
 
     def printCommands(self, command_list):
-        print("Found multiple commands. Please select one of the commands")
+        Printer.Print("Found multiple commands.",
+                      "Please select one of the commands")
         for command in command_list:
-            print(command.name)
+            Printer.Print(command.name)
 
     # Keeping it different for commands and arguments for now in case we want
     # to add further intelligence in either which might have a different logic
@@ -50,7 +52,7 @@ class AlfaDataParser:
         if type(args) is DataObject:
             args = [args]
         for arg in args:
-            print(" ".join(arg.keyword_list))
+            Printer.Print(" ".join(arg.keyword_list))
 
     def command_parse(self, text):
         """
@@ -87,8 +89,8 @@ class AlfaDataParser:
             in_keyword_list = self.keyword_list + ext_list
             res = self.command_database.search(in_keyword_list)
         if len(res) == 0:
-            print("Command not found")
-            print("If you would like to know about existing commands,"
+            Printer.Print("Command not found")
+            Printer.Print("If you would like to know about existing commands,"
                   " please say Find commands or Please help me")
             self.clearCommandSearchResults()
         elif len(res) == 1:
@@ -102,7 +104,8 @@ class AlfaDataParser:
                     self.command_search_result, res)
                 if len(intersection_set) == 0:
                     self.command_search_result = res
-                    print("The new commands do not match with the old input.")
+                    Printer.Print("The new commands do not match with the",
+                                  "old input.")
                 elif len(intersection_set) == 1:
                     self.foundCommand(intersection_set.pop())
                 else:
@@ -113,7 +116,7 @@ class AlfaDataParser:
                 self.printCommands(self.command_search_result)
 
     def foundCommand(self, res):
-        print("Found command", res.name)
+        Printer.Print("Found command", res.name)
         self.currentState = ParserStates.command_known
         self.currentCommand = res.data
         self.resolveArguments(self.keyword_list)
@@ -197,7 +200,8 @@ class AlfaDataParser:
                     argumentsFound[arg_name] = None
                     continue
                 if arg_number > 1:
-                    print("Arguments with multi-input cannot be optional")
+                    Printer.Print("Arguments with multi-input",
+                                  "cannot be optional")
                     continue
                 cache_res = self.history.getLastObject(arg_types[0])
                 if cache_res is not None:
@@ -272,8 +276,8 @@ class AlfaDataParser:
                 data_res.append(res)
                 break
             else:
-                print("Can only extract numbers and strings from user"
-                      "currently")
+                Printer.Print("Can only extract numbers and strings from user"
+                              "currently")
                 break
         return data_res
 
@@ -372,22 +376,22 @@ class AlfaDataParser:
             unknown_args = all_arg_names.difference(
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
-            print("\nChecking for arguments...\n")
+            Printer.Print("\nChecking for arguments...\n")
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
-                print("Argument ", arg, "found")
-                print("Matching argument: ",
+                Printer.Print("Argument ", arg, "found")
+                Printer.Print("Matching argument: ",
                 self.printArguments(self.argumentsFound[arg]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
-                    print("\nMultiple arguments found for ", arg)
+                    Printer.Print("\nMultiple arguments found for ", arg)
                     (self.printArguments(
                         self.argument_search_result[arg]))
                 else:
-                    print("Could not find any match for ", arg)
+                    Printer.Print("Could not find any match for ", arg)
             if len(unknownList) > 0:
-                print("\nPlease provide more clues to help me resolve",
-                      "these arguments")
+                Printer.Print("\nPlease provide more clues to help me resolve",
+                              "these arguments")
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
@@ -397,15 +401,15 @@ class AlfaDataParser:
                 self.addResultToHistory(result)
         else:
             if results.name is not None:
-                print("Saving result to", results.name)
+                Printer.Print("Saving result to", results.name)
             self.addResultToHistory(results)
 
     def addResultToHistory(self, result):
         if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
-            print("\nFailed to execute command")
-            print("Please provide new arguments or "
-                  "Type Quit to change your command")
+            Printer.Print("\nFailed to execute command")
+            Printer.Print("Please provide new arguments or "
+                          "Type Quit to change your command")
             # TODO Find which arguments are wrong and resolve only those data
         elif (result.command_status == CommandStatus.Success):
             # TODO Add a new function to add result to history
@@ -429,4 +433,4 @@ class AlfaDataParser:
             # Resolve argument types
             self.arg_reparse(textInput)
         else:
-            print("No input required in: ", self.currentState)
+            Printer.Print("No input required in: ", self.currentState)

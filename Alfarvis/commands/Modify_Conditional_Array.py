@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 
 
 class SetConditionalArray(AbstractCommand):
@@ -36,7 +37,7 @@ class SetConditionalArray(AbstractCommand):
 
         """
         StatContainer.conditional_array = array_data
-        print("Setting filter to ", array_data.name)
+        Printer.Print("Setting filter to ", array_data.name)
         return ResultObject(None, None, None, CommandStatus.Success)
 
 
@@ -65,5 +66,5 @@ class ClearConditionalArray(AbstractCommand):
 
         """
         StatContainer.conditional_array = None
-        print("clearing conditional array")
+        Printer.Print("clearing conditional array")
         return ResultObject(None, None, None, CommandStatus.Success)

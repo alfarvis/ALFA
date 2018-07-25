@@ -4,6 +4,7 @@ from Alfarvis.basic_definitions import (DataType, ResultObject, CommandStatus,
                                         DataObject, splitPattern)
 from Alfarvis.commands.Stat_ListColumns import StatListColumns
 from Alfarvis.commands.Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import pandas as pd
 import re
 
@@ -21,7 +22,7 @@ class ReadCSV(AbstractReader):
         try:
             data = pd.read_csv(file_path)
         except:
-            print("File not found")
+            Printer.Print("File not found")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         command_status = CommandStatus.Success
@@ -91,10 +92,11 @@ class ReadCSV(AbstractReader):
         # Replace columns:
         data.columns = new_column_names
         # List the information about csv
-        print("Loaded " + " ".join(keyword_list))
+        Printer.Print("Loaded " + " ".join(keyword_list))
         if current_gt is not None:
             StatContainer.ground_truth = current_gt
-            print("Setting ground truth to ", " ".join(current_gt.keyword_list))
+            Printer.Print("Setting ground truth to ",
+                          " ".join(current_gt.keyword_list))
         self.list_command.evaluate(result_objects[0], DataObject([''], []))
         return result_objects
 

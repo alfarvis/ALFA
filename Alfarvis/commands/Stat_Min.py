@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy
 
 
@@ -42,7 +43,7 @@ class StatMin(AbstractCommand):
         elif numpy.issubdtype(array.dtype, numpy.datetime64):
             array_filtered = array[numpy.logical_not(numpy.isnat(array))]
         else:
-            print("The array is not supported type so cannot find max")
+            Printer.Print("The array is not supported type so cannot find max")
             return result_object
         min_val = numpy.min(array_filtered)
         result_object = ResultObject(min_val, [],
@@ -52,6 +53,6 @@ class StatMin(AbstractCommand):
                 array_data.keyword_list,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
-        print("Minimum of", array_data.name, "is", min_val)
+        Printer.Print("Minimum of", array_data.name, "is", min_val)
 
         return result_object
