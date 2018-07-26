@@ -9,7 +9,7 @@ from Alfarvis.history.data_base import Database
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter, Align
 import numpy as np
 
 
@@ -42,6 +42,12 @@ class StatListColumns(AbstractCommand):
                 Argument(keyword="user_conv", optional=False,
                          argument_type=DataType.user_conversation)]
 
+    def initializeTable(self):
+        headers = ["Column_name", "Column_type", "Size", "Column_range"]
+        alignments = [Align.Right, Align.Center, Align.Center, Align.Left]
+        col_widths = [30, 15, 6, 40]
+        TablePrinter.initialize(4, col_widths, headers, alignments)
+
     def evaluate(self, array_data, user_conv):
         """
         List all columns in a csv matrix
@@ -52,7 +58,7 @@ class StatListColumns(AbstractCommand):
             self.column_type_db.search(user_conv.data)]
         column_strings = {'Categorical': [], 'Numeric': [], 'Logic': [],
                 'String': [], 'Unknown': []}
-        row_format = "{:>30} {:^15} {:^6} {:<40}"
+        self.initializeTable()
         if hasattr(data, 'columns'):
             for column in data.columns:
                 data_column = data[column]
@@ -85,16 +91,16 @@ class StatListColumns(AbstractCommand):
                         np.min(data_column), np.max(data_column))
                 else:
                     column_range = ""
-                column_strings[column_type].append(
-                        row_format.format(column, column_type, n_unique_vals,
-                                          column_range))
+                column_strings[column_type].append((
+                    column, column_type, n_unique_vals, column_range))
+
             Printer.Print("Showing Statistics for",
                           " ".join(array_data.keyword_list))
-            print(row_format.format("Column_name", "Column_type", "Size",
-                                    "Column_range"))
             for column_type in column_strings:
-                if column_strings[column_type] != []:
-                    print('\n'.join(column_strings[column_type]))
+                column_strings[column_type].sort()  # Sort the elements
+                for row_data in column_strings[column_type]:
+                    TablePrinter.addRow(*row_data)
+            TablePrinter.show()
             result_object = ResultObject(None, None, None,
                                          CommandStatus.Success)
 

@@ -6,6 +6,8 @@ import importlib
 import os
 import pkgutil
 from .printer_interface import Printer
+from .table_printer_interface import TablePrinter
+from .abstract_table_printer import Align
 
 pkg_dir = os.path.dirname(__file__)
 
