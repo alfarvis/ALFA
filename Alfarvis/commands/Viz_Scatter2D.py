@@ -15,6 +15,7 @@ from .Stat_Container import StatContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 import pandas as pd
 from .Viz_Container import VizContainer
+from Alfarvis.printers import Printer
 
 
 class VizScatter2D(AbstractCommand):
@@ -45,6 +46,8 @@ class VizScatter2D(AbstractCommand):
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
                 array_datas)
         if command_status == CommandStatus.Error:
+            Printer.Print("please try the following command:",
+                          "Visualize comparison between...")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         win = Window.window()
@@ -64,8 +67,12 @@ class VizScatter2D(AbstractCommand):
             lut = dict(zip(gt1.unique(), np.linspace(0, 1, gt1.unique().size)))
             row_colors = gt1.map(lut)
             array = df.values
-            ax.scatter(array[:, 0], array[:, 1], c=row_colors, cmap="jet",
+            sc = ax.scatter(array[:, 0], array[:, 1], c=row_colors, cmap="jet",
                        edgecolor="None", alpha=0.35)
+            cbar = plt.colorbar(sc)
+            cbar.ax.get_yaxis().labelpad = 15
+            cbar.ax.set_ylabel(StatContainer.ground_truth.name, rotation=270)
+
         ax.set_xlabel(kl1[0])
         ax.set_ylabel(kl1[1])
         ax.set_title(cname)
