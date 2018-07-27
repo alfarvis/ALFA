@@ -74,6 +74,7 @@ class VizPiePlots(AbstractCommand):
         ds.plot.pie(figsize=(8, 8), ax=ax)
         ax.set_title(stTitle)
         ax.set_xlabel('')
+        ax.set_aspect('equal')
 
         win.show()
         return VizContainer.createResult(win, array_data, ['pie'])
