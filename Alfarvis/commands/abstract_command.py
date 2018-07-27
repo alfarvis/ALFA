@@ -3,6 +3,7 @@
 Provide abstract base class for implementing new commands
 """
 from abc import ABCMeta, abstractmethod, abstractproperty
+from Alfarvis.printers import Printer
 import string
 import random
 
@@ -71,7 +72,7 @@ class AbstractCommand(object):
                 keyword_set.add(tag)
                 break
         if not tags_added:
-            print("Could not find a unique tag",
-                  "to add to the keyword_set")
-            print("Adding a random string")
+            Printer.Print("Could not find a unique tag",
+                          "to add to the keyword_set")
+            Printer.Print("Adding a random string")
             keyword_set.add(self.random_generator())

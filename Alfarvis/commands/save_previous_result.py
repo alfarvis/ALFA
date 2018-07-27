@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 
 
 class SavePreviousResult(AbstractCommand):
@@ -47,9 +48,9 @@ class SavePreviousResult(AbstractCommand):
                 history.data.last_data_type,
                 CommandStatus.Success)
             result_object.createName(keyword_list)
-            print("Saving ", ' '.join(previous_result.keyword_list), ' as ',
+            Printer.Print("Saving ", ' '.join(previous_result.keyword_list), ' as ',
                   result_object.name)
         except RuntimeError:
-            print("Cannot find last object from history")
+            Printer.Print("Cannot find last object from history")
 
         return result_object

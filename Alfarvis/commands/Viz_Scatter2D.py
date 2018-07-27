@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -14,6 +15,7 @@ from .Stat_Container import StatContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 import pandas as pd
 from .Viz_Container import VizContainer
+from Alfarvis.printers import Printer
 
 
 class VizScatter2D(AbstractCommand):
@@ -25,7 +27,7 @@ class VizScatter2D(AbstractCommand):
         """
         Tags to identify the scatterplot command
         """
-        return ["scatterplot", "scatter plot"]
+        return ["scatterplot", "scatter plot", "scatter 2d", "scatter"]
 
     def argumentTypes(self):
         """
@@ -44,10 +46,12 @@ class VizScatter2D(AbstractCommand):
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
                 array_datas)
         if command_status == CommandStatus.Error:
-            print ("please try the following command: Visualize comparison between...")
+            Printer.Print("please try the following command:",
+                          "Visualize comparison between...")
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
         if StatContainer.ground_truth is None:
             df.dropna(inplace=True)
@@ -68,12 +72,10 @@ class VizScatter2D(AbstractCommand):
             cbar = plt.colorbar(sc)
             cbar.ax.get_yaxis().labelpad = 15
             cbar.ax.set_ylabel(StatContainer.ground_truth.name, rotation=270)
-            
+
         ax.set_xlabel(kl1[0])
         ax.set_ylabel(kl1[1])
         ax.set_title(cname)
-        
-        
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['scatter2d'])
+        return VizContainer.createResult(win, array_datas, ['scatter2d'])

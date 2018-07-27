@@ -3,6 +3,7 @@ from .abstract_reader import AbstractReader
 from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, DataObject
 from Alfarvis.commands.Stat_ListColumns import StatListColumns
 from Alfarvis.commands.Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import pandas as pd
 import re
 import numpy as np
@@ -19,7 +20,7 @@ class ReadAlgo(AbstractReader):
         try:
             model = DataGuru.readAlgorithm(file_path)
         except:
-            print("File not found")
+            Printer.Print("File not found")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         command_status = CommandStatus.Success

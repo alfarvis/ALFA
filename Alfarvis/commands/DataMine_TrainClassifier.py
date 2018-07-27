@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -54,7 +55,8 @@ class DM_TrainClassifier(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
+            Printer.Print("Please set a feature vector to ground truth by",
+                          "typing set ground truth before using this command")
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
@@ -75,16 +77,17 @@ class DM_TrainClassifier(AbstractCommand):
         X = scaler.transform(X)
 
         # Train the classifier
-        print("Training classifier using the following features:")
-        print(df.columns)
+        Printer.Print("Training classifier using the following features:")
+        Printer.Print(df.columns)
         model.fit(X, Y)
 
         # Print an update
-        print("The classifier", " ".join(classifier_algo.keyword_list), "has been trained")
+        Printer.Print("The classifier", " ".join(classifier_algo.keyword_list),
+                      "has been trained")
 
         predictions = model.predict(X)
         accuracy = metrics.accuracy_score(predictions, Y)
-        print("Accuracy on training set : %s" % "{0:.3%}".format(accuracy))
+        Printer.Print("Accuracy on training set : %s" % "{0:.3%}".format(accuracy))
         plt.show(block=False)
 
         trained_model = {'Scaler': scaler, 'Model': model}

@@ -9,6 +9,8 @@ from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Viz_Container import VizContainer
 from .Stat_Container import StatContainer
+from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -44,30 +46,34 @@ class VizPiePlots(AbstractCommand):
         stTitle = " ".join(array_data.keyword_list)
         if StatContainer.conditional_array is not None:
             inds = StatContainer.conditional_array.data
-            print("Nfiltered: ", np.sum(inds))
+            Printer.Print("Nfiltered: ", np.sum(inds))
         else:
             inds = np.full(array_data.data.size, True)
-        col_data = pd.Series(array_data.data[inds])
+        col_data = pd.Series(array_data.data[inds], name='array')
         col_data.dropna(inplace=True)
         uniqVals = StatContainer.isCategorical(col_data)
+
+        if uniqVals is None and np.issubdtype(col_data.dtype, np.number):
+            # Convert to categorical
+            col_data = pd.cut(col_data, 10)
+            uniqVals = True
+
         if uniqVals is not None:
-            freq_vals = []
-            for uniQ in uniqVals:
-                ind = (col_data.values == uniQ)
-                freq_vals.append(np.sum(ind * 1))
+            counts = pd.Series(np.ones(col_data.size), name='count')
+            concat_df = pd.concat([counts, col_data], axis=1)
+            ds = concat_df.groupby(col_data.name).sum()['count']
         else:
-            print("Too many unique values to plot on a pie chart\n")
-            print("Please select another chart type")
+            Printer.Print("Too many unique values to plot on a pie chart\n")
+            Printer.Print("Please select another chart type")
             return result_object
 
-        df = pd.Series(freq_vals, index=uniqVals, name='')
-
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
 
-        df.plot.pie(figsize=(8, 8), ax=ax)
+        ds.plot.pie(figsize=(8, 8), ax=ax)
         ax.set_title(stTitle)
         ax.set_xlabel('')
 
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_data, ['pie'])
+        win.show()
+        return VizContainer.createResult(win, array_data, ['pie'])

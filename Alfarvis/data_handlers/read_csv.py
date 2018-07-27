@@ -4,6 +4,7 @@ from Alfarvis.basic_definitions import (DataType, ResultObject, CommandStatus,
                                         DataObject, splitPattern)
 from Alfarvis.commands.Stat_ListColumns import StatListColumns
 from Alfarvis.commands.Stat_Container import StatContainer
+from Alfarvis.printers import Printer
 import pandas as pd
 import re
 
@@ -11,6 +12,7 @@ import re
 class ReadCSV(AbstractReader):
     list_command = StatListColumns()
     col_head_pattern = re.compile('Unnamed: [0-9]+')
+    currency_dict = {ord('$'): None, ord(','): None}
 
     @classmethod
     def data_type(self):
@@ -20,7 +22,7 @@ class ReadCSV(AbstractReader):
         try:
             data = pd.read_csv(file_path)
         except:
-            print("File not found")
+            Printer.Print("File not found")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         command_status = CommandStatus.Success
@@ -44,6 +46,30 @@ class ReadCSV(AbstractReader):
                 col_split = splitPattern(column)
             col_data = data[column].values
             col_keyword_list = col_split
+
+            N = col_data.size
+            if N == 0:
+                continue
+            if isinstance(col_data[0], str):
+                if '%' in col_data[0]:
+                    try:
+                        col_data = data[column].str.rstrip('%').astype(float,
+                                       copy=False)
+                        data[column] = col_data
+                        if 'percent' not in col_keyword_list:
+                            col_keyword_list.append('percent')
+                    except ValueError:
+                        pass
+                elif '$' in col_data[0] or ',' in col_data[0]:
+                    try:
+                        col_data = data[
+                                column].str.translate(
+                                self.currency_dict).astype(float, copy=False)
+                        data[column] = col_data
+                        if '$' not in col_keyword_list:
+                            col_keyword_list.append('$')
+                    except ValueError:
+                        pass
             result_object = ResultObject(
                 col_data, col_keyword_list, DataType.array, command_status,
                 add_to_cache=True)
@@ -66,11 +92,12 @@ class ReadCSV(AbstractReader):
         # Replace columns:
         data.columns = new_column_names
         # List the information about csv
-        print("Loaded " + " ".join(keyword_list))
+        Printer.Print("Loaded " + " ".join(keyword_list))
         if current_gt is not None:
             StatContainer.ground_truth = current_gt
-            print("Setting ground truth to ", " ".join(current_gt.keyword_list))
-        self.list_command.evaluate(result_objects[0])
+            Printer.Print("Setting ground truth to ",
+                          " ".join(current_gt.keyword_list))
+        self.list_command.evaluate(result_objects[0], DataObject([''], []))
         return result_objects
 
     def add_categories_as_columns(self, uniqVals, col_data, col_split,

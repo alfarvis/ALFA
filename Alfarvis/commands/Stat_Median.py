@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy
 
 
@@ -49,8 +50,9 @@ class StatMedian(AbstractCommand):
                     array_data.keyword_list,
                     command_name=self.commandTags()[0],
                     set_keyword_list=True)
-            print("Median of", array_data.name, "is", median_val)
+            Printer.Print("Median of", array_data.name, "is", median_val)
         else:
-            print("The array is not of numeric type so cannot find median")
+            Printer.Print("The array is not of numeric type so cannot",
+                          "find median")
 
         return result_object

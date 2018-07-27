@@ -7,6 +7,8 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -24,7 +26,7 @@ class VizPlotLine(AbstractCommand):
         """
         Tags to identify the lineplot command
         """
-        return ["lineplot", "line plot"]
+        return ["lineplot", "line plot", "plot"]
 
     def argumentTypes(self):
         """
@@ -45,22 +47,18 @@ class VizPlotLine(AbstractCommand):
                 remove_nan=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
-        elif df.shape[0] == 0:
-            print("No data left to plot after cleaning up!")
+        elif (df.shape[0] == 0 or
+              (df.shape[1] == 1 and
+               np.issubdtype(array_datas[0].data.dtype, np.number) == False)):
+            Printer.Print("No data left to plot after cleaning up!")
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        if df.shape[1] == 1:
-            uniqVals = StatContainer.isCategorical(df[df.columns[0]])
-            if uniqVals is not None:
-                arr_data = df[df.columns[0]]
-                lut = dict(zip(uniqVals, np.linspace(0, 1, uniqVals.size)))
-                df[df.columns[0]] = arr_data.map(lut)
-
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
         ax.set_title(cname)
         df.plot(ax=ax)
 
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['line'])
+        return VizContainer.createResult(win, array_datas, ['line'])

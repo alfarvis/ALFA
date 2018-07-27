@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -53,8 +54,9 @@ class DM_Classify(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth to",
-                  "to get the prediction accuracy")
+            Printer.Print("Please set a feature vector to ground truth by",
+                          "typing set ground truth to",
+                          "to get the prediction accuracy")
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
@@ -75,11 +77,11 @@ class DM_Classify(AbstractCommand):
 
         # Code to run the classifier
         # Plot the k -means result
-        print('Running the trained classifier...')
+        Printer.Print('Running the trained classifier...')
 
         predictions = model.predict(X)
         accuracy = metrics.accuracy_score(predictions, Y)
-        print("Accuracy : %s" % "{0:.3%}".format(accuracy))
+        Printer.Print("Accuracy : %s" % "{0:.3%}".format(accuracy))
         cm = metrics.confusion_matrix(Y, predictions)
         DataGuru.plot_confusion_matrix(cm, np.unique(Y), title="confusion matrix")
         plt.show(block=False)

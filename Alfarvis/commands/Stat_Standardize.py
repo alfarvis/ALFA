@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy
 from sklearn import preprocessing
 import copy
@@ -51,7 +52,7 @@ class Stat_Standardize(AbstractCommand):
                 data[column] = ((data[column] - numpy.mean(col_data_drop)) /
                                 numpy.std(col_data_drop))
 
-        print("Saving the scaled data...")
+        Printer.Print("Saving the scaled data...")
         result_object = ResultObject(data, [],
                                      DataType.csv,
                                      CommandStatus.Success)

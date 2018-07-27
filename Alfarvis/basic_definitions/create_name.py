@@ -13,7 +13,6 @@ name_pattern = re.compile('^[a-zA-Z0-9.]*$')
 
 def checkName(name, name_dict):
     if name in name_dict:
-        print("Name:", name, "already in dictionary")
         return False
     return True
 

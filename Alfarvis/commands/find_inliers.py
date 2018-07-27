@@ -7,6 +7,8 @@ Created on Sat Jun  9 14:26:34 2018
 """
 
 import numpy as np
+from Alfarvis.printers import Printer
+
 
 def findInliers(input_array, inlier_ratio=0.5, cutoff_outlier_gain=1):
     """
@@ -21,9 +23,8 @@ def findInliers(input_array, inlier_ratio=0.5, cutoff_outlier_gain=1):
     sorted_dist_diff = np.diff(distances[sort_inds])
     i = np.argmax(sorted_dist_diff)
     N = distances.size
-    if (sorted_dist_diff[i] > stdev_dist*cutoff_outlier_gain and
-        i > N*inlier_ratio):
-        print("Removing Outliers")
-        return sort_inds[:(i+1)]
+    if (sorted_dist_diff[i] > stdev_dist * cutoff_outlier_gain and
+        i > N * inlier_ratio):
+        Printer.Print("Removing Outliers")
+        return sort_inds[:(i + 1)]
     return None
-        

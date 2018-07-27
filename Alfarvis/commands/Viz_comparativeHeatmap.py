@@ -7,6 +7,8 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -45,7 +47,7 @@ class Stat_RelationMap(AbstractCommand):
         df = pd.DataFrame()
         for array_data in array_datas:
             if StatContainer.isCategorical(array_data.data) is None:
-                print("The data to plot is not categorical, Please use scatter plot")
+                Printer.Print("The data to plot is not categorical, Please use scatter plot")
                 return result_object
             df[" ".join(array_data.keyword_list)] = array_data.data
 
@@ -53,9 +55,11 @@ class Stat_RelationMap(AbstractCommand):
         df = df.pivot_table(
             index=df.columns[0], columns=df.columns[1], aggfunc=np.size, fill_value=0)
 
-        print("Displaying heatmap")
-        f = plt.figure()
-        sns.heatmap(df)
+        Printer.Print("Displaying heatmap")
+        win = Window.window()
+        f = win.gcf()
+        ax = f.add_subplot(111)
+        sns.heatmap(df, ax=ax)
 
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_datas, ['heatmap'])
+        win.show()
+        return VizContainer.createResult(win, array_datas, ['heatmap'])

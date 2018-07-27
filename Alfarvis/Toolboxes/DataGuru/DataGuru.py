@@ -21,6 +21,7 @@ from sklearn import svm  # for Support Vector Machine
 from sklearn import metrics  # for the check the error and accuracy of the model
 from sklearn import preprocessing
 from sklearn.model_selection import LeaveOneOut
+from Alfarvis.printers import Printer
 import re
 import matplotlib.pyplot as plt
 import itertools
@@ -64,7 +65,7 @@ class DataGuru:
         if StatContainer.conditional_array is not None:
             inds = StatContainer.conditional_array.data
             Nfiltered = np.sum(inds)
-            print("Nfiltered: ", Nfiltered)
+            Printer.Print("Nfiltered: ", Nfiltered)
         else:
             Nfiltered = array_size
             inds = np.full(Nfiltered, True)
@@ -73,8 +74,9 @@ class DataGuru:
             # Check if the array is a numeric type or not
             if (np.issubdtype(array_data.data.dtype, np.number)) == False:
                 if not useCategorical:
-                    print("Skipping ", " ".join(array_data.keyword_list),
-                          "\nThe array is not of numeric type")
+                    Printer.Print(
+                        "Skipping ", " ".join(array_data.keyword_list),
+                        "\nThe array is not of numeric type")
                     continue
                 else:
                     if len(array_datas) > 1:
@@ -90,9 +92,9 @@ class DataGuru:
                 if array_data.data.size == 1 and expand_single:
                     data = np.ones(Nfiltered) * array_data.data
                 else:
-                    print("Skipping array ",
-                          " ".join(array_data.keyword_list),
-                          " since its size does not match with",
+                    Printer.Print("Skipping array ",
+                                  " ".join(array_data.keyword_list),
+                                  " since its size does not match with",
                           " other arrays in the frame")
                     continue
             elif array_data.data.size == 1:
@@ -102,7 +104,7 @@ class DataGuru:
             df[truncated_kl1[i]] = pd.Series(data)
 
         if df.size == 0:
-            print("No arrays found in the arguments provided")
+            Printer.Print("No arrays found in the arguments provided")
             command_status = CommandStatus.Error
         if remove_nan:
             df.dropna(inplace=True)
@@ -176,10 +178,10 @@ class DataGuru:
 
         cm = metrics.confusion_matrix(allTrue, allPred)
 
-        #print("%d-fold cross validation accuracy -  %.2f%% (+/- %.2f%%)" % (num_folds, np.mean(cvscores), np.std(cvscores)))
-        #print("%d-fold cross validation AUC -  %.2f (+/- %.2f)" % (num_folds, np.mean(aucscores), np.std(aucscores)))
-        #print("%d-fold cross validation Sens -  %.2f " % (num_folds, Sens, ))
-        #print("%d-fold cross validation Spec -  %.2f " % (num_folds, Spec, ))
+        #Printer.Print("%d-fold cross validation accuracy -  %.2f%% (+/- %.2f%%)" % (num_folds, np.mean(cvscores), np.std(cvscores)))
+        #Printer.Print("%d-fold cross validation AUC -  %.2f (+/- %.2f)" % (num_folds, np.mean(aucscores), np.std(aucscores)))
+        #Printer.Print("%d-fold cross validation Sens -  %.2f " % (num_folds, Sens, ))
+        #Printer.Print("%d-fold cross validation Spec -  %.2f " % (num_folds, Spec, ))
 
         return cm, cvscores
 
@@ -239,11 +241,11 @@ class DataGuru:
         # cm is confusion matrix
         if normalize:
             cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-            print("Normalized confusion matrix")
+            Printer.Print("Normalized confusion matrix")
         else:
-            print('Confusion matrix, without normalization')
+            Printer.Print('Confusion matrix, without normalization')
 
-        print(cm)
+        Printer.Print(cm)
 
         plt.imshow(cm, interpolation='nearest', cmap=cmap)
         plt.title(title)

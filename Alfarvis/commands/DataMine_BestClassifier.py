@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -27,7 +28,7 @@ class DM_BestClassifier(AbstractCommand):
         """
         Tags to identify the train a classifier command
         """
-        return ["best", "classifier"]
+        return ["best classifier"]
 
     def argumentTypes(self):
         """
@@ -55,7 +56,8 @@ class DM_BestClassifier(AbstractCommand):
 
         # Get the ground truth array
         if StatContainer.ground_truth is None:
-            print("Please set a feature vector to ground truth by typing set ground truth before using this command")
+            Printer.Print("Please set a feature vector to ground truth by",
+                          "typing set ground truth before using this command")
             result_object = ResultObject(None, None, None, CommandStatus.Error)
             return result_object
         else:
@@ -65,15 +67,15 @@ class DM_BestClassifier(AbstractCommand):
         # Remove nans:
         df, Y = DataGuru.removenan(df, Y)
 
-        print("Training classifier using the following features:")
-        print(df.columns)
+        Printer.Print("Training classifier using the following features:")
+        Printer.Print(df.columns)
 
         # Get all the classifier models to test against each other
         modelList = []
-        print("Testing the following classifiers: ")
+        Printer.Print("Testing the following classifiers: ")
         for classifier_algo in classifier_algos:
             model = (classifier_algo.data)
-            print(classifier_algo.name)
+            Printer.Print(classifier_algo.name)
             modelList.append({'Name': classifier_algo.name, 'Model': model})
 
         # Code to run the classifier
@@ -83,16 +85,17 @@ class DM_BestClassifier(AbstractCommand):
         scaler = preprocessing.StandardScaler().fit(X)
         X = scaler.transform(X)
 
-        print('Finding the best classifier using k fold cross validation...')
+        Printer.Print('Finding the best classifier using',
+                      'k fold cross validation...')
 
         all_cv_scores, all_mean_cv_scores, all_confusion_matrices = DataGuru.FindBestClassifier(X, Y, modelList, 10)
 
-        print('\n\nPlotting the confusion matrices...\n')
+        Printer.Print('\n\nPlotting the confusion matrices...\n')
         for iter in range(len(modelList)):
             DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), title=modelList[iter]['Name'])
             plt.show(block=False)
 
-        print("\n\nBest classifier is " + modelList[np.argmax(all_mean_cv_scores)]['Name'] + " with an accuracy of -  %.2f%% " % max(all_mean_cv_scores))
+        Printer.Print("\n\nBest classifier is " + modelList[np.argmax(all_mean_cv_scores)]['Name'] + " with an accuracy of -  %.2f%% " % max(all_mean_cv_scores))
         # TODO Need to save the model
         # Ask user for a name for the model
         result_object = ResultObject(None, None, None, CommandStatus.Success)

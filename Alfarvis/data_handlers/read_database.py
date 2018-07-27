@@ -7,6 +7,7 @@ from collections import namedtuple
 from .abstract_reader import AbstractReader
 from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, FileObject
 from Alfarvis import package_directory
+from Alfarvis.printers import Printer
 import pandas as pd
 import os
 
@@ -21,13 +22,13 @@ class ReadDatabase(AbstractReader):
 
     def checkHeaders(self, headers):
         if headers.size != 4:
-            print("Headers in data base file does not match")
+            Printer.Print("Headers in data base file does not match")
             return False
         expected_headers = ['file_name',
                             'file_type', 'keywords', 'description']
         for i, header in enumerate(expected_headers):
             if header != headers[i]:
-                print("Header at ", i, " does not match with ", header)
+                Printer.Print("Header at ", i, " does not match with ", header)
                 return False
         return True
 
@@ -52,9 +53,9 @@ class ReadDatabase(AbstractReader):
                         file_type = DataType[row['file_type']]
                     except KeyError:
                         # Depending on verbosity
-                        print("file type in line ", idx, " not understood in",
+                        Printer.Print("file type in line ", idx, " not understood in",
                               row['file_name'])
-                        print("Skipping file ...")
+                        Printer.Print("Skipping file ...")
                         skipped_files = skipped_files + 1
                         continue
                     file_path = os.path.join(package_directory, 'resources',
@@ -68,5 +69,5 @@ class ReadDatabase(AbstractReader):
                     result_list.append(file_res)
                 result_object = result_list
             except:
-                result_object = ResultObject(None, None, None, command_status)
+                result_object = ResultObject(None, None, None, CommandStatus.Error)
         return result_object

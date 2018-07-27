@@ -14,6 +14,7 @@ from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Viz_Container import VizContainer
+from Alfarvis.windows import Window
 
 
 class VizMultiScatter2D(AbstractCommand):
@@ -47,7 +48,8 @@ class VizMultiScatter2D(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
 
         if StatContainer.ground_truth is None:
@@ -62,6 +64,6 @@ class VizMultiScatter2D(AbstractCommand):
 
         f.suptitle(cname)
 
-        plt.show(block=False)
+        win.show()
 
-        return VizContainer.createResult(f, array_datas, ['multiscatter'])
+        return VizContainer.createResult(win, array_datas, ['multiscatter'])

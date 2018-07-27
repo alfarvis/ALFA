@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from Alfarvis.data_handlers import create_reader_dictionary
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from Alfarvis.printers import Printer
 import matplotlib.pyplot as plt
 
 
@@ -43,7 +44,7 @@ class ImageDisplay(AbstractCommand):
             image_name = image.keyword_list[0]
             plt.imshow(curr_image)
             plt.show(block=False)
-            print("Displaying image" + image_name)
+            Printer.Print("Displaying image" + image_name)
             result_object = ResultObject(
                 None, None, None, CommandStatus.Success)
         except:

@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 from .Viz_Container import VizContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from Alfarvis.printers import Printer
+from Alfarvis.windows import Window
 
 
 class Stat_Correl(AbstractCommand):
@@ -42,7 +44,7 @@ class Stat_Correl(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
 
         if len(array_datas) < 2:
-            print("Need atleast two arrays to compute correlation")
+            Printer.Print("Need atleast two arrays to compute correlation")
             return ResultObject(None, None, None, CommandStatus.Error)
 
         sns.set(color_codes=True)
@@ -54,13 +56,16 @@ class Stat_Correl(AbstractCommand):
         corr_res = df.corr()
 
         if len(array_datas) == 2:
-            print("The correlation between ", kl1[0], " and ", kl1[1], " is ", str(corr_res.values[0][1]))
+            Printer.Print("The correlation between ", kl1[0], " and ", kl1[1],
+                          " is ", str(corr_res.values[0][1]))
 
-        print("Displaying the result as a heatmap")
-        f = plt.figure()
+        Printer.Print("Displaying the result as a heatmap")
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
-        sns.heatmap(corr_res, cbar=True, square=True, annot=True, fmt='.2f', annot_kws={'size': 15},
-           xticklabels=df.columns, yticklabels=df.columns,
-           cmap='jet', ax=ax)
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_datas, ['correlation'])
+        sns.heatmap(corr_res, cbar=True, square=True, annot=True, fmt='.2f',
+                    annot_kws={'size': 15},
+                    xticklabels=df.columns, yticklabels=df.columns,
+                    cmap='jet', ax=ax)
+        win.show()
+        return VizContainer.createResult(win, array_datas, ['correlation'])
