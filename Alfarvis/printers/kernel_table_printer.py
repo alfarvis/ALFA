@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-from .abstract_table_printer import AbstractTablePrinter, Align
+from .abstract_table_printer import AbstractTablePrinter
+from .align import Align
 
 
 class KernelTablePrinter(AbstractTablePrinter):

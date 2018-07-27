@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 from abc import ABCMeta, abstractmethod, abstractproperty
-from enum import Enum
-
-
-class Align(Enum):
-    Left = 1
-    Right = 2
-    Center = 3
 
 
 class AbstractTablePrinter(object):
