@@ -69,8 +69,8 @@ class ListHistory(AbstractCommand):
                         object_name = data_object.name
                     keywords = " ".join(data_object.keyword_list)
                     data_type_name = data_type.name.replace('_', '.')
-                    TablePrinter.addRow(object_name, keywords,
-                                        data_type_name)
+                    TablePrinter.addRow((object_name, keywords,
+                                        data_type_name))
         except:
             result_object = ResultObject(None, None, None, CommandStatus.Error)
         TablePrinter.show()

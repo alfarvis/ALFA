@@ -99,7 +99,11 @@ class StatListColumns(AbstractCommand):
             for column_type in column_strings:
                 column_strings[column_type].sort()  # Sort the elements
                 for row_data in column_strings[column_type]:
-                    TablePrinter.addRow(*row_data)
+                    if (StatContainer.ground_truth is not None and
+                        row_data[0] == StatContainer.ground_truth.name):
+                        TablePrinter.addRow(row_data, color_fill='g')
+                    else:
+                        TablePrinter.addRow(row_data)
             TablePrinter.show()
             result_object = ResultObject(None, None, None,
                                          CommandStatus.Success)

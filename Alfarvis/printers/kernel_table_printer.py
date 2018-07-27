@@ -33,11 +33,11 @@ class KernelTablePrinter(AbstractTablePrinter):
         self.row_format = row_format
         print(row_format.format(*headers))
 
-    def addRow(self, *args):
+    def addRow(self, row_names, color_fill=None):
         """
         Add data to table
         """
-        print(self.row_format.format(*args))
+        print(self.row_format.format(*row_names))
 
     def show(self):
         """

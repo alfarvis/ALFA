@@ -8,7 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import numpy
 import re
 
@@ -38,7 +38,10 @@ class SetGT(AbstractCommand):
         Parameters:
 
         """
+        if StatContainer.ground_truth is not None:
+            TablePrinter.clearBackGround(StatContainer.ground_truth.name)
         StatContainer.ground_truth = array_data
+        TablePrinter.highlight(StatContainer.ground_truth.name)
         Printer.Print("Setting ground truth to ", " ".join(
             array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
@@ -68,6 +71,8 @@ class ClearGT(AbstractCommand):
         Parameters:
 
         """
+        if StatContainer.ground_truth is not None:
+            TablePrinter.clearBackGround(StatContainer.ground_truth.name)
         StatContainer.ground_truth = None
         Printer.Print("clearing ground truth")
         return ResultObject(None, None, None, CommandStatus.Success)

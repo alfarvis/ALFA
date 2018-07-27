@@ -25,7 +25,7 @@ class AbstractTablePrinter(object):
         pass
 
     @abstractmethod
-    def addRow(self, *args):
+    def addRow(self, row_names, color_fill=None):
         """
         Add data to table
         """
@@ -37,3 +37,9 @@ class AbstractTablePrinter(object):
         Shows the table
         """
         pass
+
+    def highlight(self, name, color='g'):
+        return
+
+    def clearBackGround(self, name):
+        return
