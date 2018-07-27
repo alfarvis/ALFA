@@ -55,7 +55,7 @@ class ReadCSV(AbstractReader):
 
             if unique_vals is not None:
                 if len(unique_vals) < num_unique:
-                    current_gt = DataObject(col_data, col_keyword_list)
+                    current_gt = result_object
                     num_unique = len(unique_vals)
                 # Do not add unique values as columns unless they are only a
                 # few

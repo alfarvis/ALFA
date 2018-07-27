@@ -12,7 +12,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from .Stat_Container import StatContainer
 from .Viz_Container import VizContainer
-from Alfarvis.Toolboxes.DataGuru import DataGuru
 import pandas as pd
 
 
@@ -43,31 +42,20 @@ class Stat_RelationMap(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
 
         sns.set(color_codes=True)
-        
-        isCategorical = True
-        count=0
         df = pd.DataFrame()
         for array_data in array_datas:
-            if (np.issubdtype(array_data.data.dtype, np.number)) == True:
-                isCategorical = False
-            if count==0:
-                
-                df[" ".join(array_data.keyword_list)] = array_data.data
-                count = 1
-                #df.index = arr
-            else:
-                df[" ".join(array_data.keyword_list)] = array_data.data
-        
-        if isCategorical == True:
-            df.dropna(inplace=True)   
-            df = df.pivot_table(index=df.columns[0],columns=df.columns[1],aggfunc=np.size,fill_value=0)
-        
-            print("Displaying heatmap")
-            f = plt.figure()
-            sns.heatmap(df)
+            if StatContainer.isCategorical(array_data.data) is None:
+                print("The data to plot is not categorical, Please use scatter plot")
+                return result_object
+            df[" ".join(array_data.keyword_list)] = array_data.data
 
-            plt.show(block=False)
-            return VizContainer.createResult(f, array_datas, ['heatmap'])
-        else:
-            print("The data to plot is not categorical, Please use scatter plot")
-            return result_object
+        df.dropna(inplace=True)
+        df = df.pivot_table(
+            index=df.columns[0], columns=df.columns[1], aggfunc=np.size, fill_value=0)
+
+        print("Displaying heatmap")
+        f = plt.figure()
+        sns.heatmap(df)
+
+        plt.show(block=False)
+        return VizContainer.createResult(f, array_datas, ['heatmap'])
