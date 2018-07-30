@@ -12,6 +12,7 @@ class StatContainer(object):
     ground_truth = None
     conditional_array = None
     percCutoff_for_categorical = 0.1
+    uniqueCutoff = 1000
 
     @classmethod
     def filterGroundTruth(self):
@@ -58,8 +59,8 @@ class StatContainer(object):
                 first_val = array.iloc[0]
             else:
                 first_val = array[0]
-            if ((isinstance(first_val, str) and Nunique < 50) or
-                (Nunique < 50 and
+            if ((isinstance(first_val, str) and Nunique < self.uniqueCutoff) or
+                (Nunique < self.uniqueCutoff and
                  (Nunique / N) <= self.percCutoff_for_categorical)):
                 return uniqVals
         return None
