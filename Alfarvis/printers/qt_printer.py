@@ -16,7 +16,7 @@ class QtPrinter(AbstractPrinter):
         self.text_box.setReadOnly(True)
         self.qt_color = mapColor('k')
         self.align = mapAlignment(Align.Left)
-        self.text_box.setMinimumHeight(400)
+        self.text_box.setMinimumWidth(300)
 
     def settings(self, color='k', alignment=Align.Left):
         self.qt_color = mapColor(color)

@@ -12,14 +12,19 @@ from Alfarvis import create_alpha_module_dictionary
 from Alfarvis.qt_gui import QtGUI
 from PyQt5.QtWidgets import QApplication
 from Alfarvis.printers import Printer
+from collections import deque
 
 
 class UserInputHandler(object):
     def __init__(self, user_input, qt_app, alpha_module_dictionary):
         self.user_input = user_input
+        self.previous_input_text = deque(maxlen=10)
+        self.buffer_index = -1
         self.qt_app = qt_app
         self.alpha_module_dictionary = alpha_module_dictionary
         self.user_input.returnPressed.connect(self.userPressedEnter)
+        self.user_input.upArrowPress.connect(self.userPressedUpArrow)
+        self.user_input.downArrowPress.connect(self.userPressedDownArrow)
         self.pattern = re.compile('(L|l)oad (A|a)l(f|ph)a\s*\w*\s*(\d+.?\d*)\w*')
         latest_version = max(alpha_module_dictionary.keys())
         self.alpha = alpha_module_dictionary[latest_version]()
@@ -51,7 +56,24 @@ class UserInputHandler(object):
                 Printer.Print(out)
         else:
             Printer.Print("No alpha loaded!")
+        self.previous_input_text.appendleft(input_text)
         self.user_input.clear()
+        self.buffer_index = -1
+
+    def userPressedUpArrow(self):
+        N = len(self.previous_input_text)
+        if N == 0:
+            return
+        self.buffer_index = min(self.buffer_index + 1, N - 1)
+        self.user_input.setText(self.previous_input_text[self.buffer_index])
+
+    def userPressedDownArrow(self):
+        if self.buffer_index >= 1:
+            self.buffer_index = self.buffer_index - 1
+            self.user_input.setText(
+                    self.previous_input_text[self.buffer_index])
+        else:
+            self.user_input.setText('')
 
 
 if __name__ == "__main__":  # pragma: no cover

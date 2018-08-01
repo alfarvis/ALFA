@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-from PyQt5.QtWidgets import QDialog, QLineEdit, QVBoxLayout, QTabWidget
+from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout,
+                             QTabWidget, QSizePolicy)
+from Alfarvis.qt_gui.qt_custom_line_edit import QCustomLineEdit
 from Alfarvis.windows.qt_window import QtWindow
 from Alfarvis.printers.qt_printer import QtPrinter
 from Alfarvis.printers.qt_table_printer import QtTablePrinter
@@ -13,19 +15,30 @@ class QtGUI(QDialog):
         # Create subcomponents of the GUI
         self.tab_container = QTabWidget()
         self.qt_printer = QtPrinter()
-        self.qt_table_printer = QtTablePrinter(self.tab_container)
-        self.user_input = QLineEdit()
+        self.qt_table_printer = QtTablePrinter()
+        self.user_input = QCustomLineEdit()
         # Select global configs
         QtWindow.setParentWidget(self.tab_container)
         Window.selectWindowType(QtWindow)
         Printer.selectPrinter(self.qt_printer)
         TablePrinter.selectPrinter(self.qt_table_printer)
+        # Size
+        self.qt_printer.text_box.setSizePolicy(QSizePolicy.Minimum,
+                                               QSizePolicy.Expanding)
+        self.tab_container.setSizePolicy(QSizePolicy.Expanding,
+                                         QSizePolicy.Expanding)
+        self.qt_table_printer.table_widget.setSizePolicy(
+                QSizePolicy.MinimumExpanding, QSizePolicy.Expanding)
         # Layout
         layout = QVBoxLayout()
-        layout.addWidget(self.tab_container)
-        layout.addWidget(self.qt_printer.text_box)
+        h_layout = QHBoxLayout()
+        h_layout.addWidget(self.qt_printer.text_box, stretch=0)
+        h_layout.addWidget(self.tab_container, stretch=2)
+        h_layout.addWidget(self.qt_table_printer.table_widget, stretch=1)
+        layout.addLayout(h_layout)
         layout.addWidget(self.user_input)
         self.setLayout(layout)
+        # Connections
         self.qt_table_printer.table_widget.itemDoubleClicked.connect(self.double_click_table_cell)
 
     def double_click_table_cell(self, widget_item):
