@@ -26,7 +26,7 @@ class UserInputHandler(object):
 
     def userPressedEnter(self):
         input_text = self.user_input.text()
-        Printer.Print("User: " + input_text)
+        Printer.UserPrint("User: " + input_text)
         Printer.Print("Alfa: ")
         if input_text == "Bye" or input_text == "bye":
             print("Qutting Application!")

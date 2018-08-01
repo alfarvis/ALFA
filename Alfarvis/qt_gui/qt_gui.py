@@ -26,3 +26,8 @@ class QtGUI(QDialog):
         layout.addWidget(self.qt_printer.text_box)
         layout.addWidget(self.user_input)
         self.setLayout(layout)
+        self.qt_table_printer.table_widget.itemDoubleClicked.connect(self.double_click_table_cell)
+
+    def double_click_table_cell(self, widget_item):
+        self.user_input.insert(' ' + widget_item.text() + ' ')
+        self.user_input.setFocus()

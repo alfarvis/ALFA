@@ -17,9 +17,17 @@ class TablePrinter(object):
         self.selected_table_printer.initialize(*args, **kwargs)
 
     @classmethod
-    def addRow(self, *args):
-        self.selected_table_printer.addRow(*args)
+    def addRow(self, row_name_list, color_fill=None):
+        self.selected_table_printer.addRow(row_name_list, color_fill)
 
     @classmethod
     def show(self):
         self.selected_table_printer.show()
+
+    @classmethod
+    def highlight(self, name, color='g'):
+        self.selected_table_printer.highlight(name)
+
+    @classmethod
+    def clearBackGround(self, name):
+        self.selected_table_printer.clearBackGround(name)

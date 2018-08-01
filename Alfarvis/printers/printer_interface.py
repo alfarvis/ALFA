@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from .abstract_printer import AbstractPrinter
 from .kernel_printer import KernelPrinter
+from .align import Align
 
 
 class Printer(object):
@@ -14,4 +15,10 @@ class Printer(object):
 
     @classmethod
     def Print(self, *args, **kwargs):
+        self.selected_printer.settings('b', Align.Left)
+        self.selected_printer.Print(*args, **kwargs)
+
+    @classmethod
+    def UserPrint(self, *args, **kwargs):
+        self.selected_printer.settings('k', Align.Left)
         self.selected_printer.Print(*args, **kwargs)

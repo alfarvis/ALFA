@@ -46,7 +46,7 @@ class Stat_RelationMap(AbstractCommand):
         sns.set(color_codes=True)
         df = pd.DataFrame()
         for array_data in array_datas:
-            if StatContainer.isCategorical(array_data.data) is None:
+            if (np.issubdtype(array_data.data.dtype, np.number)) == True:
                 Printer.Print("The data to plot is not categorical, Please use scatter plot")
                 return result_object
             df[" ".join(array_data.keyword_list)] = array_data.data
