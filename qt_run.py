@@ -16,8 +16,10 @@ from collections import deque
 
 
 class UserInputHandler(object):
-    def __init__(self, user_input, qt_app, alpha_module_dictionary):
+    def __init__(self, user_input, completion_model,
+                 qt_app, alpha_module_dictionary):
         self.user_input = user_input
+        self.cmp = completion_model
         self.previous_input_text = deque(maxlen=10)
         self.buffer_index = -1
         self.qt_app = qt_app
@@ -25,9 +27,30 @@ class UserInputHandler(object):
         self.user_input.returnPressed.connect(self.userPressedEnter)
         self.user_input.upArrowPress.connect(self.userPressedUpArrow)
         self.user_input.downArrowPress.connect(self.userPressedDownArrow)
-        self.pattern = re.compile('(L|l)oad (A|a)l(f|ph)a\s*\w*\s*(\d+.?\d*)\w*')
+        self.pattern = re.compile(
+            '(L|l)oad (A|a)l(f|ph)a\s*\w*\s*(\d+.?\d*)\w*')
         latest_version = max(alpha_module_dictionary.keys())
-        self.alpha = alpha_module_dictionary[latest_version]()
+        self.alpha = self.alpha_module_dictionary[latest_version]()
+        self.initializeAlpha()
+
+    def lastNamesAvailable(self, alpha):
+        if (hasattr(alpha, 'parser') and
+                hasattr(alpha.parser, 'lastResultNames')):
+            return True
+        return False
+
+    def initializeAlpha(self):
+        self.last_names_available = self.lastNamesAvailable(self.alpha)
+        try:
+            if self.cmp is not None:
+                self.clearModel(self.cmp)
+                for key, database in self.alpha.parser.history._argument_database.items():
+                    names = database.name_dict.keys()
+                    self.addStringListToModel(self.cmp, names)
+                cnames = self.alpha.parser.command_database.name_dict.keys()
+                self.addStringListToModel(self.cmp, cnames)
+        except:
+            print("Cannot find names to autocomplete")
 
     def userPressedEnter(self):
         input_text = self.user_input.text()
@@ -45,6 +68,7 @@ class UserInputHandler(object):
                 try:
                     self.alpha = self.alpha_module_dictionary[version]()
                     Printer.Print("Successfully loaded alpha version", version)
+                    self.initializeAlpha()
                 except:
                     Printer.Print("Cannot instantiate alpha")
                     self.alpha = None
@@ -54,6 +78,10 @@ class UserInputHandler(object):
             out = self.alpha(input_text)
             if out != '':
                 Printer.Print(out)
+            if self.last_names_available and self.cmp is not None:
+                last_names = self.alpha.parser.lastResultNames()
+                print("Last names: ", last_names)
+                self.addStringListToModel(self.cmp, last_names)
         else:
             Printer.Print("No alpha loaded!")
         self.previous_input_text.appendleft(input_text)
@@ -71,9 +99,20 @@ class UserInputHandler(object):
         if self.buffer_index >= 1:
             self.buffer_index = self.buffer_index - 1
             self.user_input.setText(
-                    self.previous_input_text[self.buffer_index])
+                self.previous_input_text[self.buffer_index])
         else:
             self.user_input.setText('')
+
+    def clearModel(self, completion_model):
+        N = completion_model.rowCount()
+        completion_model.removeRows(0, N)
+
+    def addStringListToModel(self, completion_model, string_list):
+        N = completion_model.rowCount()
+        for i, string in enumerate(string_list):
+            completion_model.insertRow(N + i)
+            index = completion_model.index(N + i, 0)
+            completion_model.setData(index, string)
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -86,7 +125,8 @@ if __name__ == "__main__":  # pragma: no cover
     qt_gui = QtGUI()
     Printer.Print("Input a text to receive response from Alfarvis")
     Printer.Print("Enter Bye to close the program")
-    user_input_handler = UserInputHandler(qt_gui.user_input, app,
+    user_input_handler = UserInputHandler(qt_gui.user_input,
+                                          qt_gui.completion_model, app,
                                           alpha_module_dictionary)
     qt_gui.show()
     app.exec_()

@@ -18,6 +18,7 @@ class AlfaDataParser:
         self.history = TypeDatabase()
         self.command_database = create_command_database()  # Command database
         self.clearCommandSearchResults()
+        self.last_result_names = []
 
     def clearCommandSearchResults(self):
         """
@@ -396,13 +397,22 @@ class AlfaDataParser:
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
         results = command.evaluate(**arguments)
+        self.last_result_names = []
         if type(results) == list:
             for result in results:
                 self.addResultToHistory(result)
+                if result.name is not None:
+                    self.last_result_names.append(result.name)
         else:
             if results.name is not None:
                 Printer.Print("Saving result to", results.name)
+                self.last_result_names.append(results.name)
             self.addResultToHistory(results)
+
+    def lastResultNames(self):
+        out = list(self.last_result_names)
+        self.last_result_names = []
+        return out
 
     def addResultToHistory(self, result):
         if result.command_status == CommandStatus.Error:

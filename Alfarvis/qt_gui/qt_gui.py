@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout,
-                             QTabWidget, QSizePolicy)
+                             QTabWidget, QSizePolicy, QCompleter)
+from PyQt5.QtCore import QStringListModel
 from Alfarvis.qt_gui.qt_custom_line_edit import QCustomLineEdit
 from Alfarvis.windows.qt_window import QtWindow
 from Alfarvis.printers.qt_printer import QtPrinter
@@ -17,6 +18,10 @@ class QtGUI(QDialog):
         self.qt_printer = QtPrinter()
         self.qt_table_printer = QtTablePrinter()
         self.user_input = QCustomLineEdit()
+        self.completion_model = QStringListModel()
+        completer = QCompleter()
+        completer.setModel(self.completion_model)
+        self.user_input.setCompleter(completer)
         # Select global configs
         QtWindow.setParentWidget(self.tab_container)
         Window.selectWindowType(QtWindow)

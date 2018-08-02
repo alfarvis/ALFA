@@ -78,6 +78,7 @@ class Database(object):
             index_list = self.keyword_search.search(keyword_list)
             return [self.data_objects[index] for index in index_list]
         else:
+            self.keyword_search.current_hit_count = 1000
             return name_search_result
 
     def getLastObject(self, index=0):

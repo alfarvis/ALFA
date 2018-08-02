@@ -25,10 +25,10 @@ def add_basic_database(history):
         if type(results) == list:
             for result in results:
                 history.add(result.data_type, result.keyword_list,
-                            result.data)
+                            result.data, name=result.name)
             print("Loaded basic file database")
         else:
-            print ("Failed to load file database")
+            print("Failed to load file database")
 
 
 class Alphav1_1(AbstractAlpha):
@@ -47,6 +47,7 @@ class Alphav1_1(AbstractAlpha):
     def __init__(self):
         self.parser = AlfaDataParser()
         add_basic_database(self.parser.history)
+        self.history = self.parser.history
 
     def __call__(self, text):
         """
