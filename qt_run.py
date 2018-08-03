@@ -80,7 +80,6 @@ class UserInputHandler(object):
                 Printer.Print(out)
             if self.last_names_available and self.cmp is not None:
                 last_names = self.alpha.parser.lastResultNames()
-                print("Last names: ", last_names)
                 self.addStringListToModel(self.cmp, last_names)
         else:
             Printer.Print("No alpha loaded!")
