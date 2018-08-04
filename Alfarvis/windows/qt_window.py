@@ -39,8 +39,6 @@ class QtWindow(AbstractWindow):
             try:
                 bbox = label.get_window_extent()
             except:
-                print("Cannot find window extent")
-                print(label)
                 continue
             # the figure transform goes from relative coords->pixels and we
             # want the inverse of that

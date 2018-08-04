@@ -13,6 +13,7 @@ import pandas as pd
 from .Stat_Container import StatContainer
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
+
 class Stat_Labelwise_Count(AbstractCommand):
     """
     Compute labelwise count of an array
@@ -34,7 +35,7 @@ class Stat_Labelwise_Count(AbstractCommand):
         executing the labelwise count command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array,number=-1)]
+                         argument_type=DataType.array, number=-1)]
 
     def performOperation(self, df):
         return df.groupby('ground_truth').count()
@@ -55,26 +56,26 @@ class Stat_Labelwise_Count(AbstractCommand):
             gtVals = np.ones(df.shape[0])
         else:
             gtVals = StatContainer.filterGroundTruth()
-            
+
         # Remove nans:
         df['ground_truth'] = gtVals
         df.dropna(inplace=True)
-            
+
         gtVals = df['ground_truth']
-        uniqVals = StatContainer.isCategorical(gtVals)
+        uniqVals = StatContainer.isCategorical(gtVals, uniqueCutoff=1000)
         binned_ground_truth = True
-        
+
         if uniqVals is None and np.issubdtype(gtVals.dtype, np.number):
             # Convert to categorical
             df['ground_truth'] = pd.cut(gtVals, 10)
             binned_ground_truth = True
 
-        #Create groupwise arrays
+        # Create groupwise arrays
         result_objects = []
-        
+
         if uniqVals is not None:
             df_new = self.performOperation(df)
-            
+
             for col in df_new.columns:
                 arr = df_new[col]
                 kName = []
@@ -83,40 +84,45 @@ class Stat_Labelwise_Count(AbstractCommand):
                 else:
                     kName.append(cname)
                     kName.append(col)
- 
+
                 result_object = ResultObject(arr, [], DataType.array,
                               CommandStatus.Success)
-                command_name = 'labelwise.'+self._condition[0]
+                command_name = 'labelwise.' + self._condition[0]
                 result_object.createName(kName, command_name=command_name,
                           set_keyword_list=True)
-            
+
                 result_objects.append(result_object)
             Printer.Print(df_new)
         else:
             Printer.Print("The array is not of numeric type so cannot",
-                          "calculate groupwise "+self._condition[0])
+                          "calculate groupwise " + self._condition[0])
             result_objects.append(result_object)
-            
+
         return result_objects
 
+
 class Stat_Labelwise_Mean(Stat_Labelwise_Count):
+
     def __init__(self):
         super(Stat_Labelwise_Mean, self).__init__(["mean", "average"])
 
     def performOperation(self, df):
         return df.groupby('ground_truth').mean()
 
+
 class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
+
     def __init__(self):
         super(Stat_Labelwise_Stdev, self).__init__(["stdev", "standard deviation"])
 
     def performOperation(self, df):
         return df.groupby('ground_truth').std()
 
+
 class Stat_Labelwise_Sum(Stat_Labelwise_Count):
+
     def __init__(self):
         super(Stat_Labelwise_Sum, self).__init__(['sum'])
 
     def performOperation(self, df):
         return df.groupby('ground_truth').sum()
-

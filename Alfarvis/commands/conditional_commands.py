@@ -4,6 +4,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         findNumbers, searchDateTime)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from .Stat_Container import StatContainer
 from Alfarvis.printers import Printer
 import pandas as pd
 import numpy as np
@@ -75,12 +76,7 @@ class FilterTopN(AbstractCommand):
         if in_array.size == 0:
             Printer.Print("No data")
             return result
-        if isinstance(array_data.data[0], pd.datetime):
-            nan_idx = np.isnat(in_array)
-        elif np.issubdtype(in_array.dtype, np.number):
-            nan_idx = np.isnan(in_array)
-        else:
-            nan_idx = pd.isnull(pd.Series(in_array))
+        nan_idx = StatContainer.getNanIdx(in_array)
         non_nan_idx = np.logical_not(nan_idx)
         non_nan_array = in_array[non_nan_idx]
         numbers = findNumbers(target.data, 1)
@@ -423,10 +419,11 @@ class Contains(AbstractCommand):
                          argument_type=DataType.user_string)]
 
     def containsWordList(self, target, word_list):
-        target_lower = target.lower()
-        for word in word_list:
-            if word in target_lower:
-                return True
+        if isinstance(target, str):
+            target_lower = target.lower()
+            for word in word_list:
+                if word in target_lower:
+                    return True
         return False
 
     def evaluate(self, array_data, target):

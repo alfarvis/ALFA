@@ -13,7 +13,6 @@ class StatContainer(object):
     ground_truth = None
     conditional_array = None
     percCutoff_for_categorical = 0.1
-    uniqueCutoff = 50
 
     @classmethod
     def filterGroundTruth(self):
@@ -53,7 +52,7 @@ class StatContainer(object):
         return nan_idx
 
     @classmethod
-    def isCategorical(self, array):
+    def isCategorical(self, array, uniqueCutoff=50):
         """
         Check if a array is categorical
         and return the categorical values if unique
@@ -70,8 +69,8 @@ class StatContainer(object):
                 first_val = array.iloc[0]
             else:
                 first_val = array[0]
-            if ((isinstance(first_val, str) and Nunique < self.uniqueCutoff) or
-                (Nunique < self.uniqueCutoff and
+            if ((isinstance(first_val, str) and Nunique < uniqueCutoff) or
+                (Nunique < uniqueCutoff and
                  (Nunique / N) <= self.percCutoff_for_categorical)):
                 return uniqVals
         return None
