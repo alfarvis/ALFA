@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
+import pandas as pd
 from Alfarvis.basic_definitions import splitPattern
 
 
@@ -12,6 +13,7 @@ class StatContainer(object):
     ground_truth = None
     conditional_array = None
     percCutoff_for_categorical = 0.1
+    uniqueCutoff = 50
 
     @classmethod
     def filterGroundTruth(self):
@@ -41,6 +43,16 @@ class StatContainer(object):
         return out_names, common_name
 
     @classmethod
+    def getNanIdx(self, array):
+        if isinstance(array[0], pd.datetime):
+            nan_idx = np.isnat(in_array)
+        elif np.issubdtype(array.dtype, np.number):
+            nan_idx = np.isnan(array)
+        else:
+            nan_idx = pd.isnull(pd.Series(array))
+        return nan_idx
+
+    @classmethod
     def isCategorical(self, array):
         """
         Check if a array is categorical
@@ -58,8 +70,8 @@ class StatContainer(object):
                 first_val = array.iloc[0]
             else:
                 first_val = array[0]
-            if ((isinstance(first_val, str) and Nunique < 50) or
-                (Nunique < 50 and
+            if ((isinstance(first_val, str) and Nunique < self.uniqueCutoff) or
+                (Nunique < self.uniqueCutoff and
                  (Nunique / N) <= self.percCutoff_for_categorical)):
                 return uniqVals
         return None
