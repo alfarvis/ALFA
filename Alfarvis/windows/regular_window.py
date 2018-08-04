@@ -15,8 +15,9 @@ class RegularWindow(AbstractWindow):
         plt.show(block=False)
         plt.pause(1e-9)
         self.figure.canvas.draw()
-        self.figure.canvas.manager.window.activateWindow()
-        self.figure.canvas.manager.window.raise_()
+        if hasattr(self.figure.canvas.manager, 'window'):
+            self.figure.canvas.manager.window.activateWindow()
+            self.figure.canvas.manager.window.raise_()
 
     def gcf(self):
         return self.figure

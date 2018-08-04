@@ -12,11 +12,8 @@ class QtTablePrinter(AbstractTablePrinter):
     Table printer for the kernel
     """
 
-    def __init__(self, tab_container):
+    def __init__(self):
         self.table_widget = QTableWidget()
-        self.tab_count = tab_container.count()
-        self.tab_container = tab_container
-        tab_container.addTab(self.table_widget, "Table Data")
 
     def initialize(self, ncols, col_widths=None, headers=None,
                    alignments=None):
@@ -61,7 +58,6 @@ class QtTablePrinter(AbstractTablePrinter):
         No need since we print it as soon as we add a row
         """
         self.table_widget.show()
-        self.tab_container.setCurrentIndex(self.tab_count)
 
     def highlight(self, name, color='g'):
         qt_color = mapColor(color)
