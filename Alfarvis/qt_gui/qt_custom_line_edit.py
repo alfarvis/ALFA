@@ -28,7 +28,12 @@ class QCustomLineEdit(QLineEdit):
             completer.setCaseSensitivity(Qt.CaseInsensitive)
             completer.activated.connect(self.insertCompletion)
             completer.highlighted.connect(self.insertCompletion)
+            completer.popup().clicked.connect(self.popupClicked)
         self.completer = completer
+
+    def popupClicked(self, model_index):
+        print("User pressed enter on popup")
+        self.in_auto_completion = False
 
     def insertCompletion(self, string):
         current_tup = self.text().rsplit(' ', 1)
