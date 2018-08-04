@@ -5,6 +5,7 @@ Define count (number of values) command
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
+from .Stat_Container import StatContainer
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
@@ -20,7 +21,7 @@ class StatCount(AbstractCommand):
         """
         return tags that are used to identify count command
         """
-        return ["count","number of values"]
+        return ["count", "number of", "of values", "nonzero"]
 
     def argumentTypes(self):
         """
@@ -38,9 +39,11 @@ class StatCount(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         array = array_data.data
-
+        if StatContainer.conditional_array is not None:
+            array = array[StatContainer.conditional_array.data]
+        nan_idx = StatContainer.getNanIdx(array)
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            array_filtered = array[numpy.logical_not(nan_idx)]
             count_val = numpy.count_nonzero(array_filtered)
 
             result_object = ResultObject(count_val, [],
