@@ -73,6 +73,8 @@ class FilterTopN(AbstractCommand):
         result = ResultObject(None, None, None, CommandStatus.Error)
         in_array = array_data.data
         N = in_array.shape[0]
+        if StatContainer.conditional_array is not None:
+            in_array = in_array[StatContainer.conditional_array.data]
         if in_array.size == 0:
             Printer.Print("No data")
             return result
@@ -109,8 +111,13 @@ class FilterTopN(AbstractCommand):
             else:
                 Printer.Print("Did not find the right condition")
             if idx is not None:
-                out = np.full(N, False)
-                out[non_nan_idx] = idx
+                out1 = np.full(in_array.size, False)
+                out1[non_nan_idx] = idx
+                if StatContainer.conditional_array is not None:
+                    out = np.full(N, False)
+                    out[StatContainer.conditional_array.data] = out1
+                else:
+                    out = out1
                 result = ResultObject(out, [], DataType.logical_array,
                                      CommandStatus.Success, True)
                 result.createName(array_data.keyword_list,
@@ -170,8 +177,12 @@ class LessThan(AbstractCommand):
             if numbers == []:
                 return ResultObject(None, None, None, CommandStatus.Error)
             if isinstance(array_data.data[0], str):
-                date_time = pd.to_datetime(
-                    array_data.data, infer_datetime_format=True)
+                try:
+                    date_time = pd.to_datetime(
+                        array_data.data, infer_datetime_format=True)
+                except:
+                    print("Cannot convert ", array_data.name)
+                    return ResultObject(None, None, None, CommandStatus.Error)
                 array_data.data = date_time
                 in_data = date_time.year
             elif isinstance(array_data.data[0], pd.datetime):
@@ -182,8 +193,12 @@ class LessThan(AbstractCommand):
                                            array_data.keyword_list)
         else:
             if isinstance(array_data.data[0], str):
-                in_data = pd.to_datetime(
-                    array_data.data, infer_datetime_format=True)
+                try:
+                    in_data = pd.to_datetime(
+                        array_data.data, infer_datetime_format=True)
+                except:
+                    print("Cannot convert ", array_data.name)
+                    return ResultObject(None, None, None, CommandStatus.Error)
                 array_data.data = in_data
             elif isinstance(array_data.data[0], pd.datetime):
                 in_data = array_data.data
@@ -241,6 +256,9 @@ class LessThan(AbstractCommand):
         if minutes != [] and np.any(unresolved_idx):
             self.updateOutput(out, array_data.minute, minutes[0],
                               unresolved_idx)
+        if StatContainer.conditional_array is not None:
+            non_filt_idx = np.logical_not(StatContainer.conditional_array.data)
+            out[non_filt_idx] = False
         return self.createResult(out, keyword_list, create_name)
 
     def evaluateForNumbers(self, array_data, target, keyword_list,
@@ -249,6 +267,9 @@ class LessThan(AbstractCommand):
         out = np.full(array_data.shape, True)
         unresolved_idx = np.full(array_data.shape, True)
         self.updateOutput(out, array_data, target.data, unresolved_idx)
+        if StatContainer.conditional_array is not None:
+            non_filt_idx = np.logical_not(StatContainer.conditional_array.data)
+            out[non_filt_idx] = False
         return self.createResult(out, keyword_list, create_name)
 
 
@@ -317,8 +338,12 @@ class Between(AbstractCommand):
                 Printer.Print("Cannot find enough numbers. Please provide two numbers")
                 return ResultObject(None, None, None, CommandStatus.Error)
             if isinstance(array_data.data[0], str):
-                date_time = pd.to_datetime(
-                    array_data.data, infer_datetime_format=True)
+                try:
+                    date_time = pd.to_datetime(
+                        array_data.data, infer_datetime_format=True)
+                except:
+                    print("Cannot convert ", array_data.name)
+                    return ResultObject(None, None, None, CommandStatus.Error)
                 array_data.data = date_time
                 in_data = date_time.year
             else:
@@ -333,8 +358,12 @@ class Between(AbstractCommand):
             return self.createResult(out, array_data.keyword_list)
         else:
             if isinstance(array_data.data[0], str):
-                in_data = pd.to_datetime(array_data.data,
-                                         infer_datetime_format=True)
+                try:
+                    in_data = pd.to_datetime(array_data.data,
+                                             infer_datetime_format=True)
+                except:
+                    print("Cannot convert ", array_data.name)
+                    return ResultObject(None, None, None, CommandStatus.Error)
                 array_data.data = in_data
             elif isinstance(array_data.data[0], pd.datetime):
                 in_data = array_data.data
@@ -485,6 +514,9 @@ class LogicalAnd(AbstractCommand):
             else:
                 return ResultObject(None, None, None, CommandStatus.Error)
             Printer.Print(arr_data.name)
+        if StatContainer.conditional_array is not None:
+            non_filt_idx = np.logical_not(StatContainer.conditional_array)
+            out[non_filt_idx] = False
         result = ResultObject(out, [], DataType.logical_array,
                               CommandStatus.Success, True)
         if len(array_data) > 1:

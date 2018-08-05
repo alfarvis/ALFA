@@ -32,8 +32,8 @@ class StatContainer(object):
         """
         name_set_list = [set(splitPattern(name)) for name in input_names]
         if len(input_names) == 1:
-            out_names = ['']
             common_name = ' '.join(name_set_list[0])
+            out_names = [common_name]
         else:
             common_name_set = set.intersection(*name_set_list)
             common_name = ' '.join(common_name_set)
@@ -44,7 +44,7 @@ class StatContainer(object):
     @classmethod
     def getNanIdx(self, array):
         if isinstance(array[0], pd.datetime):
-            nan_idx = np.isnat(in_array)
+            nan_idx = np.isnat(array)
         elif np.issubdtype(array.dtype, np.number):
             nan_idx = np.isnan(array)
         else:

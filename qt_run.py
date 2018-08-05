@@ -127,5 +127,5 @@ if __name__ == "__main__":  # pragma: no cover
     user_input_handler = UserInputHandler(qt_gui.user_input,
                                           qt_gui.completion_model, app,
                                           alpha_module_dictionary)
-    qt_gui.show()
+    qt_gui.showMaximized()
     app.exec_()
