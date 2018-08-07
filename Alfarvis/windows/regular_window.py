@@ -16,6 +16,7 @@ class RegularWindow(AbstractWindow):
         plt.pause(1e-9)
         self.figure.canvas.draw()
         if hasattr(self.figure.canvas.manager, 'window'):
+            self.figure.tight_layout()
             self.figure.canvas.manager.window.activateWindow()
             self.figure.canvas.manager.window.raise_()
 

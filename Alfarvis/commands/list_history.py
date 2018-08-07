@@ -48,7 +48,7 @@ class ListHistory(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Success)
         TablePrinter.initialize(3, [15, 35, 15], ['Name', 'Keywords', 'Type'],
-                               [Align.Right, Align.Right, Align.Right])
+                               [Align.Right, Align.Right, Align.Left])
         user_input = user_conv.data
         two_phrases = [" ".join(tup)for tup in
                        zip(user_input[:-1], user_input[1:])]

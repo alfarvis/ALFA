@@ -23,9 +23,8 @@ class QtTablePrinter(AbstractTablePrinter):
         self.table_widget.setColumnCount(ncols)
         self.table_widget.setRowCount(0)
         table_header = self.table_widget.horizontalHeader()
-        for i in range(ncols - 1):
+        for i in range(ncols):
             table_header.setSectionResizeMode(i, QHeaderView.ResizeToContents)
-        table_header.setSectionResizeMode(ncols - 1, QHeaderView.Stretch)
         if headers is None:
             headers = [''] * ncols
         if alignments is None:
@@ -35,6 +34,8 @@ class QtTablePrinter(AbstractTablePrinter):
             h_item = self.table_widget.horizontalHeaderItem(i)
             qt_align = mapAlignment(alignment)
             h_item.setTextAlignment(qt_align)
+        self.table_widget.setMinimumWidth(300)
+        self.table_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
     def addRow(self, row_names, color_fill=None):
         """

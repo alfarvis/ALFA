@@ -60,8 +60,8 @@ class VizSetXLabel(AbstractCommand):
             else:
                 getattr(ax_list[0], 'set_' +
                         self._axis_label)(' '.join(label.data))
+        VizContainer.current_figure.tight_layout()
         VizContainer.current_figure.canvas.draw()
-
         return ResultObject(None, None, None, CommandStatus.Success)
 
 

@@ -21,6 +21,7 @@ class VizPiePlots(AbstractCommand):
     """
     Plot multiple categories on a single pie plot with error bars
     """
+    max_unique = 50
 
     def commandTags(self):
         """
@@ -51,12 +52,23 @@ class VizPiePlots(AbstractCommand):
             inds = np.full(array_data.data.size, True)
         col_data = pd.Series(array_data.data[inds], name='array')
         col_data.dropna(inplace=True)
-        uniqVals = StatContainer.isCategorical(col_data)
-
-        if uniqVals is None and np.issubdtype(col_data.dtype, np.number):
-            # Convert to categorical
-            col_data = pd.cut(col_data, 10)
-            uniqVals = True
+        try:
+            uniqVals, inv, counts = np.unique(
+                col_data, return_inverse=True, return_counts=True)
+        except:
+            return ResultObject(None, None, None, CommandStatus.Error)
+        if len(uniqVals) > self.max_unique:
+            if isinstance(uniqVals[0], str):
+                best_idx = np.argpartition(
+                        counts, -self.max_unique)[-self.max_unique:]
+                idx = np.isin(inv, best_idx)
+                col_data = col_data[idx]
+            elif np.issubdtype(col_data.dtype, np.number):
+                # Convert to categorical
+                col_data = pd.cut(col_data, 10)
+                uniqVals = True
+            else:
+                uniqVals = None
 
         if uniqVals is not None:
             counts = pd.Series(np.ones(col_data.size), name='count')
