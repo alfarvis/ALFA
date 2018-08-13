@@ -19,6 +19,9 @@ import collections
 
 class CreateCategoricalFromLogical(AbstractCommand):
 
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def commandTags(self):
         """
         Tags to identify the create categorical command

@@ -19,6 +19,9 @@ class Stat_Labelwise_Count(AbstractCommand):
     Compute labelwise count of an array
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def __init__(self, condition=["count"]):
         self._condition = condition
 

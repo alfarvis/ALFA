@@ -15,6 +15,9 @@ class SavePreviousResult(AbstractCommand):
     List all variables in history
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def commandTags(self):
         """
         return tags that are used to identify save previous result command

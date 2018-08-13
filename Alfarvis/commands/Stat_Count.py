@@ -17,6 +17,9 @@ class StatCount(AbstractCommand):
     Calculate count
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify count command

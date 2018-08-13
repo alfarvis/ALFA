@@ -22,6 +22,9 @@ class VizMultiScatter2D(AbstractCommand):
     Plot multiple arrays as box plots
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def commandTags(self):
         """
         Tags to identify the box plot

@@ -20,6 +20,9 @@ class Stat_Standardize(AbstractCommand):
     Transform a csv to its standardized values
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify standardize command

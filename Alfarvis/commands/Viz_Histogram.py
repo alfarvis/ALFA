@@ -21,6 +21,9 @@ class VizHistogram(AbstractCommand):
     """
     max_unique = 50
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def commandTags(self):
         """
         Tags to identify the histogram command

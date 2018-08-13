@@ -24,6 +24,9 @@ class DM_BestClassifier(AbstractCommand):
     Find the best classifier using k fold cross validation
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.MachineLearning
+
     def commandTags(self):
         """
         Tags to identify the train a classifier command

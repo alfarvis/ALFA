@@ -22,6 +22,9 @@ class Stat_RelationMap(AbstractCommand):
     create a heatmap for visualizing relationship between two variables
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def commandTags(self):
         """
         Tags to identify the relationship visualization

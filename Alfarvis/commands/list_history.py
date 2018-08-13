@@ -16,6 +16,9 @@ class ListHistory(AbstractCommand):
     List all variables in history
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def __init__(self):
         self.datatype_database = Database()
         for key in DataType.__members__:

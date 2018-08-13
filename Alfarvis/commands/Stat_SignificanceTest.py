@@ -25,6 +25,9 @@ class StatSigTest(AbstractCommand):
     Calculates ttest for a predictor variable
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify ttest command

@@ -11,6 +11,8 @@ import numpy as np
 
 
 class ConvertToDateTime(AbstractCommand):
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         return ["convert", "extract", "to date", "date time"]
@@ -53,6 +55,9 @@ class FilterTopN(AbstractCommand):
     """
     Create a filter with top N values
     """
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self, condition=["top", "best", "largest"]):
         self._condition = condition
@@ -148,6 +153,9 @@ class LessThan(AbstractCommand):
     create logical array with elements less than
     specified value
     """
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self, condition=["less than", "smaller than", "before"],
                  operator='<'):
@@ -305,6 +313,9 @@ class Between(AbstractCommand):
     less_than = LessThan()
     greater_than = GreaterThan()
 
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def commandTags(self):
         """
         Tags to identify the condition
@@ -401,6 +412,9 @@ class Outside(AbstractCommand):
     """
     between = Between()
 
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def commandTags(self):
         """
         Tags to identify the condition
@@ -429,6 +443,9 @@ class Contains(AbstractCommand):
     """
     create logical array with elements containing specified text
     """
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         """
@@ -472,6 +489,9 @@ class LogicalAnd(AbstractCommand):
     """
     combine two logical arrays
     """
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self, add_tags=["and"], operator='&'):
         self._add_tags = add_tags

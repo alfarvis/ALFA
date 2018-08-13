@@ -18,6 +18,9 @@ class StatListColumns(AbstractCommand):
     Compute mean of an array
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def __init__(self):
         self.column_type_db = Database()
         self.column_type_db.add(['string', 'str'], 'String')

@@ -16,6 +16,9 @@ class StatMedian(AbstractCommand):
     Calculate median of an array
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify median command

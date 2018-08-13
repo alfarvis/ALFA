@@ -17,6 +17,7 @@ class AlfaDataParser:
         self.textInput = ""
         self.history = TypeDatabase()
         self.command_database = create_command_database()  # Command database
+        self.history.command_database = self.command_database  # Save
         self.clearCommandSearchResults()
         self.last_result_names = []
 

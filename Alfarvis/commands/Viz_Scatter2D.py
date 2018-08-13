@@ -23,6 +23,9 @@ class VizScatter2D(AbstractCommand):
     Plot two arrays against each other in a scatterplot
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def commandTags(self):
         """
         Tags to identify the scatterplot command

@@ -18,6 +18,9 @@ class VizSetXLabel(AbstractCommand):
     Set label for respective axis
     """
 
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def __init__(self, axis_label="xlabel"):
         self._axis_label = axis_label
 
