@@ -31,6 +31,18 @@ class AbstractCommand(object):
         """
         pass
 
+    @abstractmethod
+    def briefDescription(self):
+        return "No description provided"
+
+    @abstractmethod
+    def description(self):
+        return "No description provided"
+
+    @abstractmethod
+    def example(self, *args):
+        return "No example available"
+
     @abstractproperty
     def commandType(self):
         """

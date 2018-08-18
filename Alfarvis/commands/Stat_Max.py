@@ -16,6 +16,9 @@ class StatMax(AbstractCommand):
     Calculate max of an array
     """
 
+    def briefDescription(self):
+        return "find maximum of a numerical array"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 

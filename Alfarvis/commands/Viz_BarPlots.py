@@ -23,6 +23,9 @@ class VizBarPlots(AbstractCommand):
     Plot multiple features on a single bar plot with error bars
     """
 
+    def briefDescription(self):
+        return "bar plot an array"
+
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 

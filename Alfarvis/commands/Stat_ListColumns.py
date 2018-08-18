@@ -18,6 +18,9 @@ class StatListColumns(AbstractCommand):
     Compute mean of an array
     """
 
+    def briefDescription(self):
+        return "list columns in a dataset"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 

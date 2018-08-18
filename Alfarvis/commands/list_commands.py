@@ -16,6 +16,9 @@ class ListCommands(AbstractCommand):
     List all variables in history
     """
 
+    def briefDescription(self):
+        return "List all available commands"
+
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
@@ -54,9 +57,10 @@ class ListCommands(AbstractCommand):
             Printer.Print("History does not contain command database")
             return result_object
         command_database = history.data.command_database
-        TablePrinter.initialize(3, [20, 20, 55], ['Command Name', 'Command type',
-                                'Keywords'],
-                               [Align.Right, Align.Center, Align.Left])
+        TablePrinter.initialize(4, [20, 20, 30, 55], ['Command Name', 'Command type',
+                                'Keywords', 'Description'],
+                               [Align.Right, Align.Center, Align.Center,
+                                Align.Left])
         user_input = user_conv.data
         user_command_types = [data_object.data for data_object in
                               self.commandtype_database.search(user_input)]
@@ -74,10 +78,13 @@ class ListCommands(AbstractCommand):
                 else:
                     object_name = command_data_object.name
                 command_type_name = command_type.name.lower()
+                command_tags = ' '.join(command_object.commandTags()[:2])
+                command_brief = command_object.briefDescription()
                 TablePrinter.addRow((object_name, command_type_name,
-                                     ' '.join(command_object.commandTags())))
+                                     command_tags, command_brief))
         except:
             result_object = ResultObject(None, None, None, CommandStatus.Error)
+        TablePrinter.sort(1)  # Sort data by command type
         TablePrinter.show()
 
         return result_object

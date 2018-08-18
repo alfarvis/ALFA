@@ -16,6 +16,9 @@ class ListHistory(AbstractCommand):
     List all variables in history
     """
 
+    def briefDescription(self):
+        return "list variables in the workspace/history"
+
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
@@ -32,7 +35,7 @@ class ListHistory(AbstractCommand):
         """
         return tags that are used to identify load command
         """
-        return ["list", "history", "variables", "array", "file"]
+        return ["list", "history", "variables", "array", "file", "workspace"]
 
     def argumentTypes(self):
         """

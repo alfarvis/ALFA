@@ -23,6 +23,9 @@ class VizPiePlots(AbstractCommand):
     """
     max_unique = 50
 
+    def briefDescription(self):
+        return "pie plot of an array"
+
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 

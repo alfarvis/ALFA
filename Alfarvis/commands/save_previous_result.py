@@ -15,6 +15,9 @@ class SavePreviousResult(AbstractCommand):
     List all variables in history
     """
 
+    def briefDescription(self):
+        return "Rename variable as user specified name"
+
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 

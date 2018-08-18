@@ -16,6 +16,9 @@ class StatMean(AbstractCommand):
     Compute mean of an array
     """
 
+    def briefDescription(self):
+        return "find mean of a numerical array"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 

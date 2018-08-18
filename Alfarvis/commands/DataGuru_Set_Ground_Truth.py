@@ -18,6 +18,9 @@ class SetGT(AbstractCommand):
     Sets the ground truth for data guru operations
     """
 
+    def briefDescription(self):
+        return "set key, reference or ground truth as specified array"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 

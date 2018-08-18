@@ -18,6 +18,9 @@ class VizSetXLabel(AbstractCommand):
     Set label for respective axis
     """
 
+    def briefDescription(self):
+        return "set x label"
+
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
@@ -69,12 +72,16 @@ class VizSetXLabel(AbstractCommand):
 
 
 class VizSetYLabel(VizSetXLabel):
+    def briefDescription(self):
+        return "set y label"
 
     def __init__(self):
         super(VizSetYLabel, self).__init__("ylabel")
 
 
 class VizSetZLabel(VizSetXLabel):
+    def briefDescription(self):
+        return "set z label"
 
     def __init__(self):
         super(VizSetZLabel, self).__init__("zlabel")

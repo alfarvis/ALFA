@@ -17,10 +17,13 @@ from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Viz_Container import VizContainer
 
 
-class VizMultiScatter2D(AbstractCommand):
+class VizBoxPlot(AbstractCommand):
     """
     Plot multiple arrays as box plots
     """
+
+    def briefDescription(self):
+        return "box plot an array"
 
     def commandType(self):
         return AbstractCommand.CommandType.Visualization

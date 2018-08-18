@@ -22,6 +22,9 @@ class Stat_Correl(AbstractCommand):
     Compute Correlation between 2 or more arrays
     """
 
+    def briefDescription(self):
+        return "Find correlation among arrays"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 

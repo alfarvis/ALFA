@@ -23,6 +23,9 @@ class Stat_Clustermap(AbstractCommand):
     create a heatmap for data visualization
     """
 
+    def briefDescription(self):
+        return "create a cluster/heat map of arrays"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 

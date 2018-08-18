@@ -17,6 +17,9 @@ class StatCount(AbstractCommand):
     Calculate count
     """
 
+    def briefDescription(self):
+        return "count the number of non-zero values in an array"
+
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
