@@ -37,8 +37,8 @@ class Stat_Labelwise_Count(AbstractCommand):
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array, number=-1)]
 
-    def performOperation(self, df):
-        return df.groupby('ground_truth').count()
+    def performOperation(self, df,gtName):
+        return df.groupby(gtName).count()
 
     def evaluate(self, array_datas):
         """
@@ -54,35 +54,38 @@ class Stat_Labelwise_Count(AbstractCommand):
 
         if StatContainer.ground_truth is None:
             gtVals = np.ones(df.shape[0])
+            gtName = 'ground_truth'
         else:
             gtVals = StatContainer.filterGroundTruth()
-
+            gtName = StatContainer.ground_truth.name
+            
         # Remove nans:
-        df['ground_truth'] = gtVals
+        df[gtName] = gtVals
         df.dropna(inplace=True)
 
-        gtVals = df['ground_truth']
+        gtVals = df[gtName]
         uniqVals = StatContainer.isCategorical(gtVals, uniqueCutoff=1000)
         binned_ground_truth = True
 
         if uniqVals is None and np.issubdtype(gtVals.dtype, np.number):
             # Convert to categorical
-            df['ground_truth'] = pd.cut(gtVals, 10)
+            df[gtName] = pd.cut(gtVals, 10)
             binned_ground_truth = True
 
         # Create groupwise arrays
         result_objects = []
 
         if uniqVals is not None:
-            df_new = self.performOperation(df)
-
+            df_new = self.performOperation(df,gtName)
+            
+            df_new = df_new.reset_index()
             for col in df_new.columns:
                 arr = df_new[col]
                 kName = []
                 if col == '':
                     kName = array_datas[0].keyword_list
                 else:
-                    kName.append(cname)
+                    #kName.append(cname)
                     kName.append(col)
 
                 result_object = ResultObject(arr, [], DataType.array,
@@ -106,8 +109,8 @@ class Stat_Labelwise_Mean(Stat_Labelwise_Count):
     def __init__(self):
         super(Stat_Labelwise_Mean, self).__init__(["mean", "average"])
 
-    def performOperation(self, df):
-        return df.groupby('ground_truth').mean()
+    def performOperation(self, df,gtName):
+        return df.groupby(gtName).mean()
 
 
 class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
@@ -115,8 +118,8 @@ class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
     def __init__(self):
         super(Stat_Labelwise_Stdev, self).__init__(["stdev", "standard deviation"])
 
-    def performOperation(self, df):
-        return df.groupby('ground_truth').std()
+    def performOperation(self, df,gtName):
+        return df.groupby(gtName).std()
 
 
 class Stat_Labelwise_Sum(Stat_Labelwise_Count):
@@ -124,5 +127,31 @@ class Stat_Labelwise_Sum(Stat_Labelwise_Count):
     def __init__(self):
         super(Stat_Labelwise_Sum, self).__init__(['sum'])
 
-    def performOperation(self, df):
-        return df.groupby('ground_truth').sum()
+    def performOperation(self, df,gtName):
+        return df.groupby(gtName).sum()
+
+class Stat_Labelwise_Max(Stat_Labelwise_Count):
+
+    def __init__(self):
+        super(Stat_Labelwise_Max, self).__init__(['max','maximum'])
+
+    def performOperation(self, df,gtName):
+        df1 = df.groupby(gtName).max()
+        df2 = df.groupby(gtName).idxmax()
+        idx = df2.values
+        rl = StatContainer.row_labels.data
+        df1[StatContainer.row_labels.name] = rl[idx]
+        return df1
+    
+class Stat_Labelwise_Min(Stat_Labelwise_Count):
+
+    def __init__(self):
+        super(Stat_Labelwise_Min, self).__init__(['min','minimum'])
+
+    def performOperation(self, df,gtName):
+        df1 = df.groupby(gtName).min()
+        df2 = df.groupby(gtName).idxmin()
+        idx = df2.values
+        rl = StatContainer.row_labels.data
+        df1[StatContainer.row_labels.name] = rl[idx]
+        return df1

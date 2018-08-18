@@ -26,7 +26,7 @@ class TablePrinter(object):
 
     @classmethod
     def highlight(self, name, color='g'):
-        self.selected_table_printer.highlight(name)
+        self.selected_table_printer.highlight(name,color)
 
     @classmethod
     def clearBackGround(self, name):

@@ -9,6 +9,7 @@ from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
 import numpy
+from .Stat_Container import StatContainer
 
 
 class StatMax(AbstractCommand):
@@ -36,6 +37,7 @@ class StatMax(AbstractCommand):
         Parameters:
 
         """
+        result_objects = []
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         array = array_data.data
 
@@ -47,12 +49,29 @@ class StatMax(AbstractCommand):
             Printer.Print("The array is not supported type so cannot find max")
             return result_object
         max_val = numpy.max(array_filtered)
+        idx = numpy.argmax(array_filtered)
+        rl = StatContainer.row_labels.data
+        max_rl = rl[idx]
+        #Result for max value
         result_object = ResultObject(max_val, [],
                                      DataType.array,
                                      CommandStatus.Success)
+        
         result_object.createName(
                 array_data.keyword_list,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
-        Printer.Print("Maximum of", array_data.name, "is", max_val)
-        return result_object
+        result_objects.append(result_object)
+        
+        # Result for max index
+        result_object = ResultObject(max_rl, [],
+                                     DataType.array,
+                                     CommandStatus.Success)
+        
+        result_object.createName(
+                StatContainer.row_labels.name,
+                command_name=self.commandTags()[0],
+                set_keyword_list=True)
+        result_objects.append(result_object)
+        Printer.Print("Maximum of", array_data.name, "is", max_val, "corresponding to", max_rl)
+        return result_objects

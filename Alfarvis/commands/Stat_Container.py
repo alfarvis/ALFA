@@ -13,6 +13,7 @@ class StatContainer(object):
     ground_truth = None
     conditional_array = None
     percCutoff_for_categorical = 0.1
+    row_labels = None
 
     @classmethod
     def filterGroundTruth(self):
@@ -23,6 +24,17 @@ class StatContainer(object):
         else:
             inds = self.conditional_array.data
             return self.ground_truth.data[inds]
+        return None
+    
+    @classmethod
+    def filterRowLabels(self):
+        if self.row_labels is None:
+            return None
+        elif self.conditional_array is None:
+            return self.row_labels.data
+        else:
+            inds = self.conditional_array.data
+            return self.row_labels.data[inds]
         return None
 
     @classmethod

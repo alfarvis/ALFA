@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Set ground truth
+Set Row labels
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
@@ -13,55 +13,55 @@ import numpy
 import re
 
 
-class SetGT(AbstractCommand):
+class SetRowLabels(AbstractCommand):
     """
-    Sets the ground truth for data guru operations
+    Sets the row labels for data guru operations
     """
 
     def commandTags(self):
         """
-        return tags that are used to identify set ground truth command
+        return tags that are used to identify set row labels command
         """
-        return ["setgt", "set", "ground", "truth","labels","reference"]
+        return ["setrl", "set","row labels"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
-        executing the set ground truth command
+        executing the set row label command
         """
         return [Argument(keyword="array_data", optional=False,
                          argument_type=DataType.array)]
 
     def evaluate(self, array_data):
         """
-        store ground truth to history
+        set row label
         Parameters:
 
         """
-        if StatContainer.ground_truth is not None:
-            TablePrinter.clearBackGround(StatContainer.ground_truth.name)
-        StatContainer.ground_truth = array_data
-        TablePrinter.highlight(StatContainer.ground_truth.name)
-        Printer.Print("Setting ground truth to ", " ".join(
+        if StatContainer.row_labels is not None:
+            TablePrinter.clearBackGround(StatContainer.row_labels.name)
+        StatContainer.row_labels = array_data
+        TablePrinter.highlight(StatContainer.row_labels.name,color='b')
+        Printer.Print("Setting row label to ", " ".join(
             array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
 
 
-class ClearGT(AbstractCommand):
+class ClearRL(AbstractCommand):
     """
-    Clear the ground truth
+    Clear the row labels
     """
 
     def commandTags(self):
         """
-        return tags that are used to identify clear ground truth command
+        return tags that are used to identify set ground truth command
         """
-        return ["cleargt", "clear", "ground", "truth"]
+        return ["clearrl", "clear", "row labels"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
-        executing the set ground truth command
+        executing the clear row labels command
         """
         return []
 
@@ -71,8 +71,8 @@ class ClearGT(AbstractCommand):
         Parameters:
 
         """
-        if StatContainer.ground_truth is not None:
-            TablePrinter.clearBackGround(StatContainer.ground_truth.name)
-        StatContainer.ground_truth = None
-        Printer.Print("clearing ground truth")
+        if StatContainer.row_labels is not None:
+            TablePrinter.clearBackGround(StatContainer.row_labels.name)
+        StatContainer.row_labels = None
+        Printer.Print("clearing row labels")
         return ResultObject(None, None, None, CommandStatus.Success)
