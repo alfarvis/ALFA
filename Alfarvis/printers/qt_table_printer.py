@@ -5,7 +5,6 @@ from .map_qt_colors import mapColor
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush
-from Alfarvis.printers import Printer
 
 
 class QtTablePrinter(AbstractTablePrinter):
@@ -62,7 +61,6 @@ class QtTablePrinter(AbstractTablePrinter):
         self.table_widget.show()
 
     def highlight(self, name, color='g'):
-        Printer.Print("Color is ",color)
         qt_color = mapColor(color)
         for i in range(self.table_widget.rowCount()):
             if self.table_widget.item(i, 0).text() == name:
