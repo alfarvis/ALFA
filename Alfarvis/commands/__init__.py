@@ -6,6 +6,7 @@ import importlib
 import os
 import pkgutil
 from .create_command_database import create_command_database
+from .help_command import helpCommand
 
 pkg_dir = os.path.dirname(__file__)
 

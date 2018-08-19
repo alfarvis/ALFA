@@ -13,7 +13,6 @@ from Alfarvis.printers import Printer
 from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 import pandas as pd
 
 
@@ -33,7 +32,7 @@ class VizPiePlots(AbstractCommand):
         """
         Tags to identify the pie plot command
         """
-        return ["pie chart", "pie plot"]
+        return ["pie plot", "pie chart", "plot"]
 
     def argumentTypes(self):
         """

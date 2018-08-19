@@ -36,11 +36,7 @@ class AbstractCommand(object):
         return "No description provided"
 
     @abstractmethod
-    def description(self):
-        return "No description provided"
-
-    @abstractmethod
-    def example(self, *args):
+    def example(self, history, user_conv):
         return "No example available"
 
     @abstractproperty

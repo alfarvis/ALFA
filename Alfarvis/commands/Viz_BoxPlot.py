@@ -32,7 +32,7 @@ class VizBoxPlot(AbstractCommand):
         """
         Tags to identify the box plot
         """
-        return ["boxplot", "box plot"]
+        return ["boxplot", "box plot", "plot"]
 
     def argumentTypes(self):
         """

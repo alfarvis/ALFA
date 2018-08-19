@@ -12,3 +12,4 @@ from .tag import TagPosition, Tag
 from .pattern_split import splitPattern
 from .find_numbers import findNumbers
 from .search_date_time import searchDateTime
+from .find_closest_match import findClosestMatch
