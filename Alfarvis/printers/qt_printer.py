@@ -2,7 +2,7 @@
 from .abstract_printer import AbstractPrinter
 from .map_qt_colors import mapColor
 from .map_qt_alignment import mapAlignment, Align
-from PyQt5.QtWidgets import QTextEdit
+from .qt_custom_text_edit import QCustomTextEdit
 from io import StringIO
 
 
@@ -12,11 +12,12 @@ class QtPrinter(AbstractPrinter):
     """
 
     def __init__(self):
-        self.text_box = QTextEdit()
+        self.text_box = QCustomTextEdit()
         self.text_box.setReadOnly(True)
         self.qt_color = mapColor('k')
         self.align = mapAlignment(Align.Left)
         self.text_box.setMinimumWidth(300)
+        self.text_box.setFontPointSize(16)
 
     def settings(self, color='k', alignment=Align.Left):
         self.qt_color = mapColor(color)
@@ -29,5 +30,5 @@ class QtPrinter(AbstractPrinter):
         print(*args, **kwargs)
         self.text_box.setTextColor(self.qt_color)
         self.text_box.setAlignment(self.align)
-        self.text_box.append(string_io.getvalue())
+        self.text_box.append(string_io.getvalue() + '\n')
         string_io.close()
