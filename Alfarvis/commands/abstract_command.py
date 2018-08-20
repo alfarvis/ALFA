@@ -21,6 +21,7 @@ class AbstractCommand(object):
         Statistics = 2,
         Visualization = 3,
         MachineLearning = 4
+        Unknown = 5
 
     @abstractproperty
     def commandTags(self):
@@ -44,7 +45,7 @@ class AbstractCommand(object):
         """
         Return command type
         """
-        pass
+        return CommandType.Unknown
 
     @abstractproperty
     def argumentTypes(self):
