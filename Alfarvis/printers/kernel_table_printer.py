@@ -23,7 +23,7 @@ class KernelTablePrinter(AbstractTablePrinter):
         Initialize the table
         """
         if alignments is None:
-            alignments = ['<'] * ncols
+            alignments = [Align.Left] * ncols
         if col_widths is None:
             col_widths = [20] * ncols
         row_format = ''

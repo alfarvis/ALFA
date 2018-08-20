@@ -31,6 +31,16 @@ class AbstractTablePrinter(object):
         """
         pass
 
+    def printDataFrame(self, df, col_widths=None, alignments=None):
+        """
+        Print data frame
+        """
+        ncols = len(df.columns)
+        self.initialize(ncols, col_widths, df.columns, alignments)
+        for index, row in df.iterrows():
+            row_names = [str(val) for val in row]
+            self.addRow(row_names)
+
     def highlight(self, name, color='g'):
         return
 
