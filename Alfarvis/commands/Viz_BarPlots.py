@@ -49,7 +49,7 @@ class VizBarPlots(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        if StatContainer.ground_truth is None:
+        if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
             gtVals = np.ones(df.shape[0])
         else:
             gtVals = StatContainer.filterGroundTruth()

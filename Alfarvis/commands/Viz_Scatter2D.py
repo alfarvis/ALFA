@@ -53,7 +53,7 @@ class VizScatter2D(AbstractCommand):
         win = Window.window()
         f = win.gcf()
         ax = f.add_subplot(111)
-        if StatContainer.ground_truth is None:
+        if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
             df.dropna(inplace=True)
             if df.shape[0] == 0:
                 return ResultObject(None, None, None, CommandStatus.Error)

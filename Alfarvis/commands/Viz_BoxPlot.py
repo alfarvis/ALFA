@@ -50,7 +50,7 @@ class VizMultiScatter2D(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        if StatContainer.ground_truth is None:
+        if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
             df.dropna(inplace=True)
             df.boxplot(figsize=(10, 10), ax=ax)
         else:
