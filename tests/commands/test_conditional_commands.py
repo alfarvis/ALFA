@@ -21,8 +21,8 @@ class TestConditional(unittest.TestCase):
         arguments = {'array_data': array_data, 'target': target}
         result_object = filter_top.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)
-        self.assertEqual(result_object.data[0], True)
-        self.assertEqual(result_object.data[3], True)
+        self.assertEqual(result_object.data[-2], True)
+        self.assertEqual(result_object.data[-3], True)
         self.assertEqual(result_object.data[-1], False)
         array_data.data = np.array(['Hello', 'how', 'are', 'you', 'how', 'are'])
         result_object = filter_top.evaluate(**arguments)
@@ -35,16 +35,16 @@ class TestConditional(unittest.TestCase):
         filter_bottom = FilterBottomN()
         array_data = DataObject(np.array([1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 5, np.nan]),
                                 keyword_list=['array'])
-        user_conv = 'Find last 2 values in array'
+        user_conv = 'Find last 3 values in array'
         user_conv = user_conv.lower()
         target = DataObject(user_conv.split(' '), ['user', 'conversation'])
         arguments = {'array_data': array_data, 'target': target}
         result_object = filter_bottom.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)
-        self.assertEqual(result_object.data[-3], True)
-        self.assertEqual(result_object.data[-2], True)
+        self.assertEqual(result_object.data[0], True)
+        self.assertEqual(result_object.data[1], True)
+        self.assertEqual(result_object.data[2], True)
         self.assertEqual(result_object.data[-1], False)
-        self.assertEqual(result_object.data[0], False)
 
     def testEvaluateLessThanNumbers(self):
         less_than = LessThan()
