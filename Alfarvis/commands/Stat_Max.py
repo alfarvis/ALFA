@@ -11,6 +11,8 @@ from Alfarvis.printers import Printer
 import numpy
 from .Stat_Container import StatContainer
 
+# TODO: Combine all stat commands
+
 
 class StatMax(AbstractCommand):
     """
@@ -52,22 +54,22 @@ class StatMax(AbstractCommand):
         idx = numpy.argmax(array_filtered)
         rl = StatContainer.row_labels.data
         max_rl = rl[idx]
-        #Result for max value
+        # Result for max value
         result_object = ResultObject(max_val, [],
                                      DataType.array,
                                      CommandStatus.Success)
-        
+
         result_object.createName(
                 array_data.keyword_list,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         result_objects.append(result_object)
-        
+
         # Result for max index
         result_object = ResultObject(max_rl, [],
                                      DataType.array,
                                      CommandStatus.Success)
-        
+
         result_object.createName(
                 StatContainer.row_labels.name,
                 command_name=self.commandTags()[0],
