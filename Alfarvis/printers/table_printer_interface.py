@@ -13,6 +13,10 @@ class TablePrinter(object):
         self.selected_table_printer = table_printer
 
     @classmethod
+    def printDataFrame(self, *args, **kwargs):
+        self.selected_table_printer.printDataFrame(*args, **kwargs)
+
+    @classmethod
     def initialize(self, *args, **kwargs):
         self.selected_table_printer.initialize(*args, **kwargs)
 
@@ -26,7 +30,7 @@ class TablePrinter(object):
 
     @classmethod
     def highlight(self, name, color='g'):
-        self.selected_table_printer.highlight(name)
+        self.selected_table_printer.highlight(name, color)
 
     @classmethod
     def sort(self, column_index, ascending=True):

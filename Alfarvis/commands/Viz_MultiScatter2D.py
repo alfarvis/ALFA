@@ -58,7 +58,7 @@ class VizMultiScatter2D(AbstractCommand):
         f = win.gcf()
         ax = f.add_subplot(111)
 
-        if StatContainer.ground_truth is None:
+        if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
             df.dropna(inplace=True)
             pd.plotting.scatter_matrix(df, alpha=0.2, diagonal='kde', ax=ax)
         else:

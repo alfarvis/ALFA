@@ -5,7 +5,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import pandas as pd
 import numpy as np
 
@@ -101,21 +101,48 @@ class FilterTopN(AbstractCommand):
         if numbers != [] and numbers[0].data > 0:
             num = int(numbers[0].data)
             idx = None
-            num = min(unique_arr.size, num)
+            if not np.issubdtype(non_nan_array.dtype, np.number):
+                num = min(unique_arr.size, num)
             if self._condition[0] == "top":
                 Printer.Print("Finding top", num)
-                best_idx = np.argpartition(counts, -num)[-num:]
-                idx = np.isin(inv, best_idx)
-                if num <= 30:
-                    Printer.Print("Top values:")
-                    Printer.Print(unique_arr[best_idx])
+                if np.issubdtype(non_nan_array.dtype, np.number):
+                    best_idx = np.argpartition(non_nan_array, -num)[-num:]
+                    idx = np.full(non_nan_array.size, False)
+                    idx[best_idx] = True
+                    if num <= 30:
+                        if StatContainer.row_labels is not None:
+                            df_new = pd.DataFrame({array_data.name: non_nan_array[best_idx]})
+                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[idx]
+                            TablePrinter.printDataFrame(df_new)
+                        else:
+                            Printer.Print("Top values:")
+                            Printer.Print(non_nan_array[best_idx])
+                else:
+                    best_idx = np.argpartition(counts, -num)[-num:]
+                    idx = np.isin(inv, best_idx)
+                    if num <= 30:
+                        Printer.Print("Top values:")
+                        Printer.Print(unique_arr[best_idx])
             elif self._condition[0] == "bottom":
                 Printer.Print("Finding bottom", num)
-                worst_idx = np.argpartition(counts, num)[:num]
-                idx = np.isin(inv, worst_idx)
-                if num <= 30:
-                    Printer.Print("Worst values:")
-                    Printer.Print(unique_arr[worst_idx])
+                if np.issubdtype(non_nan_array.dtype, np.number):
+                    worst_idx = np.argpartition(non_nan_array, -num)[:num]
+                    idx = np.full(non_nan_array.size, False)
+                    idx[worst_idx] = True
+                    if num <= 30:
+                        if StatContainer.row_labels is not None:
+                            df_new = pd.DataFrame({array_data.name: non_nan_array[worst_idx]})
+                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[idx]
+                            TablePrinter.printDataFrame(df_new)
+                        else:
+                            Printer.Print("Worst values:")
+                            Printer.Print(non_nan_array[worst_idx])
+                else:
+                    worst_idx = np.argpartition(counts, num)[:num]
+                    idx = np.isin(inv, worst_idx)
+                    if num <= 30:
+                        Printer.Print("Worst values:")
+                        Printer.Print(unique_arr[worst_idx])
             elif self._condition[0] == "first":
                 Printer.Print(array_data.data[:num])
                 result = ResultObject(None, None, None, CommandStatus.Success)

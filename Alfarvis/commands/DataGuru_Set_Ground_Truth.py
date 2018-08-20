@@ -28,7 +28,7 @@ class SetGT(AbstractCommand):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["setgt", "set", "ground", "truth"]
+        return ["setgt", "set", "ground", "truth", "labels", "reference"]
 
     def argumentTypes(self):
         """
@@ -40,7 +40,7 @@ class SetGT(AbstractCommand):
 
     def evaluate(self, array_data):
         """
-        Calculate average value of the array and store it to history
+        store ground truth to history
         Parameters:
 
         """
@@ -63,9 +63,9 @@ class ClearGT(AbstractCommand):
 
     def commandTags(self):
         """
-        return tags that are used to identify set ground truth command
+        return tags that are used to identify clear ground truth command
         """
-        return ["cleargt", "clear", "ground", "truth"]
+        return ["cleargt", "clear", "ground", "truth", "labels", "reference"]
 
     def argumentTypes(self):
         """
