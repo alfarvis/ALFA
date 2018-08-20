@@ -1,11 +1,10 @@
 from .parser_states import ParserStates
-from Alfarvis.commands import create_command_database
+from Alfarvis.commands import create_command_database, helpCommand
 from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
-                                        findNumbers)
+                                        findNumbers, findClosestMatch)
 from Alfarvis.printers import Printer
-import numpy as np
 
 # TODO Remove/split based on commas and semicolumns etc
 # TODO Handle capitalization when user string input is used
@@ -17,8 +16,10 @@ class AlfaDataParser:
         self.textInput = ""
         self.history = TypeDatabase()
         self.command_database = create_command_database()  # Command database
+        self.history.command_database = self.command_database  # Save
         self.clearCommandSearchResults()
         self.last_result_names = []
+        helpCommand(['help'], self.history)
 
     def clearCommandSearchResults(self):
         """
@@ -79,6 +80,11 @@ class AlfaDataParser:
             two_phrases = [" ".join(tup)for tup in
                            zip(split_text[:-1], split_text[1:])]
             ext_list.extend(two_phrases)
+        if 'how' in split_text or 'help' in split_text:
+            helpCommand(split_text + ext_list, self.history)
+            # Call help command
+            self.clearCommandSearchResults()
+            return
         if len(self.command_search_result) > 0:
             # If old text is used, we will not be able to resolve command
             # Since there will be multiple commands always
@@ -97,7 +103,7 @@ class AlfaDataParser:
         elif len(res) == 1:
             self.foundCommand(res[0])
         else:
-            closest_match = self.findClosestMatch(res)
+            closest_match = findClosestMatch(res)
             if closest_match is not None:
                 self.foundCommand(closest_match)
             elif len(self.command_search_result) > 0:
@@ -132,33 +138,6 @@ class AlfaDataParser:
         else:
             self.resolveArguments(split_text)
 
-    @classmethod
-    def getMinIndices(self, array):
-        """
-        Find the indices of all the elements that have the smallest value in
-        the array
-        Parameters:
-            array - Any iterable with elements that can be compared to a
-                    numeric value
-        Return: the indices of the minimum values in the array
-        """
-        out = []
-        min_val = np.Inf
-        for i, val in enumerate(array):
-            if val < min_val:
-                min_val = val
-                out = [i]
-            elif val == min_val:
-                out.append(i)
-        return out
-
-    def findClosestMatch(self, match_res):
-        data_len_list = [data.length for data in match_res]
-        idx = self.getMinIndices(data_len_list)
-        if len(idx) == 1:
-            return match_res[idx[0]]
-        return None
-
     def fillClosestArguments(self, argument_search_result,
                              argumentsFound, argumentTypes):
         """
@@ -182,7 +161,7 @@ class AlfaDataParser:
             if (arg_name in argument_search_result and
                     arg_number == 1):
                 match_res = argument_search_result[arg_name]
-                closest_match = self.findClosestMatch(match_res)
+                closest_match = findClosestMatch(match_res)
                 if closest_match is not None:
                     argumentsFound[arg_name] = closest_match
 
@@ -436,6 +415,7 @@ class AlfaDataParser:
         textInput = textInput.lower()
         textInput = textInput.replace(' the ', ' ')
         textInput = textInput.replace(' a ', ' ')
+        textInput = textInput.replace('?', '')
         # Tokenizer and create keyword list
         if self.currentState == ParserStates.command_unknown:
             self.command_parse(textInput)

@@ -41,6 +41,9 @@ class AbstractTablePrinter(object):
             row_names = [str(val) for val in row]
             self.addRow(row_names)
 
+    def sort(self, column_index, ascending):
+        return
+
     def highlight(self, name, color='g'):
         return
 

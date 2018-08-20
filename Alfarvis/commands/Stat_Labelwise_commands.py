@@ -19,6 +19,12 @@ class Stat_Labelwise_Count(AbstractCommand):
     Compute labelwise count of an array
     """
 
+    def briefDescription(self):
+        return "find labelwise count of categories in an array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def __init__(self, condition=["count"]):
         self._condition = condition
 
@@ -105,6 +111,8 @@ class Stat_Labelwise_Count(AbstractCommand):
 
 
 class Stat_Labelwise_Mean(Stat_Labelwise_Count):
+    def briefDescription(self):
+        return "find labelwise mean of categories in an array"
 
     def __init__(self):
         super(Stat_Labelwise_Mean, self).__init__(["mean", "average"])
@@ -114,6 +122,8 @@ class Stat_Labelwise_Mean(Stat_Labelwise_Count):
 
 
 class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
+    def briefDescription(self):
+        return "find labelwise stdev of categories in an array"
 
     def __init__(self):
         super(Stat_Labelwise_Stdev, self).__init__(["stdev", "standard deviation"])
@@ -123,6 +133,8 @@ class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
 
 
 class Stat_Labelwise_Sum(Stat_Labelwise_Count):
+    def briefDescription(self):
+        return "find labelwise sum of elements in categories"
 
     def __init__(self):
         super(Stat_Labelwise_Sum, self).__init__(['sum'])

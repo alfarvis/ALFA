@@ -16,6 +16,12 @@ class StatStdev(AbstractCommand):
     Calculate stdev of an array
     """
 
+    def briefDescription(self):
+        return "calculate standard deviation for an array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify stdev command

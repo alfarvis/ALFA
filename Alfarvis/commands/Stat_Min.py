@@ -16,6 +16,12 @@ class StatMin(AbstractCommand):
     Calculate min of an array
     """
 
+    def briefDescription(self):
+        return "find minimum of a numerical array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify min command

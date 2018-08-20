@@ -109,7 +109,8 @@ class KeywordSearch(object):
         for keyword in keyword_list:
             # Try correcting if not in dict
             if keyword not in self.keyword_dict:
-                secondary_keyword_set.update(self.correctTypo(keyword))
+                if ' ' not in keyword:
+                    secondary_keyword_set.update(self.correctTypo(keyword))
             else:
                 self.updateMaxHitSet(keyword, max_hit_word_set)
         backup_max_hit_set = max_hit_word_set.max_hit_set.copy()

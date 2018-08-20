@@ -24,6 +24,12 @@ class DM_TrainClassifier(AbstractCommand):
     Run k fold CV on a bunch of arrays
     """
 
+    def briefDescription(self):
+        return "train classifier on a dataset"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.MachineLearning
+
     def commandTags(self):
         """
         Tags to identify the train a classifier command

@@ -22,6 +22,12 @@ class VizMultiScatter2D(AbstractCommand):
     Plot multiple arrays against each other in a multidimensional scatterplot
     """
 
+    def briefDescription(self):
+        return "Plot multiple arrays against each other in a multidimensional scatterplot"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def commandTags(self):
         """
         Tags to identify the multidimensional scatterplot command

@@ -22,6 +22,12 @@ class VizPlotLine(AbstractCommand):
     Plot multiple arrays in a single line plot
     """
 
+    def briefDescription(self):
+        return "line plot of an array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Visualization
+
     def commandTags(self):
         """
         Tags to identify the lineplot command

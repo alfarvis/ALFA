@@ -9,6 +9,7 @@ Created on Fri Mar 23 22:34:24 2018
 import unittest
 from Alfarvis.parsers import AlfaDataParser, ParserStates
 from Alfarvis.basic_definitions import (DataObject, DataType, ResultObject)
+from Alfarvis.basic_definitions.find_closest_match import getMinIndices
 from Alfarvis.commands.abstract_command import AbstractCommand
 from Alfarvis.commands.argument import Argument
 import numpy as np
@@ -172,10 +173,10 @@ class TestParserMethods(unittest.
 
     def test_get_min_indices(self):
         array = np.array([1, 2, 3, 4, 1, 1, 2, 2, 2, 4, 1])
-        idx = self.parser.getMinIndices(array)
+        idx = getMinIndices(array)
         self.assertEqual(idx, [0, 4, 5, 10])
         array[-1] = -1
-        idx = self.parser.getMinIndices(array)
+        idx = getMinIndices(array)
         self.assertEqual(idx, [10])
 
     def test_extract_arg_from_user(self):
