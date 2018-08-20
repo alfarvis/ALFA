@@ -16,6 +16,12 @@ class StatRange(AbstractCommand):
     Calculate range of an array
     """
 
+    def briefDescription(self):
+        return "find range of a numerical array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify range command

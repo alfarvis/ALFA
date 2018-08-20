@@ -11,6 +11,11 @@ import numpy as np
 
 
 class ConvertToDateTime(AbstractCommand):
+    def briefDescription(self):
+        return "convert array to date time month or year"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         return ["convert", "extract", "to date", "date time"]
@@ -53,6 +58,12 @@ class FilterTopN(AbstractCommand):
     """
     Create a filter with top N values
     """
+
+    def briefDescription(self):
+        return "find top N values in an array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self, condition=["top", "best", "largest"]):
         self._condition = condition
@@ -133,12 +144,18 @@ class FilterTopN(AbstractCommand):
 
 
 class FilterBottomN(FilterTopN):
+    def briefDescription(self):
+        return "find bottom N values in an array"
+
     def __init__(self):
         super(FilterBottomN, self).__init__(["bottom", "worst", "smallest",
              "last"])
 
 
 class FilterFirstN(FilterTopN):
+    def briefDescription(self):
+        return "print first N values of an array"
+
     def __init__(self):
         super(FilterFirstN, self).__init__(["first", "print"])
 
@@ -148,6 +165,12 @@ class LessThan(AbstractCommand):
     create logical array with elements less than
     specified value
     """
+
+    def briefDescription(self):
+        return "find elements of an array less than target"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self, condition=["less than", "smaller than", "before"],
                  operator='<'):
@@ -274,6 +297,8 @@ class LessThan(AbstractCommand):
 
 
 class LessThanEqual(LessThan):
+    def briefDescription(self):
+        return "find elements of an array less than equal to target"
 
     def __init__(self):
         super(LessThanEqual, self).__init__(["equal", "less than",
@@ -282,6 +307,8 @@ class LessThanEqual(LessThan):
 
 
 class GreaterThan(LessThan):
+    def briefDescription(self):
+        return "find elements of an array greater than target"
 
     def __init__(self):
         super(GreaterThan, self).__init__(["greater than", "bigger than",
@@ -289,6 +316,8 @@ class GreaterThan(LessThan):
 
 
 class GreaterThanEqual(LessThan):
+    def briefDescription(self):
+        return "find elements of an array greater than or equal to target"
 
     def __init__(self):
         super(GreaterThanEqual, self).__init__(
@@ -304,6 +333,12 @@ class Between(AbstractCommand):
     """
     less_than = LessThan()
     greater_than = GreaterThan()
+
+    def briefDescription(self):
+        return "find elements of an array between targets"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         """
@@ -401,6 +436,12 @@ class Outside(AbstractCommand):
     """
     between = Between()
 
+    def briefDescription(self):
+        return "find elements of an array outside specified targets"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def commandTags(self):
         """
         Tags to identify the condition
@@ -429,6 +470,12 @@ class Contains(AbstractCommand):
     """
     create logical array with elements containing specified text
     """
+
+    def briefDescription(self):
+        return "find elements of an array containing specified string"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         """
@@ -472,6 +519,12 @@ class LogicalAnd(AbstractCommand):
     """
     combine two logical arrays
     """
+
+    def briefDescription(self):
+        return "find logical and among arrays"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self, add_tags=["and"], operator='&'):
         self._add_tags = add_tags
@@ -530,18 +583,24 @@ class LogicalAnd(AbstractCommand):
 
 
 class LogicalOr(LogicalAnd):
+    def briefDescription(self):
+        return "find logical or among arrays"
 
     def __init__(self):
         super(LogicalOr, self).__init__(["or"], '||')
 
 
 class LogicalNot(LogicalAnd):
+    def briefDescription(self):
+        return "find logical not between arrays"
 
     def __init__(self):
         super(LogicalNot, self).__init__(["not"], '!')
 
 
 class LogicalXor(LogicalAnd):
+    def briefDescription(self):
+        return "find logical xor among arrays"
 
     def __init__(self):
         super(LogicalXor, self).__init__(["xor"], '^')

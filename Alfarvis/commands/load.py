@@ -19,6 +19,12 @@ class Load(AbstractCommand):
     Loads a csv file
     """
 
+    def briefDescription(self):
+        return "Load dataset/image/figure"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def __init__(self):
         self.reader_dictionary = create_reader_dictionary()
 

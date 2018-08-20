@@ -14,8 +14,14 @@ import matplotlib.pyplot as plt
 
 class ImageDisplay(AbstractCommand):
     """
-    Loads a csv file
+    image display
     """
+
+    def briefDescription(self):
+        return "display an image"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def __init__(self):
         self.reader_dictionary = create_reader_dictionary()

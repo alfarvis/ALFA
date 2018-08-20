@@ -34,7 +34,6 @@ class QtTablePrinter(AbstractTablePrinter):
             h_item = self.table_widget.horizontalHeaderItem(i)
             qt_align = mapAlignment(alignment)
             h_item.setTextAlignment(qt_align)
-        self.table_widget.setMinimumWidth(300)
         self.table_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
     def addRow(self, row_names, color_fill=None):
@@ -67,6 +66,12 @@ class QtTablePrinter(AbstractTablePrinter):
                 for j in range(self.table_widget.columnCount()):
                     self.table_widget.item(i, j).setBackground(
                             QBrush(qt_color))
+
+    def sort(self, column_index, ascending):
+        if ascending:
+            self.table_widget.sortItems(column_index, Qt.AscendingOrder)
+        else:
+            self.table_widget.sortItems(column_index, Qt.DescendingOrder)
 
     def clearBackGround(self, name):
         qt_color = mapColor('w')

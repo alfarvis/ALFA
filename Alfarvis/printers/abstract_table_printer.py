@@ -31,6 +31,9 @@ class AbstractTablePrinter(object):
         """
         pass
 
+    def sort(self, column_index, ascending):
+        return
+
     def highlight(self, name, color='g'):
         return
 

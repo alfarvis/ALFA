@@ -16,6 +16,12 @@ class SetConditionalArray(AbstractCommand):
     Sets the ground truth for data guru operations
     """
 
+    def briefDescription(self):
+        return "set filter as a logical array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
+
     def commandTags(self):
         """
         return tags that are used to identify set ground truth command
@@ -45,6 +51,12 @@ class ClearConditionalArray(AbstractCommand):
     """
     Clear the ground truth
     """
+
+    def briefDescription(self):
+        return "clear filter"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         """

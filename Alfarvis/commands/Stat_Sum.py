@@ -16,6 +16,12 @@ class StatSum(AbstractCommand):
     Compute sum of elements of an array
     """
 
+    def briefDescription(self):
+        return "find the sum of elements of an array"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.Statistics
+
     def commandTags(self):
         """
         return tags that are used to identify sum command

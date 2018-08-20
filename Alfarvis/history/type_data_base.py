@@ -7,7 +7,7 @@ from .data_base import Database
 from Alfarvis.basic_definitions import DataType
 
 
-class TypeDatabase:
+class TypeDatabase(object):
     """
     Database for storing values based on data type and keywords
     """

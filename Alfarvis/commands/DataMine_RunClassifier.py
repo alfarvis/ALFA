@@ -23,6 +23,12 @@ class DM_Classify(AbstractCommand):
     Run a trained classifier on a bunch of arrays
     """
 
+    def briefDescription(self):
+        return "run trained classifier on a bunch of arrays"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.MachineLearning
+
     def commandTags(self):
         """
         Tags to identify the train a classifier command

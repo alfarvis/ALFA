@@ -18,6 +18,11 @@ import collections
 
 
 class CreateCategoricalFromLogical(AbstractCommand):
+    def briefDescription(self):
+        return "create categorical array from logical arrays"
+
+    def commandType(self):
+        return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
         """

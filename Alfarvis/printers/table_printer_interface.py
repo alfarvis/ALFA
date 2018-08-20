@@ -29,5 +29,9 @@ class TablePrinter(object):
         self.selected_table_printer.highlight(name)
 
     @classmethod
+    def sort(self, column_index, ascending=True):
+        self.selected_table_printer.sort(column_index, ascending)
+
+    @classmethod
     def clearBackGround(self, name):
         self.selected_table_printer.clearBackGround(name)

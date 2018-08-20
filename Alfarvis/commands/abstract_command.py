@@ -4,6 +4,7 @@ Provide abstract base class for implementing new commands
 """
 from abc import ABCMeta, abstractmethod, abstractproperty
 from Alfarvis.printers import Printer
+from enum import Enum
 import string
 import random
 
@@ -15,6 +16,13 @@ class AbstractCommand(object):
     """
     __metaclass__ = ABCMeta
 
+    class CommandType(Enum):
+        DataHandling = 1,
+        Statistics = 2,
+        Visualization = 3,
+        MachineLearning = 4
+        Unknown = 5
+
     @abstractproperty
     def commandTags(self):
         """
@@ -23,6 +31,21 @@ class AbstractCommand(object):
         a list of commands
         """
         pass
+
+    @abstractmethod
+    def briefDescription(self):
+        return "No description provided"
+
+    @abstractmethod
+    def example(self, history, user_conv):
+        return "No example available"
+
+    @abstractproperty
+    def commandType(self):
+        """
+        Return command type
+        """
+        return CommandType.Unknown
 
     @abstractproperty
     def argumentTypes(self):
