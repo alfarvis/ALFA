@@ -11,6 +11,7 @@ from Alfarvis.printers import Printer
 import numpy
 from .Stat_Container import StatContainer
 
+
 class StatMin(AbstractCommand):
     """
     Calculate min of an array
@@ -46,18 +47,20 @@ class StatMin(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         array = array_data.data
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            idx = numpy.logical_not(numpy.isnan(array))
         elif numpy.issubdtype(array.dtype, numpy.datetime64):
-            array_filtered = array[numpy.logical_not(numpy.isnat(array))]
+            idx = numpy.logical_not(numpy.isnat(array))
         else:
             Printer.Print("The array is not supported type so cannot find max")
             return result_object
-        min_val = numpy.min(array_filtered)
-        idx = numpy.argmin(array_filtered)
+        if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
+            idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
+        min_val = numpy.min(array[idx])
+        idx = numpy.argmin(array[idx])
         rl = StatContainer.row_labels.data
         min_rl = rl[idx]
-        
-        #min value
+
+        # min value
         result_object = ResultObject(min_val, [],
                                      DataType.array,
                                      CommandStatus.Success)
@@ -66,18 +69,18 @@ class StatMin(AbstractCommand):
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         result_objects.append(result_object)
-        
-        #min index
+
+        # min index
         result_object = ResultObject(min_rl, [],
                                      DataType.array,
                                      CommandStatus.Success)
-        
+
         result_object.createName(
                 StatContainer.row_labels.name,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         result_objects.append(result_object)
-        
+
         Printer.Print("Minimum of", array_data.name, "is", min_val, "corresponding to", min_rl)
 
         return result_objects

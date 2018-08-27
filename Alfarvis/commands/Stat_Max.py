@@ -50,14 +50,16 @@ class StatMax(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            idx = numpy.logical_not(numpy.isnan(array))
         elif numpy.issubdtype(array.dtype, numpy.datetime64):
-            array_filtered = array[numpy.logical_not(numpy.isnat(array))]
+            idx = numpy.logical_not(numpy.isnat(array))
         else:
             Printer.Print("The array is not supported type so cannot find max")
             return result_object
-        max_val = numpy.max(array_filtered)
-        idx = numpy.argmax(array_filtered)
+        if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
+            idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
+        max_val = numpy.max(array[idx])
+        idx = numpy.argmax(array[idx])
         rl = StatContainer.row_labels.data
         max_rl = rl[idx]
         # Result for max value

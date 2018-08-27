@@ -19,7 +19,8 @@ class StatContainer(object):
     def filterGroundTruth(self):
         if self.ground_truth is None:
             return None
-        elif self.conditional_array is None:
+        elif (self.conditional_array is None or
+              self.conditional_array.data.size != self.ground_truth.data.size):
             return self.ground_truth.data
         else:
             inds = self.conditional_array.data

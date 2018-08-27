@@ -46,8 +46,10 @@ class StatSum(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
-            mean_val = numpy.mean(array_filtered)
+            idx = numpy.logical_not(numpy.isnan(array))
+            if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
+                idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
+            mean_val = numpy.mean(array[idx])
             result_object = ResultObject(mean_val, [],
                                          DataType.array,
                                          CommandStatus.Success)
