@@ -112,8 +112,9 @@ class FilterTopN(AbstractCommand):
                     if num <= 30:
                         if StatContainer.row_labels is not None:
                             df_new = pd.DataFrame({array_data.name: non_nan_array[best_idx]})
-                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[idx]
+                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[best_idx]
                             TablePrinter.printDataFrame(df_new)
+                            TablePrinter.sort(0, ascending=False)
                         else:
                             Printer.Print("Top values:")
                             Printer.Print(non_nan_array[best_idx])
@@ -132,8 +133,9 @@ class FilterTopN(AbstractCommand):
                     if num <= 30:
                         if StatContainer.row_labels is not None:
                             df_new = pd.DataFrame({array_data.name: non_nan_array[worst_idx]})
-                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[idx]
+                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[worst_idx]
                             TablePrinter.printDataFrame(df_new)
+                            TablePrinter.sort(0, ascending=True)
                         else:
                             Printer.Print("Worst values:")
                             Printer.Print(non_nan_array[worst_idx])

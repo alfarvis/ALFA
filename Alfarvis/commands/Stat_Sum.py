@@ -47,7 +47,7 @@ class StatSum(AbstractCommand):
 
         if numpy.issubdtype(array.dtype, numpy.number):
             array_filtered = array[numpy.logical_not(numpy.isnan(array))]
-            mean_val = numpy.mean(array_filtered)
+            mean_val = numpy.sum(array_filtered)
             result_object = ResultObject(mean_val, [],
                                          DataType.array,
                                          CommandStatus.Success)
