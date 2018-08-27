@@ -31,10 +31,7 @@ class VizSetXLabel(AbstractCommand):
         """
         Tags to identify the lineplot command
         """
-        tags = []
-        for word in ["change", "set"]:
-            tags.append(word + " " + self._axis_label)
-        return tags
+        return ["set", self._axis_label, "change"]
 
     def argumentTypes(self):
         """
@@ -72,6 +69,7 @@ class VizSetXLabel(AbstractCommand):
 
 
 class VizSetYLabel(VizSetXLabel):
+
     def briefDescription(self):
         return "set y label"
 
@@ -80,6 +78,7 @@ class VizSetYLabel(VizSetXLabel):
 
 
 class VizSetZLabel(VizSetXLabel):
+
     def briefDescription(self):
         return "set z label"
 
