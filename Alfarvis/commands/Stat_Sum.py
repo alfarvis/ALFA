@@ -49,7 +49,7 @@ class StatSum(AbstractCommand):
             idx = numpy.logical_not(numpy.isnan(array))
             if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
                 idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
-            mean_val = numpy.mean(array[idx])
+            mean_val = numpy.sum(array[idx])
             result_object = ResultObject(mean_val, [],
                                          DataType.array,
                                          CommandStatus.Success)

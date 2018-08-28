@@ -14,6 +14,7 @@ from .Stat_Container import StatContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from .Viz_Container import VizContainer
+from Alfarvis.windows import Window
 
 
 class Viz_VioloinPlot(AbstractCommand):
@@ -53,12 +54,19 @@ class Viz_VioloinPlot(AbstractCommand):
                 array_datas, remove_nan=True)
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
-
-        f = plt.figure()
+        win = Window.window()
+        f = win.gcf()
         ax = f.add_subplot(111)
-        # Code to create the violin plot
-        sns.violinplot(data=df, ax=ax)
-        ax.set_title(cname)
+        if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
+            df.dropna(inplace=True)
+            sns.violinplot(data=df, ax=ax)
+        else:
+            ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
+            df[ground_truth] = StatContainer.filterGroundTruth()
+            df.dropna(inplace=True)
+            df1 = pd.melt(df, id_vars=ground_truth)
+            sns.violinplot(data=df1, ax=ax, x='variable', y='value', hue=ground_truth)
 
-        plt.show(block=False)
-        return VizContainer.createResult(f, array_datas, ['violin'])
+        win.show()
+
+        return VizContainer.createResult(win, array_datas, ['violin'])

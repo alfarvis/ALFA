@@ -11,6 +11,7 @@ import numpy as np
 
 
 class ConvertToDateTime(AbstractCommand):
+
     def briefDescription(self):
         return "convert array to date time month or year"
 
@@ -112,8 +113,9 @@ class FilterTopN(AbstractCommand):
                     if num <= 30:
                         if StatContainer.row_labels is not None:
                             df_new = pd.DataFrame({array_data.name: non_nan_array[best_idx]})
-                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[idx]
+                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[best_idx]
                             TablePrinter.printDataFrame(df_new)
+                            TablePrinter.sort(0, ascending=False)
                         else:
                             Printer.Print("Top values:")
                             Printer.Print(non_nan_array[best_idx])
@@ -132,8 +134,9 @@ class FilterTopN(AbstractCommand):
                     if num <= 30:
                         if StatContainer.row_labels is not None:
                             df_new = pd.DataFrame({array_data.name: non_nan_array[worst_idx]})
-                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[idx]
+                            df_new[StatContainer.row_labels.name] = StatContainer.row_labels.data[worst_idx]
                             TablePrinter.printDataFrame(df_new)
+                            TablePrinter.sort(0, ascending=True)
                         else:
                             Printer.Print("Worst values:")
                             Printer.Print(non_nan_array[worst_idx])
@@ -171,6 +174,7 @@ class FilterTopN(AbstractCommand):
 
 
 class FilterBottomN(FilterTopN):
+
     def briefDescription(self):
         return "find bottom N values in an array"
 
@@ -180,6 +184,7 @@ class FilterBottomN(FilterTopN):
 
 
 class FilterFirstN(FilterTopN):
+
     def briefDescription(self):
         return "print first N values of an array"
 
@@ -324,6 +329,7 @@ class LessThan(AbstractCommand):
 
 
 class LessThanEqual(LessThan):
+
     def briefDescription(self):
         return "find elements of an array less than equal to target"
 
@@ -334,6 +340,7 @@ class LessThanEqual(LessThan):
 
 
 class GreaterThan(LessThan):
+
     def briefDescription(self):
         return "find elements of an array greater than target"
 
@@ -343,6 +350,7 @@ class GreaterThan(LessThan):
 
 
 class GreaterThanEqual(LessThan):
+
     def briefDescription(self):
         return "find elements of an array greater than or equal to target"
 
@@ -610,6 +618,7 @@ class LogicalAnd(AbstractCommand):
 
 
 class LogicalOr(LogicalAnd):
+
     def briefDescription(self):
         return "find logical or among arrays"
 
@@ -618,6 +627,7 @@ class LogicalOr(LogicalAnd):
 
 
 class LogicalNot(LogicalAnd):
+
     def briefDescription(self):
         return "find logical not between arrays"
 
@@ -626,6 +636,7 @@ class LogicalNot(LogicalAnd):
 
 
 class LogicalXor(LogicalAnd):
+
     def briefDescription(self):
         return "find logical xor among arrays"
 
