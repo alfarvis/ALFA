@@ -50,7 +50,7 @@ class VizPiePlots(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         sns.set(color_codes=True)
         stTitle = " ".join(array_data.keyword_list)
-        if StatContainer.conditional_array is not None:
+        if StatContainer.conditional_array is not None and len(StatContainer.conditional_array.data) == array_data.data.size:
             inds = StatContainer.conditional_array.data
             Printer.Print("Nfiltered: ", np.sum(inds))
         else:

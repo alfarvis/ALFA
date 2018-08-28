@@ -55,10 +55,14 @@ class VizBarPlots(AbstractCommand):
         if command_status == CommandStatus.Error:
             return ResultObject(None, None, None, CommandStatus.Error)
 
-        if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
+        if StatContainer.ground_truth is None:
             gtVals = np.ones(df.shape[0])
         else:
             gtVals = StatContainer.filterGroundTruth()
+            if len(gtVals) != df.shape[0]:
+                print("ground truth does not match with df shape")
+                print(len(gtVals), df.shape[0])
+                gtVals = np.ones(df.shape[0])
         # Remove nans:
         df['ground_truth'] = gtVals
         df.dropna(inplace=True)

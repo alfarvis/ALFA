@@ -30,5 +30,5 @@ class QtPrinter(AbstractPrinter):
         print(*args, **kwargs)
         self.text_box.setTextColor(self.qt_color)
         self.text_box.setAlignment(self.align)
-        self.text_box.append(string_io.getvalue() + '\n')
+        self.text_box.append(string_io.getvalue())
         string_io.close()

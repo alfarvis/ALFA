@@ -15,6 +15,8 @@ class QtWindow(AbstractWindow):
     def __init__(self, *args, **kwargs):
         if self.parent_tab_widget is None:
             QtWindow.parent_tab_widget = QTabWidget()
+        QtWindow.parent_tab_widget.setTabsClosable(True)
+        QtWindow.parent_tab_widget.setMovable(True)
         self.figure_tab = QWidget()
         self.figure = plt.figure(*args, **kwargs)
         self.canvas = FigureCanvas(self.figure)

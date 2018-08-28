@@ -1,6 +1,7 @@
 name: Alfarvis
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - scipy
   - numpy
@@ -11,6 +12,7 @@ dependencies:
   - scikit-learn
   - pip
   - nose
+  - lazyasd
   - pip:
     - namedlist==1.7
     - pep8

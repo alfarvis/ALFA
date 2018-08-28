@@ -85,7 +85,7 @@ class FilterTopN(AbstractCommand):
         result = ResultObject(None, None, None, CommandStatus.Error)
         in_array = array_data.data
         N = in_array.shape[0]
-        if StatContainer.conditional_array is not None:
+        if StatContainer.conditional_array is not None and len(StatContainer.conditional_array.data) == N:
             in_array = in_array[StatContainer.conditional_array.data]
         if in_array.size == 0:
             Printer.Print("No data")
@@ -154,7 +154,7 @@ class FilterTopN(AbstractCommand):
             if idx is not None:
                 out1 = np.full(in_array.size, False)
                 out1[non_nan_idx] = idx
-                if StatContainer.conditional_array is not None:
+                if StatContainer.conditional_array is not None and len(StatContainer.conditional_array.data) == N:
                     out = np.full(N, False)
                     out[StatContainer.conditional_array.data] = out1
                 else:
@@ -311,7 +311,7 @@ class LessThan(AbstractCommand):
         if minutes != [] and np.any(unresolved_idx):
             self.updateOutput(out, array_data.minute, minutes[0],
                               unresolved_idx)
-        if StatContainer.conditional_array is not None:
+        if StatContainer.conditional_array is not None and len(StatContainer.conditional_array.data) == array_data.shape[0]:
             non_filt_idx = np.logical_not(StatContainer.conditional_array.data)
             out[non_filt_idx] = False
         return self.createResult(out, keyword_list, create_name)
