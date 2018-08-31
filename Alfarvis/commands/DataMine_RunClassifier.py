@@ -16,6 +16,7 @@ import pandas as pd
 from sklearn.manifold import TSNE
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from sklearn import metrics  # for the check the error and accuracy of the model
+from Alfarvis.windows import Window
 
 
 class DM_Classify(AbstractCommand):
@@ -41,12 +42,12 @@ class DM_Classify(AbstractCommand):
         executing the run classifier command
         """
         # TODO Add an argument for k = number of clusters
-        return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array, number=-1),
+        return [Argument(keyword="data_frame", optional=True,
+                         argument_type=DataType.csv, number=1),
                          Argument(keyword="classifier_model", optional=True,
                          argument_type=DataType.trained_model)]
 
-    def evaluate(self, array_datas, classifier_model):
+    def evaluate(self, data_frame, classifier_model):
         """
         Run a trained classifier on multiple arrays
 
@@ -55,9 +56,10 @@ class DM_Classify(AbstractCommand):
 
         # Get the data frame
         sns.set(color_codes=True)
-        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        if command_status == CommandStatus.Error:
-            return ResultObject(None, None, None, CommandStatus.Error)
+        #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
+        df = data_frame.data
+        #if command_status == CommandStatus.Error:
+        #    return ResultObject(None, None, None, CommandStatus.Error)
 
         if StatContainer.ground_truth is None:
             Printer.Print("Please set a feature vector to ground truth by",
@@ -82,18 +84,20 @@ class DM_Classify(AbstractCommand):
         X = scaler.transform(X)
 
         # Code to run the classifier
-        # Plot the k -means result
+        # Plot the classification result
+        win = Window.window()
+        f = win.gcf()
+        ax = f.add_subplot(111)
         Printer.Print('Running the trained classifier...')
 
         predictions = model.predict(X)
         accuracy = metrics.accuracy_score(predictions, Y)
         Printer.Print("Accuracy : %s" % "{0:.3%}".format(accuracy))
         cm = metrics.confusion_matrix(Y, predictions)
-        DataGuru.plot_confusion_matrix(cm, np.unique(Y), title="confusion matrix")
-        plt.show(block=False)
+        DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
+        win.show()
 
-        # TODO Need to save the model
-        # Ask user for a name for the model
+        # TODO Need to save the result
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
         return result_object

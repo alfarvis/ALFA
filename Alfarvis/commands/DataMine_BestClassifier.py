@@ -17,6 +17,7 @@ from sklearn.manifold import TSNE
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from sklearn import metrics  # for the check the error and accuracy of the model
 from sklearn import preprocessing
+from Alfarvis.windows import Window
 
 
 class DM_BestClassifier(AbstractCommand):
@@ -42,12 +43,12 @@ class DM_BestClassifier(AbstractCommand):
         executing the train classifier command
         """
         # TODO Add an argument for k = number of clusters
-        return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array, number=-1),
+        return [Argument(keyword="data_frame", optional=True,
+                         argument_type=DataType.csv, number=1),
                          Argument(keyword="classifier_algos", optional=True,
                          argument_type=DataType.algorithm_arg, number=-1)]
 
-    def evaluate(self, array_datas, classifier_algos):
+    def evaluate(self, data_frame, classifier_algos):
         """
         Train a classifier on multiple arrays
 
@@ -56,9 +57,10 @@ class DM_BestClassifier(AbstractCommand):
 
         # Get the data frame
         sns.set(color_codes=True)
-        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        if command_status == CommandStatus.Error:
-            return ResultObject(None, None, None, CommandStatus.Error)
+        df = data_frame.data
+        #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
+        #if command_status == CommandStatus.Error:
+        #    return ResultObject(None, None, None, CommandStatus.Error)
 
         # Get the ground truth array
         if StatContainer.ground_truth is None:
@@ -95,11 +97,14 @@ class DM_BestClassifier(AbstractCommand):
                       'k fold cross validation...')
 
         all_cv_scores, all_mean_cv_scores, all_confusion_matrices = DataGuru.FindBestClassifier(X, Y, modelList, 10)
-
+        
         Printer.Print('\n\nPlotting the confusion matrices...\n')
         for iter in range(len(modelList)):
-            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), title=modelList[iter]['Name'])
-            plt.show(block=False)
+            win = Window.window()
+            f = win.gcf()
+            ax = f.add_subplot(111)
+            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), ax,title=modelList[iter]['Name'])
+            win.show()
 
         Printer.Print("\n\nBest classifier is " + modelList[np.argmax(all_mean_cv_scores)]['Name'] + " with an accuracy of -  %.2f%% " % max(all_mean_cv_scores))
         # TODO Need to save the model

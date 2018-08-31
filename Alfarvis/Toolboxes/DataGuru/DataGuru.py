@@ -228,7 +228,7 @@ class DataGuru:
         return data_frame
 
     @classmethod
-    def plot_confusion_matrix(self, cm, classes,
+    def plot_confusion_matrix(self, cm, classes, ax=plt,
                           normalize=False,
                           title='Confusion matrix',
                           cmap=plt.cm.Blues):
@@ -247,12 +247,12 @@ class DataGuru:
 
         Printer.Print(cm)
 
-        plt.imshow(cm, interpolation='nearest', cmap=cmap)
-        plt.title(title)
-        plt.colorbar()
-        tick_marks = np.arange(len(classes))
-        plt.xticks(tick_marks, classes, rotation=45)
-        plt.yticks(tick_marks, classes)
+        ax.imshow(cm, interpolation='nearest', cmap=cmap)
+        ax.set_title(title)
+        #ax.colorbar()
+        #tick_marks = np.arange(len(classes))
+        #ax.xticks(tick_marks, classes, rotation=45)
+        #ax.yticks(tick_marks, classes)
 
         fmt = '.2f' if normalize else 'd'
         thresh = cm.max() / 2.
@@ -261,9 +261,9 @@ class DataGuru:
                      horizontalalignment="center",
                      color="white" if cm[i, j] > thresh else "black")
 
-        plt.tight_layout()
-        plt.ylabel('True label')
-        plt.xlabel('Predicted label')
+        #ax.tight_layout()
+        ax.set_ylabel('True label')
+        ax.set_xlabel('Predicted label')
 
     def perf_measure(self, y_actual, y_hat):
         TP = 0

@@ -17,6 +17,7 @@ from sklearn.manifold import TSNE
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 from sklearn import metrics  # for the check the error and accuracy of the model
 from sklearn import preprocessing
+from Alfarvis.windows import Window
 
 
 class DM_TrainClassifier(AbstractCommand):
@@ -42,12 +43,12 @@ class DM_TrainClassifier(AbstractCommand):
         executing the train classifier command
         """
         # TODO Add an argument for k = number of clusters
-        return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array, number=-1),
+        return [Argument(keyword="data_frame", optional=True,
+                         argument_type=DataType.csv, number=1),
                          Argument(keyword="classifier_algo", optional=True,
                          argument_type=DataType.algorithm_arg)]
 
-    def evaluate(self, array_datas, classifier_algo):
+    def evaluate(self, data_frame, classifier_algo):
         """
         Train a classifier on multiple arrays
 
@@ -56,9 +57,10 @@ class DM_TrainClassifier(AbstractCommand):
 
         # Get the data frame
         sns.set(color_codes=True)
-        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        if command_status == CommandStatus.Error:
-            return ResultObject(None, None, None, CommandStatus.Error)
+        df = data_frame.data
+        #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
+        #if command_status == CommandStatus.Error:
+        #    return ResultObject(None, None, None, CommandStatus.Error)
 
         # Get the ground truth array
         if StatContainer.ground_truth is None:
@@ -86,9 +88,11 @@ class DM_TrainClassifier(AbstractCommand):
         Printer.Print('Running k fold cross validation...')
 
         cm, cvscores = DataGuru.runKFoldCV(X, Y, model, 10)
-
-        DataGuru.plot_confusion_matrix(cm, np.unique(Y), title="confusion matrix")
-        plt.show(block=False)
+        win = Window.window()
+        f = win.gcf()
+        ax = f.add_subplot(111)
+        DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
+        win.show()
 
         # TODO Need to save the model
         # Ask user for a name for the model
