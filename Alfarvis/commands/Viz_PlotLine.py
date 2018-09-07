@@ -32,7 +32,7 @@ class VizPlotLine(AbstractCommand):
         """
         Tags to identify the lineplot command
         """
-        return ["lineplot", "line plot", "plot"]
+        return ["lineplot", "line plot", "plot", "plot line"]
 
     def argumentTypes(self):
         """

@@ -57,8 +57,19 @@ class StatMin(AbstractCommand):
             idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
         min_val = numpy.min(array[idx])
         idx = numpy.argmin(array[idx])
-        rl = StatContainer.row_labels.data
-        min_rl = rl[idx]
+        if StatContainer.row_labels is not None:
+            rl = StatContainer.row_labels.data
+            min_rl = rl[idx]
+            # min index
+            result_object = ResultObject(min_rl, [],
+                                         DataType.array,
+                                         CommandStatus.Success)
+
+            result_object.createName(
+                    StatContainer.row_labels.name,
+                    command_name=self.commandTags()[0],
+                    set_keyword_list=True)
+            result_objects.append(result_object)
 
         # min value
         result_object = ResultObject(min_val, [],
@@ -70,17 +81,9 @@ class StatMin(AbstractCommand):
                 set_keyword_list=True)
         result_objects.append(result_object)
 
-        # min index
-        result_object = ResultObject(min_rl, [],
-                                     DataType.array,
-                                     CommandStatus.Success)
-
-        result_object.createName(
-                StatContainer.row_labels.name,
-                command_name=self.commandTags()[0],
-                set_keyword_list=True)
-        result_objects.append(result_object)
-
-        Printer.Print("Minimum of", array_data.name, "is", min_val, "corresponding to", min_rl)
+        if StatContainer.row_labels is not None:
+            Printer.Print("Minimum of", array_data.name, "is", min_val, "corresponding to", min_rl)
+        else:
+            Printer.Print("Minimum of", array_data.name, "is", min_val)
 
         return result_objects
