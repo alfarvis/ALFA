@@ -1,30 +1,45 @@
 # here we will import the libraries used for machine learning
 import numpy as np  # linear algebra
-from scipy.stats import mode
 # data processing, CSV file I/O (e.g. pd.read_csv), data manipulation as in SQL
 import pandas as pd
+import importlib
+import collections
+import matplotlib.pyplot as plt
+import itertools
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject, DataObject)
 from Alfarvis.commands.Stat_Container import StatContainer
-from sklearn.cluster import KMeans
-from sklearn.cluster import AgglomerativeClustering
-import collections
-from sklearn.linear_model import LogisticRegression  # to apply the Logistic regression
+from Alfarvis.printers import Printer
+from lazyasd import lazyobject
+from scipy.stats import mode
+
+#from sklearn.cluster import KMeans
+#from sklearn.cluster import AgglomerativeClustering
+# from sklearn.linear_model import LogisticRegression  # to apply the Logistic regression
 # from sklearn.model_selection import train_test_split # to split the data into two parts
-from sklearn.model_selection import StratifiedKFold
 # from sklearn.model_selection import GridSearchCV# for tuning parameter
-from sklearn.ensemble import RandomForestClassifier  # for random forest classifier
+# from sklearn.ensemble import RandomForestClassifier  # for random forest classifier
 #from sklearn.naive_bayes import GaussianNB
 #from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import svm  # for Support Vector Machine
-from sklearn import metrics  # for the check the error and accuracy of the model
-from sklearn import preprocessing
-from sklearn.model_selection import LeaveOneOut
-from Alfarvis.printers import Printer
-import re
-import matplotlib.pyplot as plt
-import itertools
+#from sklearn.tree import DecisionTreeClassifier
+# from sklearn import svm  # for Support Vector Machine
+#from sklearn import preprocessing
+#from sklearn.model_selection import LeaveOneOut
+
+
+@lazyobject
+def cluster():
+    return importlib.import_module('sklearn.cluster')
+
+
+@lazyobject
+def StratifiedKFold():
+    return importlib.import_module('sklearn.model_selection.StratifiedKFold')
+
+
+@lazyobject
+def metrics():
+    return importlib.import_module('sklearn.metrics')  # for the check the error and accuracy of the model
 
 
 class DataGuru:
@@ -62,7 +77,7 @@ class DataGuru:
         kl1 = [" ".join(array_data.keyword_list) for array_data in array_datas]
         truncated_kl1, common_name = StatContainer.removeCommonNames(kl1)
         # Conditional filter
-        if StatContainer.conditional_array is not None:
+        if StatContainer.conditional_array is not None and len(StatContainer.conditional_array.data) == array_size:
             inds = StatContainer.conditional_array.data
             Nfiltered = np.sum(inds)
             Printer.Print("Nfiltered: ", Nfiltered)

@@ -58,16 +58,15 @@ class Viz_VioloinPlot(AbstractCommand):
         f = win.gcf()
         ax = f.add_subplot(111)
         if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
-            df.dropna(inplace=True)            
+            df.dropna(inplace=True)
             sns.violinplot(data=df, ax=ax)
         else:
             ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
             df[ground_truth] = StatContainer.filterGroundTruth()
             df.dropna(inplace=True)
-            df1 = pd.melt(df,id_vars = ground_truth)
-            sns.violinplot(data=df1, ax=ax,x='variable',y='value', hue=ground_truth)
+            df1 = pd.melt(df, id_vars=ground_truth)
+            sns.violinplot(data=df1, ax=ax, x='variable', y='value', hue=ground_truth)
 
         win.show()
-        
-        
+
         return VizContainer.createResult(win, array_datas, ['violin'])

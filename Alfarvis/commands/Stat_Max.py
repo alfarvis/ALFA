@@ -50,36 +50,40 @@ class StatMax(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
+            idx = numpy.logical_not(numpy.isnan(array))
         elif numpy.issubdtype(array.dtype, numpy.datetime64):
-            array_filtered = array[numpy.logical_not(numpy.isnat(array))]
+            idx = numpy.logical_not(numpy.isnat(array))
         else:
             Printer.Print("The array is not supported type so cannot find max")
             return result_object
-        max_val = numpy.max(array_filtered)
-        idx = numpy.argmax(array_filtered)
-        rl = StatContainer.row_labels.data
-        max_rl = rl[idx]
+        if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
+            idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
+        max_val = numpy.max(array[idx])
+        idx = numpy.argmax(array[idx])
+        if StatContainer.row_labels is not None:
+            rl = StatContainer.row_labels.data
+            max_rl = rl[idx]
+            # Result for max index
+            result_object = ResultObject(max_rl, [],
+                                         DataType.array,
+                                         CommandStatus.Success)
+
+            result_object.createName(
+                    StatContainer.row_labels.name,
+                    command_name=self.commandTags()[0],
+                    set_keyword_list=True)
+            result_objects.append(result_object)
         # Result for max value
         result_object = ResultObject(max_val, [],
                                      DataType.array,
                                      CommandStatus.Success)
-
         result_object.createName(
                 array_data.keyword_list,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         result_objects.append(result_object)
-
-        # Result for max index
-        result_object = ResultObject(max_rl, [],
-                                     DataType.array,
-                                     CommandStatus.Success)
-
-        result_object.createName(
-                StatContainer.row_labels.name,
-                command_name=self.commandTags()[0],
-                set_keyword_list=True)
-        result_objects.append(result_object)
-        Printer.Print("Maximum of", array_data.name, "is", max_val, "corresponding to", max_rl)
+        if StatContainer.row_labels is not None:
+            Printer.Print("Maximum of", array_data.name, "is", max_val, "corresponding to", max_rl)
+        else:
+            Printer.Print("Maximum of", array_data.name, "is", max_val)
         return result_objects

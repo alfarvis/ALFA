@@ -19,13 +19,14 @@ class StatContainer(object):
     def filterGroundTruth(self):
         if self.ground_truth is None:
             return None
-        elif self.conditional_array is None:
+        elif (self.conditional_array is None or
+              self.conditional_array.data.size != self.ground_truth.data.size):
             return self.ground_truth.data
         else:
             inds = self.conditional_array.data
             return self.ground_truth.data[inds]
         return None
-    
+
     @classmethod
     def filterRowLabels(self):
         if self.row_labels is None:
@@ -38,19 +39,23 @@ class StatContainer(object):
         return None
 
     @classmethod
+    def removeFromList(self, name_list, remove_set):
+        return [name for name in name_list if name not in remove_set]
+
+    @classmethod
     def removeCommonNames(self, input_names):
         """
         Remove common occurences between different strings
         """
-        name_set_list = [set(splitPattern(name)) for name in input_names]
+        name_list_list = [splitPattern(name) for name in input_names]
         if len(input_names) == 1:
-            common_name = ' '.join(name_set_list[0])
+            common_name = ' '.join(name_list_list[0])
             out_names = [common_name]
         else:
-            common_name_set = set.intersection(*name_set_list)
+            common_name_set = set.intersection(*[set(name_list) for name_list in name_list_list])
             common_name = ' '.join(common_name_set)
-            out_names = [' '.join(name_set.difference(common_name_set))
-                         for name_set in name_set_list]
+            out_names = [' '.join(self.removeFromList(name_list, common_name_set))
+                         for name_list in name_list_list]
         return out_names, common_name
 
     @classmethod

@@ -58,8 +58,14 @@ class ReadDatabase(AbstractReader):
                         Printer.Print("Skipping file ...")
                         skipped_files = skipped_files + 1
                         continue
-                    file_path = os.path.join(package_directory, 'resources',
-                                             row['file_name'])
+                    if os.path.isfile(row['file_name']):
+                        file_path = row['file_name']
+                    else:
+                        file_path = os.path.join(package_directory, 'resources',
+                                                 row['file_name'])
+                        if not os.path.isfile(file_path):
+                            Printer.Print("Cannot find file: ", row['file_name'])
+                            continue
                     file_object = FileObject(file_path, file_type,
                                              row['description'], False)
                     keywords = row['keywords'].split(' ')

@@ -40,12 +40,12 @@ class AbstractCommand(object):
     def example(self, history, user_conv):
         return "No example available"
 
-    @abstractproperty
+    @abstractmethod
     def commandType(self):
         """
         Return command type
         """
-        return CommandType.Unknown
+        return self.CommandType.Unknown
 
     @abstractproperty
     def argumentTypes(self):

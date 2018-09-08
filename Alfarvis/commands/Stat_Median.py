@@ -46,8 +46,10 @@ class StatMedian(AbstractCommand):
         array = array_data.data
 
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
-            median_val = numpy.median(array_filtered)
+            idx = numpy.logical_not(numpy.isnan(array))
+            if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
+                idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
+            median_val = numpy.median(array[idx])
 
             result_object = ResultObject(median_val, [],
                                          DataType.array,
