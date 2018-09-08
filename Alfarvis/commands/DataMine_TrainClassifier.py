@@ -41,25 +41,23 @@ class DM_TrainClassifier(AbstractCommand):
         A list of  argument structs that specify the inputs needed for
         executing the train classifier command
         """
-        # TODO Add an argument for k = number of clusters
-        return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array, number=-1),
+        
+        return [Argument(keyword="data_frame", optional=True,
+                         argument_type=DataType.csv, number=1),
                          Argument(keyword="classifier_algo", optional=True,
                          argument_type=DataType.algorithm_arg)]
 
-    def evaluate(self, array_datas, classifier_algo):
+    def evaluate(self, data_frame, classifier_algo):
         """
         Train a classifier on multiple arrays
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
 
-        # Get the data frame
-        sns.set(color_codes=True)
-        command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        if command_status == CommandStatus.Error:
-            return ResultObject(None, None, None, CommandStatus.Error)
-
+        # Get the data frame        
+        df = data_frame.data
+        #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
+        
         if StatContainer.ground_truth is None:
             Printer.Print("Please set a feature vector to ground truth by",
                           "typing set ground truth before using this command")
@@ -94,15 +92,16 @@ class DM_TrainClassifier(AbstractCommand):
         predictions = model.predict(X)
         accuracy = metrics.accuracy_score(predictions, Y)
         Printer.Print("Accuracy on training set : %s" % "{0:.3%}".format(accuracy))
-        plt.show(block=False)
+        
 
         trained_model = {'Scaler': scaler, 'Model': model}
 
-        # TODO Need to save the model
-        # Ask user for a name for the model
-        keyword_list = ["trained", "model"]
-        keyword_list = keyword_list + classifier_algo.keyword_list
+        result_object = ResultObject(trained_model, [], DataType.trained_model,
+                              CommandStatus.Success)
+        
+        
+        result_object.createName(data_frame.keyword_list, command_name=classifier_algo.name,
+                          set_keyword_list=True)
 
-        result_object = ResultObject(trained_model, keyword_list, DataType.trained_model, CommandStatus.Success)
 
         return result_object
