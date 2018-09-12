@@ -12,19 +12,22 @@ from Alfarvis.commands.Stat_Container import StatContainer
 from Alfarvis.printers import Printer
 from lazyasd import lazyobject
 from scipy.stats import mode
+import re
 
-#from sklearn.cluster import KMeans
-#from sklearn.cluster import AgglomerativeClustering
-# from sklearn.linear_model import LogisticRegression  # to apply the Logistic regression
-# from sklearn.model_selection import train_test_split # to split the data into two parts
-# from sklearn.model_selection import GridSearchCV# for tuning parameter
-# from sklearn.ensemble import RandomForestClassifier  # for random forest classifier
-#from sklearn.naive_bayes import GaussianNB
-#from sklearn.neighbors import KNeighborsClassifier
-#from sklearn.tree import DecisionTreeClassifier
-# from sklearn import svm  # for Support Vector Machine
-#from sklearn import preprocessing
-#from sklearn.model_selection import LeaveOneOut
+from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.linear_model import LogisticRegression  # to apply the Logistic regression
+from sklearn.model_selection import train_test_split # to split the data into two parts
+from sklearn.model_selection import GridSearchCV# for tuning parameter
+from sklearn.ensemble import RandomForestClassifier  # for random forest classifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import svm  # for Support Vector Machine
+from sklearn import preprocessing
+from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import StratifiedKFold
+
 
 
 @lazyobject
@@ -32,9 +35,9 @@ def cluster():
     return importlib.import_module('sklearn.cluster')
 
 
-@lazyobject
-def StratifiedKFold():
-    return importlib.import_module('sklearn.model_selection.StratifiedKFold')
+#@lazyobject
+#def StratifiedKFold():
+#    return importlib.import_module('sklearn.model_selection.StratifiedKFold')
 
 
 @lazyobject

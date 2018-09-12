@@ -152,8 +152,9 @@ class Stat_Labelwise_Max(Stat_Labelwise_Count):
         df1 = df.groupby(gtName).max()
         df2 = df.groupby(gtName).idxmax()
         idx = df2.values
-        rl = StatContainer.row_labels.data
-        df1[StatContainer.row_labels.name] = rl[idx]
+        if StatContainer.row_labels is not None:
+            rl = StatContainer.row_labels.data
+            df1[StatContainer.row_labels.name] = rl[idx]
         return df1
 
 
@@ -166,6 +167,7 @@ class Stat_Labelwise_Min(Stat_Labelwise_Count):
         df1 = df.groupby(gtName).min()
         df2 = df.groupby(gtName).idxmin()
         idx = df2.values
-        rl = StatContainer.row_labels.data
-        df1[StatContainer.row_labels.name] = rl[idx]
+        if StatContainer.row_labels is not None:
+            rl = StatContainer.row_labels.data
+            df1[StatContainer.row_labels.name] = rl[idx]
         return df1

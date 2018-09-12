@@ -54,3 +54,7 @@ class DataType(Enum):
 
     # User provided string input
     user_string = 15
+    
+    #alfarvis script (a script file .alpha written in alfarvis)
+    alpha_script = 16
+    
