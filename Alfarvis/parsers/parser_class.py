@@ -313,6 +313,9 @@ class AlfaDataParser:
                 self.argumentsFound[arg_name] = DataObject(self.history,
                                                            ['history'])
                 continue
+            elif arg_name == "parent_parser":
+                self.argumentsFound[arg_name] = DataObject(self,
+                                                           ['parent', 'parser'])
             data_res = self.searchHistory(argument, key_words)
             all_arg_names.add(arg_name)
             # If infinite args allowed and we found some args or
