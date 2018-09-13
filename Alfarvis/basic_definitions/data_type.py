@@ -27,7 +27,7 @@ class DataType(Enum):
     # data types
     file_name = 6
 
-    #Save in this format once the algorithm has been trained
+    # Save in this format once the algorithm has been trained
     trained_model = 7
 
     # This is the type of algorithm run
@@ -54,3 +54,6 @@ class DataType(Enum):
 
     # User provided string input
     user_string = 15
+
+    # Folder
+    folder = 16

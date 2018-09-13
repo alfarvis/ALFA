@@ -11,15 +11,17 @@ class TypeDatabase(object):
     """
     Database for storing values based on data type and keywords
     """
-    _argument_database = dict()
-    last_data_type = None
-    last_data_object = None
 
-    def __init__(self, cache_len=10):
+    def __init__(self, cache_len=10, data_type_list=None):
         """
         Initiate keyword data base for each data type
         """
-        for data_type in DataType:
+        self._argument_database = dict()
+        self.last_data_type = None
+        self.last_data_object = None
+        if data_type_list is None:
+            data_type_list = DataType
+        for data_type in data_type_list:
             if (data_type is not DataType.user_conversation and
                     data_type is not DataType.history):
                 self._argument_database[data_type] = Database(cache_len)

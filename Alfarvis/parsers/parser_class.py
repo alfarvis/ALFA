@@ -3,7 +3,8 @@ from Alfarvis.commands import create_command_database, helpCommand
 from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
-                                        findNumbers, findClosestMatch)
+                                        findNumbers, findClosestMatch,
+                                        searchFileFromFolder)
 from Alfarvis.printers import Printer
 
 # TODO Remove/split based on commas and semicolumns etc
@@ -315,6 +316,10 @@ class AlfaDataParser:
                 continue
             data_res = self.searchHistory(argument, key_words)
             all_arg_names.add(arg_name)
+            # If file name, try searching folders
+            if self.wrap(arg_type)[0] == DataType.file_name and len(data_res) == 0:
+                print("Searching for file fromfolders")
+                data_res = searchFileFromFolder(key_words, self.history)
             # If infinite args allowed and we found some args or
             # if finite args allowed and we found exactly those
             # many arguments
@@ -342,6 +347,7 @@ class AlfaDataParser:
 
                 else:
                     self.argument_search_result[arg_name] = data_res
+
         self.fillClosestArguments(self.argument_search_result,
                                   self.argumentsFound,
                                   argumentTypes)

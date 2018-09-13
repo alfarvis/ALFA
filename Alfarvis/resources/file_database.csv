@@ -1,6 +1,5 @@
 file_name,file_type,keywords,description
 data.csv,csv,tumor data,Tumor data
-Most-Recent-Cohorts-Scorecard-Elements.csv,csv,cohorts scorecard,Random data obtained from internet
 U.S._Chronic_Disease_Indicators__CDI_.csv,csv,chronic disease indicators CDI,CDI indicators specifying indicators for chronic diseases
 image.jpg,image,hand parallel mirror illusion phone,A hand is holding phone which shows multiple pictures
 crime.csv,csv,crime data,crime data from denver
@@ -24,3 +23,5 @@ TourDeFrance.csv,csv,tour de france,tour de france
 cricket.csv,csv,ipl cricket ,IPL database
 movie_ratings.csv,csv,movie ratings,Movie ratings
 athlete_events.csv,csv,olympic ,120 years of olympic data
+projects/Alfarvis/Alfarvis/resources,folder,test folder,recursive
+Downloads,folder,downloads folder,Downloads
