@@ -317,7 +317,7 @@ class AlfaDataParser:
             data_res = self.searchHistory(argument, key_words)
             all_arg_names.add(arg_name)
             # If file name, try searching folders
-            if self.wrap(arg_type)[0] == DataType.file_name and len(data_res) == 0:
+            if DataType.file_name in self.wrap(arg_type) and len(data_res) == 0:
                 print("Searching for file fromfolders")
                 data_res = searchFileFromFolder(key_words, self.history)
             # If infinite args allowed and we found some args or

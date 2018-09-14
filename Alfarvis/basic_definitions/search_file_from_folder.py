@@ -31,4 +31,6 @@ def searchFileFromFolder(user_conv, history):
         for folder in history._argument_database[DataType.folder].data_objects:
             for file_type in file_types:
                 file_res = file_res + folder.data.file_name_database.search(file_type, user_conv)
+    for res in file_res:
+        res.data_type = DataType.file_name
     return file_res
