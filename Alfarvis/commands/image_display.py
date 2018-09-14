@@ -49,26 +49,26 @@ class ImageDisplay(AbstractCommand):
         """
         Display the image specified
         """
-        # try:
-        print("Data type: ", image.data_type)
-        if image.data_type is DataType.file_name:
-            file_path = image.data.path
-            if not os.path.isfile(file_path):
-                Printer.Print("Cannot find image file: ", file_path)
-                raise RuntimeError
-            print("File path: ", file_path)
-            curr_image = imread(file_path)
-        else:
-            curr_image = image.data
-        image_name = image.keyword_list[0]
-        win = Window.window()
-        plt.imshow(curr_image)
-        plt.gca().axis('off')
-        win.show()
-        Printer.Print("Displaying image" + image_name)
-        result_object = ResultObject(
-            None, None, None, CommandStatus.Success)
-        # except:
-        #    result_object = ResultObject(None, None, None, CommandStatus.Error)
+        try:
+            if image.data_type is DataType.file_name:
+                file_path = image.data.path
+                if not os.path.isfile(file_path):
+                    Printer.Print("Cannot find image file: ", file_path)
+                    raise RuntimeError
+                curr_image = imread(file_path)
+                result_object = ResultObject(
+                    curr_image, image.keyword_list, DataType.image, CommandStatus.Success)
+            else:
+                curr_image = image.data
+                result_object = ResultObject(
+                    None, None, None, CommandStatus.Success)
+            image_name = image.keyword_list[0]
+            win = Window.window()
+            plt.imshow(curr_image)
+            plt.gca().axis('off')
+            win.show()
+            Printer.Print("Displaying image" + image_name)
+        except:
+            result_object = ResultObject(None, None, None, CommandStatus.Error)
 
         return result_object
