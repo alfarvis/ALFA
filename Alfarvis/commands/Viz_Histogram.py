@@ -19,7 +19,7 @@ class VizHistogram(AbstractCommand):
     """
     Plot multiple array histograms on a single plot
     """
-    max_unique = 50
+    max_unique = 30
 
     def briefDescription(self):
         return "plot histogram of an array"

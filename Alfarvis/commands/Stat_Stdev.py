@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from .Stat_Container import StatContainer
 from Alfarvis.printers import Printer
 import numpy
 
@@ -45,8 +46,10 @@ class StatStdev(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         array = array_data.data
         if numpy.issubdtype(array.dtype, numpy.number):
-            array_filtered = array[numpy.logical_not(numpy.isnan(array))]
-            std_val = numpy.std(array_filtered)
+            idx = numpy.logical_not(numpy.isnan(array))
+            if StatContainer.conditional_array is not None and StatContainer.conditional_array.data.size == array.size:
+                idx = numpy.logical_and(idx, StatContainer.conditional_array.data)
+            std_val = numpy.std(array[idx])
             result_object = ResultObject(
                 std_val, [], DataType.array, CommandStatus.Success)
             result_object.createName(
