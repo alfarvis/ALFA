@@ -10,7 +10,7 @@ class AbstractPrinter(object):
     """
     __metaclass__ = ABCMeta
 
-    def settings(self, color='k', alignment=Align.Left):
+    def settings(self, color='k', alignment=Align.Left, bgcolor = 'w'):
         return
 
     @abstractmethod

@@ -14,11 +14,11 @@ class Printer(object):
         self.selected_printer = printer
 
     @classmethod
-    def Print(self, *args, **kwargs):
-        self.selected_printer.settings('b', Align.Left)
+    def Print(self, *args, **kwargs):                
         self.selected_printer.Print(*args, **kwargs)
-
+        self.selected_printer.settings('b',Align.Left,'w')        
     @classmethod
-    def UserPrint(self, *args, **kwargs):
-        self.selected_printer.settings('k', Align.Left)
+    def UserPrint(self, *args, **kwargs):        
+        self.selected_printer.settings('r',Align.Left,'w')
         self.selected_printer.Print(*args, **kwargs)
+        self.selected_printer.settings('b',Align.Right)

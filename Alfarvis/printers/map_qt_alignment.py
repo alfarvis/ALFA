@@ -10,4 +10,4 @@ def mapAlignment(alignment):
         return Qt.AlignRight
     elif alignment == Align.Center:
         return Qt.AlignCenter
-    raise RuntimeError("Do not understoond align")
+    raise RuntimeError("Do not understand alignment")
