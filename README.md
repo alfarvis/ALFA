@@ -7,4 +7,4 @@ Install anaconda [distribution](https://www.anaconda.com/enterprise/?gclid=Cj0KC
 Then create conda environment using `conda create -f environment.yaml`. Once all the packages are installed, activate the environment using `conda activate Alfarvis`. Then run the executable using `python run.py`. To install the package, you can do `pip install .` or `python setup.py install` from the source directory
 
 # Tutorials
-To learn more about Alfa, visit our [tutorials](https://github.com/garimellagowtham/Alfarvis/wiki/Basic-Tutorial)
+To learn more about Alfa, visit our [wiki](https://github.com/garimellagowtham/Alfarvis/wiki)
