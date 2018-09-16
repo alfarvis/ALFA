@@ -17,11 +17,12 @@ from collections import deque
 
 class UserInputHandler(object):
     def __init__(self, user_input, completion_model,
-                 qt_app, alpha_module_dictionary):
+                 update_labels, qt_app, alpha_module_dictionary):
         self.user_input = user_input
         self.cmp = completion_model
         self.previous_input_text = deque(maxlen=10)
         self.buffer_index = -1
+        self.update_labels = update_labels
         self.qt_app = qt_app
         self.alpha_module_dictionary = alpha_module_dictionary
         self.user_input.returnPressed.connect(self.userPressedEnter)
@@ -84,6 +85,8 @@ class UserInputHandler(object):
                 self.addStringListToModel(self.cmp, last_names)
         else:
             Printer.Print("No alpha loaded!")
+        # Update ground truth etc
+        self.update_labels()
         self.previous_input_text.appendleft(input_text)
         self.user_input.clear()
         self.buffer_index = -1
@@ -126,7 +129,8 @@ if __name__ == "__main__":  # pragma: no cover
     Printer.Print("Input a text to receive response from Alfarvis")
     Printer.Print("Enter Bye to close the program")
     user_input_handler = UserInputHandler(qt_gui.user_input,
-                                          qt_gui.completion_model, app,
+                                          qt_gui.completion_model,
+                                          qt_gui.updateLabels, app,
                                           alpha_module_dictionary)
     qt_gui.showMaximized()
     app.exec_()

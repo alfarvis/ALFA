@@ -22,7 +22,7 @@ class TestImageDisplay(unittest.TestCase):
         argument_types = image_command.argumentTypes()
         self.assertEqual(len(argument_types), 1)
         self.assertTrue(argument_types[0].optional)
-        self.assertEqual(argument_types[0].argument_type, DataType.image)
+        self.assertEqual(argument_types[0].argument_type[0], DataType.image)
         self.assertEqual(argument_types[0].tags, [])
 
     def testEvaluate(self):

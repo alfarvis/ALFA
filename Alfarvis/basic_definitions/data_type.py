@@ -27,7 +27,7 @@ class DataType(Enum):
     # data types
     file_name = 6
 
-    #Save in this format once the algorithm has been trained
+    # Save in this format once the algorithm has been trained
     trained_model = 7
 
     # This is the type of algorithm run
@@ -58,3 +58,6 @@ class DataType(Enum):
     #alfarvis script (a script file .alpha written in alfarvis)
     alpha_script = 16
     
+
+    # Folder
+    folder = 17

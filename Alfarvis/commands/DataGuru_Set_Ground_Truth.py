@@ -47,8 +47,7 @@ class SetGT(AbstractCommand):
         if StatContainer.ground_truth is not None:
             TablePrinter.clearBackGround(StatContainer.ground_truth.name)
         StatContainer.ground_truth = array_data
-        TablePrinter.highlight(StatContainer.ground_truth.name)
-        Printer.Print("Setting ground truth to ", " ".join(
+        Printer.Print("Setting reference to ", " ".join(
             array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
 
