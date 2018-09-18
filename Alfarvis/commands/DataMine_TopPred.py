@@ -8,7 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         findNumbers, searchDateTime)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from Alfarvis.printers import Printer
+from Alfarvis.printers import TablePrinter, Printer
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -86,11 +86,12 @@ class DM_topPredictor(AbstractCommand):
         featImpVals = model.feature_importances_
     
         featimp = pd.Series(featImpVals, index=df.columns).sort_values(ascending=False)
-        Printer.Print("Here is the sorted list of top features: ")
-        Printer.Print(featimp)
         
-        df_new = df[featimp.index[0:num]]
-        
+        df_show = pd.DataFrame()
+        df_show['top features'] = featimp.index[0:num]
+        df_show['feature importance'] = featimp.values[0:num]
+        TablePrinter.printDataFrame(df_show)
+        df_new = df[featimp.index[0:num]]        
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
         

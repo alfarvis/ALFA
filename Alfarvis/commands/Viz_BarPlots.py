@@ -57,26 +57,30 @@ class VizBarPlots(AbstractCommand):
 
         if StatContainer.ground_truth is None:
             gtVals = np.ones(df.shape[0])
+            ground_truth = 'ground_truth';
         else:
             gtVals = StatContainer.filterGroundTruth()
+            ground_truth = StatContainer.ground_truth.name
             if len(gtVals) != df.shape[0]:
                 print("ground truth does not match with df shape")
                 print(len(gtVals), df.shape[0])
                 gtVals = np.ones(df.shape[0])
+                ground_truth = 'ground_truth'
+                
         # Remove nans:
-        df['ground_truth'] = gtVals
+        df[ground_truth] = gtVals
         df.dropna(inplace=True)
-        gtVals = df['ground_truth']
+        gtVals = df[ground_truth]
         uniqVals = StatContainer.isCategorical(gtVals)
         binned_ground_truth = False
 
         if uniqVals is None and np.issubdtype(gtVals.dtype, np.number):
             # Convert to categorical
-            df['ground_truth'] = pd.cut(gtVals, 10)
+            df[ground_truth] = pd.cut(gtVals, 10)
             binned_ground_truth = True
 
         if binned_ground_truth is True or uniqVals is not None:
-            gb = df.groupby('ground_truth')
+            gb = df.groupby(ground_truth)
             df_mean = gb.mean()
             df_errors = gb.std()
             if uniqVals is not None and isinstance(uniqVals[0], str):

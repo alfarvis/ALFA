@@ -58,13 +58,13 @@ class VizBoxPlot(AbstractCommand):
 
         if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:
             df.dropna(inplace=True)
-            df.boxplot(figsize=(10, 10), ax=ax)
+            df.boxplot(ax=ax)
         else:
-            ground_truth = " ".join(StatContainer.ground_truth.keyword_list)
+            ground_truth = StatContainer.ground_truth.name
             df[ground_truth] = StatContainer.filterGroundTruth()
             df.dropna(inplace=True)
-            df.boxplot(by=ground_truth, figsize=(10, 10), ax=ax)
-
+            df.boxplot(by=ground_truth, ax=ax)
+            f.suptitle("")
         win.show()
 
         return VizContainer.createResult(win, array_datas, ['box'])
