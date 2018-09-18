@@ -7,6 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
+from .Stat_Container import StatContainer
 from Alfarvis.printers import Printer
 import numpy
 
