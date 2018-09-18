@@ -42,7 +42,7 @@ class QtGUI(QDialog):
         screen_resolution = app.desktop().screenGeometry()
         # Add ref labels
         self.ref_labels = []
-        for ref_label in ['Ground Truth', 'Row Label', 'Filter']:
+        for ref_label in ['Reference', 'Row Label', 'Filter']:
             self.ref_labels.append(QLabel('<span style=" font-size: ' + str(self.label_font) + 'pt; font-weight:600;">' + ref_label + ': </span>'))
             self.ref_labels[-1].setMinimumHeight(0.02 * screen_resolution.height())
         # Font for user input:
