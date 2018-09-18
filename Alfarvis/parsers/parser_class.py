@@ -134,10 +134,11 @@ class AlfaDataParser:
         # Resolve arguments or data
         split_text = text.split(" ")
         split_text = list(filter(None, split_text))  # Remove empty strings
-        if 'quit' in split_text:
+        if not hasattr(self, 'currentCommand'):
+            Printer.Print("No command available to parse args")
             self.clearCommandSearchResults()
-        else:
-            self.resolveArguments(split_text)
+            return
+        self.resolveArguments(split_text)
 
     def fillClosestArguments(self, argument_search_result,
                              argumentsFound, argumentTypes):
@@ -406,16 +407,13 @@ class AlfaDataParser:
         if result.command_status == CommandStatus.Error:
             self.currentState = ParserStates.command_known_data_unknown
             Printer.Print("\nFailed to execute command")
-            Printer.Print("Please provide new arguments or "
-                          "Type Quit to change your command")
-            # TODO Find which arguments are wrong and resolve only those data
-        elif (result.command_status == CommandStatus.Success):
-            # TODO Add a new function to add result to history
-            if (result.data_type is not None):
-                self.history.add(result.data_type, result.keyword_list,
-                                 result.data, result.add_to_cache, result.name)
-            self.currentState = ParserStates.command_unknown
-            self.clearCommandSearchResults()
+        # TODO Find which arguments are wrong and resolve only those data
+        # TODO Add a new function to add result to history
+        if (result.data_type is not None):
+            self.history.add(result.data_type, result.keyword_list,
+                             result.data, result.add_to_cache, result.name)
+        self.currentState = ParserStates.command_unknown
+        self.clearCommandSearchResults()
 
     def parse(self, textInput):
         """
