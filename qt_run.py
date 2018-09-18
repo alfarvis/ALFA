@@ -56,7 +56,8 @@ class UserInputHandler(object):
         input_text = self.user_input.text()
         Printer.UserPrint("User: " + input_text)
         Printer.Print("Alfa: ")
-        if input_text == "Bye" or input_text == "bye":
+        lower_text = input_text.lower()
+        if 'bye' in lower_text or 'quit' in lower_text or 'exit' in lower_text:
             print("Qutting Application!")
             self.qt_app.quit()
             return
