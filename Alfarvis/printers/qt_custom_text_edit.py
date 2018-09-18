@@ -2,6 +2,7 @@
 from PyQt5.QtWidgets import QTextEdit
 from .map_qt_colors import mapColor
 
+
 class QCustomTextEdit(QTextEdit):
 
     def __init__(self, parent=None):
@@ -14,5 +15,5 @@ class QCustomTextEdit(QTextEdit):
         self.setFontPointSize(point_size)
         self.setTextCursor(cursor)
         self.setFontPointSize(point_size)
-        self.setTextBackgroundColor(mapColor('g'))
+        self.setTextBackgroundColor(mapColor('w'))
         QTextEdit.resizeEvent(self, event)
