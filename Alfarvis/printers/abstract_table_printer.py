@@ -11,7 +11,7 @@ class AbstractTablePrinter(object):
 
     @abstractmethod
     def initialize(self, ncols, col_widths=None, headers=None,
-                   alignments=None):
+                   alignments=None, tabbed=True):
         """
         Initialize the table
         """

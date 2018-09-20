@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from .abstract_window import AbstractWindow
 import matplotlib.pyplot as plt
-#from PyQt5.QtWidgets import QTabWidget, QWidget, QVBoxLayout
 from Alfarvis.tab_manager.qt_tab_manager import QTabManager
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
