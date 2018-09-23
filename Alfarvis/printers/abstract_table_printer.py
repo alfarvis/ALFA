@@ -38,7 +38,12 @@ class AbstractTablePrinter(object):
         ncols = len(df.columns)
         self.initialize(ncols, col_widths, df.columns, alignments)
         for index, row in df.iterrows():
-            row_names = [str(val) for val in row]
+            row_names = []
+            for val in row:
+                if type(val) is float:
+                    row_names.append('{:.2f}'.format(val))
+                else:
+                    row_names.append(str(val))
             self.addRow(row_names)
 
     def sort(self, column_index, ascending):

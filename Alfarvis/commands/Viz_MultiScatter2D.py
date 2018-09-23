@@ -5,6 +5,7 @@ Plot multiple arrays in a multidimensional scatterplot
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
+from Alfarvis.printers import Printer
 from .abstract_command import AbstractCommand
 from .argument import Argument
 import numpy as np
@@ -32,7 +33,7 @@ class VizMultiScatter2D(AbstractCommand):
         """
         Tags to identify the multidimensional scatterplot command
         """
-        return ["multiscatterplot", "multi scatterplot", "multi scatter", "plot"]
+        return ["multiscatterplot", "multi scatterplot", "multi scatter", "scatter plot", "multi", "multiscatter", "plot"]
 
     def argumentTypes(self):
         """
@@ -52,7 +53,10 @@ class VizMultiScatter2D(AbstractCommand):
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
                 array_datas)
         if command_status == CommandStatus.Error:
-            return ResultObject(None, None, None, CommandStatus.Error)
+            return result_object
+        if len(df.columns) <= 1:
+            Printer.Print("There needs to be atleast two variables to perform multiscatter plot!")
+            return result_object
 
         win = Window.window()
         f = win.gcf()
