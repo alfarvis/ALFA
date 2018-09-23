@@ -32,7 +32,7 @@ class VizMultiScatter2D(AbstractCommand):
         """
         Tags to identify the multidimensional scatterplot command
         """
-        return ["multiscatterplot", "multi scatterplot", "multi scatter"]
+        return ["multiscatterplot", "multi scatterplot", "multi scatter", "plot"]
 
     def argumentTypes(self):
         """
