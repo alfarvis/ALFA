@@ -11,8 +11,11 @@ class QtPrinter(AbstractPrinter):
     Simple printer that prints things to kernel
     """
 
-    def __init__(self):
-        self.text_box = QCustomTextEdit()
+    def __init__(self, text_box=None):
+        if text_box is not None:
+            self.text_box = text_box
+        else:
+            self.text_box = QCustomTextEdit()
         self.text_box.setReadOnly(True)
         self.qt_color = mapColor('k')
         self.align = mapAlignment(Align.Left)
@@ -34,5 +37,5 @@ class QtPrinter(AbstractPrinter):
         self.text_box.setTextColor(self.qt_color)
         self.text_box.setAlignment(self.align)
         self.text_box.append(string_io.getvalue())
-        
+
         string_io.close()

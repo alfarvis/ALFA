@@ -9,7 +9,7 @@ Uses Qt version of things through a GUI
 import re
 import sys
 from Alfarvis import create_alpha_module_dictionary
-from Alfarvis.qt_gui import QtGUI
+from Alfarvis.qt_gui import QtGUI, QtNotebookGUI
 from PyQt5.QtWidgets import QApplication
 from Alfarvis.printers import Printer
 from collections import deque
@@ -119,14 +119,17 @@ class UserInputHandler(object):
             completion_model.setData(index, string)
 
 
-if __name__ == "__main__":  # pragma: no cover
+def main(gui_type='regular'):
     # Create alpha module dictionary
     if not QApplication.instance():
         app = QApplication(sys.argv)
     else:
         app = QApplication.instance()
     alpha_module_dictionary = create_alpha_module_dictionary()
-    qt_gui = QtGUI()
+    if gui_type == 'notebook':
+        qt_gui = QtNotebookGUI()
+    else:
+        qt_gui = QtGUI()
     Printer.Print("Input a text to receive response from Alfarvis")
     Printer.Print("Enter Bye to close the program")
     user_input_handler = UserInputHandler(qt_gui.user_input,
@@ -135,3 +138,7 @@ if __name__ == "__main__":  # pragma: no cover
                                           alpha_module_dictionary)
     qt_gui.showMaximized()
     app.exec_()
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main('regular')
