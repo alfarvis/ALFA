@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 from PyQt5.QtWidgets import QTextEdit
 from .map_qt_colors import mapColor
+from PyQt5.QtGui import QImage, QTextCursor, QTextBlockFormat, QTextDocument, QTextImageFormat
+from PyQt5.QtCore import QUrl, QVariant
+import os
 
 
 class QCustomTextEdit(QTextEdit):
@@ -10,6 +13,8 @@ class QCustomTextEdit(QTextEdit):
         self.div = div
         self.max_text_size = max_text_size
         self.point_size = 16
+        self.image_resources = {}
+        self.resource_folder = 'notebook_resources'
 
     def resetFontSize(self):
         cursor = self.textCursor()
@@ -18,6 +23,17 @@ class QCustomTextEdit(QTextEdit):
         self.setTextCursor(cursor)
         self.setFontPointSize(self.point_size)
         self.setTextBackgroundColor(mapColor('w'))
+
+    def insertImage(self, qimage, image_name):
+        self.moveCursor(QTextCursor.End)
+        resource_path = os.path.join(self.resource_folder, image_name) + '.png'
+        print("Resource path: ", resource_path)
+        self.document().addResource(QTextDocument.ImageResource, QUrl(resource_path), QVariant(qimage))
+        image_format = QTextImageFormat()
+        image_format.setName(resource_path)
+        cursor = self.textCursor()
+        cursor.insertImage(image_format)
+        self.image_resources[resource_path] = qimage
 
     def resizeEvent(self, event):
         self.point_size = min(event.size().width() / self.div, self.max_text_size)

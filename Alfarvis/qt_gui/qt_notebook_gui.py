@@ -6,7 +6,7 @@ from PyQt5.QtCore import QStringListModel, Qt
 from PyQt5.QtWidgets import QApplication
 from Alfarvis.qt_gui.qt_custom_line_edit import QCustomLineEdit
 from Alfarvis.tab_manager.qt_tab_manager import QTabManager
-from Alfarvis.windows.qt_window import QtWindow
+from Alfarvis.windows.qt_notebook_window import QtNotebookWindow
 from Alfarvis.printers.qt_printer import QtPrinter
 from Alfarvis.printers.qt_notebook_table_printer import QtNotebookTablePrinter
 from Alfarvis.printers.qt_custom_text_edit import QCustomTextEdit
@@ -35,7 +35,8 @@ class QtNotebookGUI(QDialog):
         completer.setModel(self.completion_model)
         self.user_input.setCompleter(completer)
         # Select global configs
-        Window.selectWindowType(QtWindow)
+        QtNotebookWindow.parent_notebook = self.notebook
+        Window.selectWindowType(QtNotebookWindow)
         Printer.selectPrinter(self.qt_printer)
         TablePrinter.selectPrinter(self.qt_table_printer)
         # Get screen resolution:

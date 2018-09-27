@@ -80,8 +80,6 @@ class QtNotebookTablePrinter(AbstractTablePrinter):
         if self.tab_initialized:
             self.text_edit.moveCursor(QTextCursor.End)
             self.text_edit.setTextColor(mapColor('k'))
-            self.text_edit.append('\n')
-            self.text_edit.setAlignment(Qt.AlignCenter)
             self.text_edit.append(self.html_table_widget.show())
             self.text_edit.resetFontSize()
         else:
