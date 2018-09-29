@@ -5,6 +5,7 @@ from .map_qt_alignment import mapAlignment, Align
 from .qt_custom_text_edit import QCustomTextEdit
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtPrintSupport import QPrinter
+from PyQt5.QtGui import QTextCursor
 from io import StringIO
 import os
 
@@ -34,6 +35,8 @@ class QtPrinter(AbstractPrinter):
     def save(self, name):
         file_name = QFileDialog.getSaveFileName()
         text = self.text_box.toHtml()
+        text = text.replace('<table', '<center>\n<table')
+        text = text.replace('/table>', '/table>\n</center>')
         if file_name:
             name = file_name[0]
             if name[-4:] != 'html':
@@ -67,5 +70,6 @@ class QtPrinter(AbstractPrinter):
         self.text_box.setTextColor(self.qt_color)
         self.text_box.setAlignment(self.align)
         self.text_box.append(string_io.getvalue())
+        self.text_box.moveCursor(QTextCursor.End)
 
         string_io.close()

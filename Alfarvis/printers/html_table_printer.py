@@ -56,15 +56,18 @@ class HtmlTablePrinter(object):
         self.min_column_width = column_width
 
     def sortItems(self, column_index, order):
-        pass
-        #df = pd.DataFrame(self.data, columns=self.headers)
-        #self.data.sort(self.headers[column_index], inplace=True)
-        #self.data = df.values()
+        data_dict = {}
+        for i, header in enumerate(self.headers):
+            data_dict[header] = self.data[i]
+        df = pd.DataFrame(data_dict)
+        df.sort_values(self.headers[column_index], inplace=True)
+        self.data = (df.values.T).tolist()
 
     def show(self):
         data_dict = {}
         for i, header in enumerate(self.headers):
             data_dict[header] = self.data[i]
         df = pd.DataFrame(data_dict)
-        out = df.to_html(col_space=self.min_column_width)
+        out = df.to_html(col_space=self.min_column_width, index=False)
+        out = "<center>\n" + out + "\n </center>"
         return out

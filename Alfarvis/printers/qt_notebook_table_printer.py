@@ -5,7 +5,7 @@ from .map_qt_colors import mapColor
 from .html_table_printer import HtmlTablePrinter
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QBrush, QTextCursor
+from PyQt5.QtGui import QBrush, QTextCursor, QTextBlockFormat
 
 
 class QtNotebookTablePrinter(AbstractTablePrinter):
@@ -80,7 +80,12 @@ class QtNotebookTablePrinter(AbstractTablePrinter):
         if self.tab_initialized:
             self.text_edit.moveCursor(QTextCursor.End)
             self.text_edit.setTextColor(mapColor('k'))
-            self.text_edit.append(self.html_table_widget.show())
+            cursor = self.text_edit.textCursor()
+            block_format = QTextBlockFormat()
+            block_format.setAlignment(mapAlignment(Align.Center))
+            cursor.insertBlock(block_format)
+            cursor.insertHtml(self.html_table_widget.show())
+            cursor.insertBlock(block_format)
             self.text_edit.resetFontSize()
         else:
             self.table_widget.show()
