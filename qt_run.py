@@ -13,6 +13,7 @@ from Alfarvis.qt_gui import QtGUI, QtNotebookGUI
 from PyQt5.QtWidgets import QApplication
 from Alfarvis.printers import Printer
 from collections import deque
+from Alfarvis.parsers.parser_states import ParserStates
 
 
 class UserInputHandler(object):
@@ -59,7 +60,9 @@ class UserInputHandler(object):
         Printer.UserPrint("User: " + input_text)
         Printer.Print("Alfa: ")
         lower_text = input_text.lower()
-        if 'bye' in lower_text or 'quit' in lower_text or 'exit' in lower_text:
+        if (('bye' in lower_text) or
+            (('quit' in lower_text or 'exit' in lower_text) and
+             self.alpha.parser.currentState != ParserStates.command_known_data_unknown)):
             print("Qutting Application!")
             self.qt_app.quit()
             return

@@ -134,11 +134,11 @@ class AlfaDataParser:
         # Resolve arguments or data
         split_text = text.split(" ")
         split_text = list(filter(None, split_text))  # Remove empty strings
-        if not hasattr(self, 'currentCommand'):
-            Printer.Print("No command available to parse args")
+        if 'quit' in split_text or 'exit' in split_text:
+            Printer.Print("Quitting out of current command!")
             self.clearCommandSearchResults()
-            return
-        self.resolveArguments(split_text)
+        else:
+            self.resolveArguments(split_text)
 
     def fillClosestArguments(self, argument_search_result,
                              argumentsFound, argumentTypes):
