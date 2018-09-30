@@ -18,7 +18,7 @@ class KernelTablePrinter(AbstractTablePrinter):
         raise RuntimeError("Do not understoond align")
 
     def initialize(self, ncols, col_widths=None, headers=None,
-                   alignments=None):
+                   alignments=None, **kwargs):
         """
         Initialize the table
         """

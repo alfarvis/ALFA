@@ -52,7 +52,7 @@ class StatListColumns(AbstractCommand):
         headers = ["Column_name", "Column_type", "Size", "Column_range"]
         alignments = [Align.Right, Align.Center, Align.Center, Align.Left]
         col_widths = [30, 15, 6, 40]
-        TablePrinter.initialize(4, col_widths, headers, alignments)
+        TablePrinter.initialize(4, col_widths, headers, alignments, tabbed=False)
 
     def evaluate(self, array_data, user_conv):
         """

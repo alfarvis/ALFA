@@ -11,7 +11,7 @@ class AbstractTablePrinter(object):
 
     @abstractmethod
     def initialize(self, ncols, col_widths=None, headers=None,
-                   alignments=None):
+                   alignments=None, tabbed=True):
         """
         Initialize the table
         """
@@ -45,6 +45,7 @@ class AbstractTablePrinter(object):
                 else:
                     row_names.append(str(val))
             self.addRow(row_names)
+        self.show()
 
     def sort(self, column_index, ascending):
         return

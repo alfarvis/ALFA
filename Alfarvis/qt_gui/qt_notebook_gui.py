@@ -6,24 +6,25 @@ from PyQt5.QtCore import QStringListModel, Qt
 from PyQt5.QtWidgets import QApplication
 from Alfarvis.qt_gui.qt_custom_line_edit import QCustomLineEdit
 from Alfarvis.tab_manager.qt_tab_manager import QTabManager
-from Alfarvis.windows.qt_window import QtWindow
+from Alfarvis.windows.qt_notebook_window import QtNotebookWindow
 from Alfarvis.printers.qt_printer import QtPrinter
-from Alfarvis.printers.qt_table_printer import QtTablePrinter
+from Alfarvis.printers.qt_notebook_table_printer import QtNotebookTablePrinter
+from Alfarvis.printers.qt_custom_text_edit import QCustomTextEdit
 from Alfarvis.printers import Printer, TablePrinter
 from Alfarvis.windows import Window
 from Alfarvis.commands.Stat_Container import StatContainer
 
 
-class QtGUI(QDialog):
+class QtNotebookGUI(QDialog):
     label_font = 12
     user_input_font = 18
 
     def __init__(self, parent=None):
-        super(QtGUI, self).__init__(parent)
+        super(QtNotebookGUI, self).__init__(parent)
         # Create subcomponents of the GUI
-        self.tab_container = QTabWidget()
-        self.qt_printer = QtPrinter()
-        self.qt_table_printer = QtTablePrinter()
+        self.notebook = QCustomTextEdit(max_text_size=24, div=80)
+        self.qt_printer = QtPrinter(self.notebook)
+        self.qt_table_printer = QtNotebookTablePrinter(self.notebook)
         self.user_input = QCustomLineEdit()
         self.completion_model = QStringListModel()
         self.labels = [QLineEdit("None"), QLineEdit("None"), QLineEdit("None")]
@@ -34,8 +35,8 @@ class QtGUI(QDialog):
         completer.setModel(self.completion_model)
         self.user_input.setCompleter(completer)
         # Select global configs
-        QTabManager.setParentWidget(self.tab_container)
-        Window.selectWindowType(QtWindow)
+        QtNotebookWindow.parent_notebook = self.notebook
+        Window.selectWindowType(QtNotebookWindow)
         Printer.selectPrinter(self.qt_printer)
         TablePrinter.selectPrinter(self.qt_table_printer)
         # Get screen resolution:
@@ -57,10 +58,8 @@ class QtGUI(QDialog):
             label.setReadOnly(True)
         # Size
         self.user_input.setMinimumHeight(0.02 * screen_resolution.height())
-        self.qt_printer.text_box.setSizePolicy(QSizePolicy.Minimum,
-                                               QSizePolicy.Expanding)
-        self.tab_container.setSizePolicy(QSizePolicy.Expanding,
-                                         QSizePolicy.Expanding)
+        self.notebook.setSizePolicy(QSizePolicy.Expanding,
+                                    QSizePolicy.Expanding)
         self.qt_table_printer.table_widget.setSizePolicy(
                 QSizePolicy.MinimumExpanding, QSizePolicy.Expanding)
         self.ground_truth.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -73,13 +72,11 @@ class QtGUI(QDialog):
             hlayout.addWidget(self.labels[i])
         # Add chat,window, tab
         splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(self.qt_printer.text_box)
-        splitter.addWidget(self.tab_container)
+        splitter.addWidget(self.notebook)
         splitter.addWidget(self.qt_table_printer.table_widget)
-        splitter.setStretchFactor(0, 0)
-        splitter.setStretchFactor(1, 2)
-        splitter.setStretchFactor(2, 0)
-        splitter.setSizes([1, 1000, 500])
+        splitter.setStretchFactor(0, 2)
+        splitter.setStretchFactor(1, 0)
+        splitter.setSizes([1000, 500])
         # Final
         layout.addLayout(hlayout)
         layout.addWidget(splitter)
