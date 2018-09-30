@@ -73,7 +73,7 @@ class FilterTopN(AbstractCommand):
         """
         Tags to identify the condition
         """
-        return self._condition + ["create filter"]
+        return self._condition + ["filter"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
