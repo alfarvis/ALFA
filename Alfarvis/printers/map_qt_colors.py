@@ -13,4 +13,4 @@ def mapColor(color):
         return Qt.black
     elif color == 'w':
         return Qt.white
-    raise RuntimeError("Do not understoond color")
+    raise RuntimeError("Do not understand color")

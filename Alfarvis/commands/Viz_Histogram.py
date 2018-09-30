@@ -31,7 +31,7 @@ class VizHistogram(AbstractCommand):
         """
         Tags to identify the histogram command
         """
-        return ["histogram", "frequency plot"]
+        return ["histogram", "frequency plot", "plot"]
 
     def argumentTypes(self):
         """

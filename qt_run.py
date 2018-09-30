@@ -9,19 +9,21 @@ Uses Qt version of things through a GUI
 import re
 import sys
 from Alfarvis import create_alpha_module_dictionary
-from Alfarvis.qt_gui import QtGUI
+from Alfarvis.qt_gui import QtGUI, QtNotebookGUI
 from PyQt5.QtWidgets import QApplication
 from Alfarvis.printers import Printer
 from collections import deque
+from Alfarvis.parsers.parser_states import ParserStates
 
 
 class UserInputHandler(object):
     def __init__(self, user_input, completion_model,
-                 qt_app, alpha_module_dictionary):
+                 update_labels, qt_app, alpha_module_dictionary):
         self.user_input = user_input
         self.cmp = completion_model
         self.previous_input_text = deque(maxlen=10)
         self.buffer_index = -1
+        self.update_labels = update_labels
         self.qt_app = qt_app
         self.alpha_module_dictionary = alpha_module_dictionary
         self.user_input.returnPressed.connect(self.userPressedEnter)
@@ -54,9 +56,13 @@ class UserInputHandler(object):
 
     def userPressedEnter(self):
         input_text = self.user_input.text()
+        Printer.Print("______________________________________________________\n")
         Printer.UserPrint("User: " + input_text)
         Printer.Print("Alfa: ")
-        if input_text == "Bye" or input_text == "bye":
+        lower_text = input_text.lower()
+        if (('bye' in lower_text) or
+            (('quit' in lower_text or 'exit' in lower_text) and
+             self.alpha.parser.currentState != ParserStates.command_known_data_unknown)):
             print("Qutting Application!")
             self.qt_app.quit()
             return
@@ -83,6 +89,8 @@ class UserInputHandler(object):
                 self.addStringListToModel(self.cmp, last_names)
         else:
             Printer.Print("No alpha loaded!")
+        # Update ground truth etc
+        self.update_labels()
         self.previous_input_text.appendleft(input_text)
         self.user_input.clear()
         self.buffer_index = -1
@@ -114,18 +122,26 @@ class UserInputHandler(object):
             completion_model.setData(index, string)
 
 
-if __name__ == "__main__":  # pragma: no cover
+def main(gui_type='regular'):
     # Create alpha module dictionary
     if not QApplication.instance():
         app = QApplication(sys.argv)
     else:
         app = QApplication.instance()
     alpha_module_dictionary = create_alpha_module_dictionary()
-    qt_gui = QtGUI()
+    if gui_type == 'notebook':
+        qt_gui = QtNotebookGUI()
+    else:
+        qt_gui = QtGUI()
     Printer.Print("Input a text to receive response from Alfarvis")
     Printer.Print("Enter Bye to close the program")
     user_input_handler = UserInputHandler(qt_gui.user_input,
-                                          qt_gui.completion_model, app,
+                                          qt_gui.completion_model,
+                                          qt_gui.updateLabels, app,
                                           alpha_module_dictionary)
     qt_gui.showMaximized()
     app.exec_()
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main('regular')

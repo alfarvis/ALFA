@@ -25,7 +25,7 @@ class SavePreviousResult(AbstractCommand):
         """
         return tags that are used to identify save previous result command
         """
-        return ["save", "previous", "result"]
+        return ["save", "previous", "result", "save chat", "save notebook"]
 
     def argumentTypes(self):
         """
@@ -34,17 +34,24 @@ class SavePreviousResult(AbstractCommand):
         """
         return [Argument(keyword="history", optional=False,
                          argument_type=DataType.history),
-                Argument(keyword="name", optional=False,
+                Argument(keyword="user_conv", optional=False,
+                         argument_type=DataType.user_conversation),
+                Argument(keyword="name", optional=True,
                          tags=[Argument.Tag('as', Argument.TagPosition.After),
                                Argument.Tag(
                              'into', Argument.TagPosition.After)],
-                         argument_type=DataType.user_string)]
+                         argument_type=DataType.user_string, fill_from_cache=False)]
 
-    def evaluate(self, history, name):
+    def evaluate(self, history, user_conv, name=None):
         """
         Saves the last element from history and saves it with given name
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        if 'notebook' in user_conv.data or 'chat' in user_conv.data:
+            Printer.save(name)
+            return ResultObject(None, None, None, CommandStatus.Success)
+        if name is None:
+            return result_object
         try:
             previous_result = history.data.getLastObject()
             name_lower = name.data.lower()

@@ -5,6 +5,7 @@ Define mean command
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
+from .Stat_Container import StatContainer
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer

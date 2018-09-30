@@ -22,7 +22,7 @@ class SetRowLabels(AbstractCommand):
         """
         return tags that are used to identify set row labels command
         """
-        return ["setrl", "set","row labels"]
+        return ["setrl", "set","row","labels"]
 
     def argumentTypes(self):
         """

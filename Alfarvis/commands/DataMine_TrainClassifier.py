@@ -7,7 +7,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -81,12 +81,15 @@ class DM_TrainClassifier(AbstractCommand):
         X = scaler.transform(X)
 
         # Train the classifier
-        Printer.Print("Training classifier using the following features:")
-        Printer.Print(df.columns)
+        Printer.Print("Training the classifier")
+        df_show = pd.DataFrame()
+        df_show['Features'] = df.columns
+        
+        TablePrinter.printDataFrame(df_show)
         model.fit(X, Y)
 
         # Print an update
-        Printer.Print("The classifier", " ".join(classifier_algo.keyword_list),
+        Printer.Print("The classifier", classifier_algo.name,
                       "has been trained")
 
         predictions = model.predict(X)
