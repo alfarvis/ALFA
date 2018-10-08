@@ -59,7 +59,7 @@ class StatMean(AbstractCommand):
                     array_data.keyword_list,
                     command_name=self.commandTags()[0],
                     set_keyword_list=True)
-            Printer.Print("Mean of", array_data.name, "is", mean_val)
+            #Printer.Print("Mean of", array_data.name, "is", mean_val)
             df_new = pd.DataFrame()
             df_new['Feature']=[array_data.name]
             df_new['Mean']=[mean_val]
