@@ -119,3 +119,14 @@ class VizBarPlots(AbstractCommand):
         win.show()
 
         return VizContainer.createResult(win, array_datas, ['bar'])
+
+    def ArgNotFoundResponse(self,array_datas):
+        print("Which variables do you want me to plot?")
+    
+    def ArgFoundResponse(self,array_datas):
+        print("Found variables") # will only be called for commands with multiple args
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        print("I found multiple variables that seem to match your query")
+        print("Could you please look at the following variables and tell me which one you "
+              "want to plot?")
