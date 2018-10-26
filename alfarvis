@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+PS1='$ '
+source ~/.bashrc
+conda activate alfarvis
+if [ $? -ne 0 ]; then
+  echo "Failed to activate conda environment"
+  exit
+fi
+
+python ./qt_notebook.py

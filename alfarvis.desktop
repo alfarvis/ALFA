@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Mendeley Desktop
+GenericName=Research Paper Manager
+Comment=Mendeley Desktop is software for managing and sharing research papers
+Exec=alfarvis
+Icon=alfa
+Terminal=false
+Type=Application
+Categories=Education;Literature;Qt;

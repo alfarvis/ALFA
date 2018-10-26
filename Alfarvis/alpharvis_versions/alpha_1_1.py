@@ -6,18 +6,18 @@ Defines alpha 1.0
 from .abstract_alpha import AbstractAlpha
 from Alfarvis.parsers.parser_class import AlfaDataParser
 from Alfarvis.data_handlers.read_database import ReadDatabase
-from Alfarvis import package_directory
+from pathlib import Path
 from Alfarvis.basic_definitions import DataObject, DataType
 import os
 
 
 def add_basic_database(history):
-    data_base_path = os.path.join(package_directory,
-                                  'resources/file_database.csv')
+    data_base_path = os.path.join(str(Path.home()),
+                                  'AlfaDatabase/file_database.csv')
     if os.path.isfile(data_base_path):
         reader = ReadDatabase()
-        data_base_object = DataObject('file_database.csv',
-                                      ['basic', 'database'])
+        data_base_object = DataObject(data_base_path,
+                                      ['startup', 'database'])
         history.add(DataType.data_base, data_base_object.keyword_list,
                     data_base_object)
         results = reader.read(data_base_object.data,

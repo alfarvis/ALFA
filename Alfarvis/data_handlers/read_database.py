@@ -43,8 +43,9 @@ class ReadDatabase(AbstractReader):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         skipped_files = 0
-        file_path = os.path.join(package_directory, 'resources',
-                                 file_path)
+        if not os.path.isfile(file_path):
+            file_path = os.path.join(package_directory, 'resources',
+                    file_path)
         if os.path.isfile(file_path):
             # try:
             data_frame = pd.read_csv(file_path)
