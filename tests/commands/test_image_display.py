@@ -44,7 +44,7 @@ class TestImageDisplay(unittest.TestCase):
         self.assertEqual(result_object.command_status, CommandStatus.Error)
         # Use real image
         image_data = imread(os.path.join(
-            package_directory, 'resources', 'image.jpg'))
+            package_directory, 'test_data', 'image.jpg'))
         data_object.data = image_data
         result_object = image_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Success)

@@ -39,7 +39,7 @@ class TestLoad(unittest.TestCase):
         result_object = load_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Error)
         file_name_data_object.path = os.path.join(
-            package_directory, 'resources', 'data.csv')
+            package_directory, 'test_data', 'data.csv')
         file_name_data_object.data_type = DataType.csv
         file_name_object.data = file_name_data_object
 
