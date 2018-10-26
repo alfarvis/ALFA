@@ -7,6 +7,7 @@ from .abstract_alpha import AbstractAlpha
 from Alfarvis.parsers.parser_class import AlfaDataParser
 from Alfarvis.data_handlers.read_database import ReadDatabase
 from pathlib import Path
+from Alfarvis import package_directory
 from Alfarvis.basic_definitions import DataObject, DataType
 import os
 
@@ -14,6 +15,9 @@ import os
 def add_basic_database(history):
     data_base_path = os.path.join(str(Path.home()),
                                   'AlfaDatabase/file_database.csv')
+    if not os.path.isfile(data_base_path):
+        data_base_path = os.path.join(package_directory,
+                'resources/file_database.csv')
     if os.path.isfile(data_base_path):
         reader = ReadDatabase()
         data_base_object = DataObject(data_base_path,
