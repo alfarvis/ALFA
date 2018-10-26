@@ -4,6 +4,6 @@ GenericName=Research Paper Manager
 Comment=Natural language based data analysis software
 Exec=~/.Alfarvis/alfarvis
 Icon=alfa
-Terminal=true
+Terminal=false
 Type=Application
 Categories=Education;Literature;Qt;
