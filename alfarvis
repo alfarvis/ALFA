@@ -6,5 +6,6 @@ if [ $? -ne 0 ]; then
   echo "Failed to activate conda environment"
   exit
 fi
+CUR_DIR=`dirname "$0"`
 
-python ./qt_notebook.py
+python $CUR_DIR/qt_notebook.py
