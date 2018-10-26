@@ -5,7 +5,6 @@ channels:
 dependencies:
   - scipy
   - numpy
-  - nltk
   - pandas
   - seaborn
   - scikit-image

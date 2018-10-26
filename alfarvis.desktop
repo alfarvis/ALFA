@@ -1,9 +1,9 @@
 [Desktop Entry]
-Name=Mendeley Desktop
+Name=Alfarvis
 GenericName=Research Paper Manager
-Comment=Mendeley Desktop is software for managing and sharing research papers
-Exec=alfarvis
+Comment=Natural language based data analysis software
+Exec=~/.Alfarvis/alfarvis
 Icon=alfa
-Terminal=false
+Terminal=true
 Type=Application
 Categories=Education;Literature;Qt;
