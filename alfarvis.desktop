@@ -2,7 +2,7 @@
 Name=Alfarvis
 GenericName=Research Paper Manager
 Comment=Natural language based data analysis software
-Exec=~/.Alfarvis/alfarvis
+Exec=~/.Alfarvis/alfa
 Icon=alfa
 Terminal=false
 Type=Application
