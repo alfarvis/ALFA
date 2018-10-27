@@ -51,7 +51,7 @@ if [ $? -ne 0 ]; then
 fi
 cd .Alfarvis
 git checkout installation_script
-chmod +x alfarvis alfa_notebook.py alfa_gui.py alfa_terminal.py
+chmod +x alfa alfa_notebook.py alfa_gui.py alfa_terminal.py
 conda env create -f environment.yaml
 #if [ $? -ne 0 ]; then
 #  echo "Failed to create environment"
