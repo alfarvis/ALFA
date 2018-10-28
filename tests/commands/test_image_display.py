@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import unittest
 from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
 from Alfarvis import package_directory, create_command_database

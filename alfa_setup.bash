@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 PS1='$ '
 # Check if conda already installed
-source ~/.bashrc
+source ~/.bash_profile
 conda info > /dev/null
 if [ $? -eq 0 ]; then
   echo "Conda already installed"
@@ -28,10 +28,10 @@ if [ $CONDA_INSTALLED = false ]; then
   fi
   wget "https://repo.continuum.io/archive/$FILE_NAME"
   bash $FILE_NAME -b -p ~/anaconda
-  echo 'export PATH="~/anaconda/bin:$PATH"' >> ~/.bashrc 
+  echo 'export PATH="~/anaconda/bin:$PATH"' >> ~/.bash_profile
 
   # Refresh basically
-  source ~/.bashrc
+  source ~/.bash_profile
 
   conda update conda
 
@@ -50,7 +50,7 @@ if [ $? -ne 0 ]; then
   exit
 fi
 cd .Alfarvis
-git checkout installation_script
+git checkout mac_installation
 chmod +x alfa alfa_notebook.py alfa_gui.py alfa_terminal.py
 conda env create -f environment.yaml
 #if [ $? -ne 0 ]; then
@@ -61,8 +61,8 @@ conda env create -f environment.yaml
 mkdir $HOME/AlfaDatabase
 cp ./Alfarvis/resources/* $HOME/AlfaDatabase/
 # Add to path maynot be necessary
-echo 'export PATH="~/.Alfarvis:$PATH"' >> ~/.bashrc
+echo 'export PATH="~/.Alfarvis:$PATH"' >> ~/.bash_profile
 # Copy desktop file
 cp alfarvis.desktop ~/Desktop/
 cp ./alfa.png ~/.local/share/icons/
-source ~/.bashrc
+source ~/.bash_profile

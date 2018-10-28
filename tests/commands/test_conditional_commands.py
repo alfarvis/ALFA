@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import unittest
 from Alfarvis.basic_definitions import CommandStatus, DataObject
 from Alfarvis.commands.conditional_commands import (LessThan, Between,

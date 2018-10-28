@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 """
 Main executable that calls alpha with specified version
 and facilitates communication between user and alpha

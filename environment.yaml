@@ -3,6 +3,7 @@ channels:
   - defaults
   - conda-forge
 dependencies:
+  - python=3.6
   - scipy
   - numpy
   - pandas
@@ -12,6 +13,7 @@ dependencies:
   - pip
   - nose
   - lazyasd
+  - pyqt
   - pip:
     - namedlist==1.7
     - pep8
