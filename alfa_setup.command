@@ -43,13 +43,15 @@ if [ $CONDA_INSTALLED = false ]; then
   cd $CURRENT_DIR
 fi
 cd $HOME
-rm -rf .Alfarvis
-git clone https://github.com/garimellagowtham/Alfarvis .Alfarvis
+rm -rf Alfa.app
+mkdir -p Alfa.app/Contents/
+cd Alfa.app/Contents
+git clone https://garimellagowtham@github.com/garimellagowtham/Alfarvis MacOS
 if [ $? -ne 0 ]; then
   echo "Failed to clone Alfa"
   exit
 fi
-cd .Alfarvis
+cd MacOS
 git checkout mac_installation
 chmod +x alfa alfa_notebook.py alfa_gui.py alfa_terminal.py
 conda env create -f environment.yaml
@@ -61,8 +63,26 @@ conda env create -f environment.yaml
 mkdir $HOME/AlfaDatabase
 cp ./Alfarvis/resources/* $HOME/AlfaDatabase/
 # Add to path maynot be necessary
-echo 'export PATH="~/.Alfarvis:$PATH"' >> ~/.bash_profile
-# Copy desktop file
-cp alfarvis.desktop ~/Desktop/
-cp ./alfa.png ~/.local/share/icons/
+#echo 'export PATH="~/.Alfarvis:$PATH"' >> ~/.bash_profile
 source ~/.bash_profile
+### Create ICONS
+ORIGICON=./alfa.png
+PROJECT=Alfa
+ICONDIR=../Resources/$PROJECT.iconset
+
+mkdir -p $ICONDIR
+
+# Normal screen icons
+for SIZE in 16 32 64 128 256 512; do
+sips -z $SIZE $SIZE $ORIGICON --out $ICONDIR/icon_${SIZE}x${SIZE}.png ;
+done
+
+# Retina display icons
+for SIZE in 32 64 256 512 1024; do
+sips -z $SIZE $SIZE $ORIGICON --out $ICONDIR/icon_$(expr $SIZE / 2)x$(expr $SIZE / 2)@2x.png ;
+done
+
+# Make a multi-resolution Icon
+iconutil -c icns -o $HOME/$PROJECT.app/Contents/Resources/$PROJECT.icns $ICONDIR
+#rm -rf $ICONDIR #it is useless now
+#########
