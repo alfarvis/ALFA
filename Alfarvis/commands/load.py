@@ -80,15 +80,15 @@ class Load(AbstractCommand):
         return result_object
 
     def ArgNotFoundResponse(self,file_name):
-        print("Couldn't find the file you are looking for...")
-        print("Which file do you want me to load?")
+        Printer.Print("Couldn't find the file you are looking for...")
+        Printer.Print("Which file do you want me to load?")
     
     def ArgFoundResponse(self,file_name):
-        print("Found file") #Won't be called for load
+        Printer.Print("Found file") #Won't be called for load
         
     def MultipleArgsFoundResponse(self, file_name):
-        print("I found multiple files that seem to match your query")
-        print("Could you please look at the following files and tell me which one you "
+        Printer.Print("I found multiple files that seem to match your query")
+        Printer.Print("Could you please look at the following files and tell me which one you "
               "want to load?")
         
         
