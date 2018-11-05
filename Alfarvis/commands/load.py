@@ -54,8 +54,12 @@ class Load(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         if file_name.data_type is DataType.figure:
             Printer.Print("Loading figure ", ' '.join(file_name.keyword_list))
-            VizContainer.current_figure = file_name.data.gcf()
-            file_name.data.show()
+            if type(file_name.data) == list:
+                win = file_name.data[0]
+            else:
+                win = file_name.data
+            VizContainer.current_figure = win.gcf()
+            win.show()
             return ResultObject(None, None, None, CommandStatus.Success)
 
         if file_name.data.loaded:

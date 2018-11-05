@@ -7,10 +7,11 @@ from PyQt5.QtWidgets import QApplication
 from Alfarvis.qt_gui.qt_custom_line_edit import QCustomLineEdit
 from Alfarvis.tab_manager.qt_tab_manager import QTabManager
 from Alfarvis.windows.qt_window import QtWindow
+from Alfarvis.windows.qt_property_editor import QtPropertyEditor
 from Alfarvis.printers.qt_printer import QtPrinter
 from Alfarvis.printers.qt_table_printer import QtTablePrinter
 from Alfarvis.printers import Printer, TablePrinter
-from Alfarvis.windows import Window
+from Alfarvis.windows import Window, PropertyEditor
 from Alfarvis.commands.Stat_Container import StatContainer
 
 
@@ -36,6 +37,7 @@ class QtGUI(QDialog):
         # Select global configs
         QTabManager.setParentWidget(self.tab_container)
         Window.selectWindowType(QtWindow)
+        PropertyEditor.property_editor_class = QtPropertyEditor
         Printer.selectPrinter(self.qt_printer)
         TablePrinter.selectPrinter(self.qt_table_printer)
         # Get screen resolution:
@@ -71,11 +73,16 @@ class QtGUI(QDialog):
         for i in range(3):
             hlayout.addWidget(self.ref_labels[i])
             hlayout.addWidget(self.labels[i])
+        # Add separate splitter for table and property editor
+        h_splitter = QSplitter(Qt.Vertical)
+        h_splitter.addWidget(self.qt_table_printer.table_widget)
+        h_splitter.setStretchFactor(0, 2)
+        PropertyEditor.parent_widget = h_splitter
         # Add chat,window, tab
         splitter = QSplitter(Qt.Horizontal)
         splitter.addWidget(self.qt_printer.text_box)
         splitter.addWidget(self.tab_container)
-        splitter.addWidget(self.qt_table_printer.table_widget)
+        splitter.addWidget(h_splitter)
         splitter.setStretchFactor(0, 0)
         splitter.setStretchFactor(1, 2)
         splitter.setStretchFactor(2, 0)

@@ -43,6 +43,18 @@ class VizBarPlots(AbstractCommand):
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array, number=-1)]
 
+    def createDefaultProperties(self):
+        properties = {}
+        properties["horizontal"] = False
+        properties["overwrite_labels"] = False
+        properties["ylabel"] = ''
+        properties["xlabel"] = ''
+        properties["title"] = ''
+        properties["invert"] = False
+        properties["color_map"] = "jet"
+        properties["rotation"] = 0
+        return properties
+
     def evaluate(self, array_datas):
         """
         Create a bar plot between multiple variables
@@ -57,7 +69,7 @@ class VizBarPlots(AbstractCommand):
 
         if StatContainer.ground_truth is None:
             gtVals = np.ones(df.shape[0])
-            ground_truth = 'ground_truth';
+            ground_truth = 'ground_truth'
         else:
             gtVals = StatContainer.filterGroundTruth()
             ground_truth = StatContainer.ground_truth.name
@@ -66,14 +78,13 @@ class VizBarPlots(AbstractCommand):
                 print(len(gtVals), df.shape[0])
                 gtVals = np.ones(df.shape[0])
                 ground_truth = 'ground_truth'
-                
+
         # Remove nans:
         df[ground_truth] = gtVals
         df.dropna(inplace=True)
         gtVals = df[ground_truth]
         uniqVals = StatContainer.isCategorical(gtVals)
         binned_ground_truth = False
-
         if uniqVals is None and np.issubdtype(gtVals.dtype, np.number):
             # Convert to categorical
             df[ground_truth] = pd.cut(gtVals, 10)
@@ -100,22 +111,40 @@ class VizBarPlots(AbstractCommand):
             Printer.Print("Please clear or select appropriate ground truth")
             return result_object
 
-        win = Window.window()
-        f = win.gcf()
-        ax = f.add_subplot(111)
+        properties = self.createDefaultProperties()
+        properties['title'] = cname
         if uniqVals is not None and isinstance(uniqVals[0], str):
             max_len = max([len(uniqVal) for uniqVal in uniqVals])
         else:
             max_len = 0
         if (binned_ground_truth or
             (uniqVals is not None and len(uniqVals) > 5 and max_len > 8)):
-            df_mean.plot.barh(xerr=df_errors, cmap="jet", ax=ax)
-        else:
-            df_mean.plot.bar(yerr=df_errors, cmap="jet", ax=ax, rot=10)
+            properties["horizontal"] = True
         if binned_ground_truth:
-            ax.set_ylabel(StatContainer.ground_truth.name)
-            ax.set_xlabel('')
-        ax.set_title(cname)
-        win.show()
+            properties["overwrite_labels"] = True
+            properties["ylabel"] = StatContainer.ground_truth.name
+        win = Window.window()
+        result_object = VizContainer.createResult(win, array_datas, ['bar'])
+        result_object.data = [win, properties, [df_mean, df_errors], self.updateFigure]
+        self.updateFigure(result_object.data)
+        return result_object
 
-        return VizContainer.createResult(win, array_datas, ['bar'])
+    def updateFigure(self, result_data):
+        win = result_data[0]
+        f = win.gcf()
+        f.clear()
+        ax = f.add_subplot(111)
+        properties = result_data[1]
+        data = result_data[2]
+        if properties["invert"]:
+            data[0] = data[0].T
+            data[1] = data[1].T
+        if properties["horizontal"]:
+            data[0].plot.barh(xerr=data[1], cmap=properties["color_map"], ax=ax)
+        else:
+            data[0].plot.bar(yerr=data[1], cmap=properties["color_map"], ax=ax, rot=properties["rotation"])
+        if properties["overwrite_labels"]:
+            ax.set_xlabel(properties["xlabel"])
+            ax.set_ylabel(properties["ylabel"])
+        ax.set_title(properties["title"])
+        win.show()
