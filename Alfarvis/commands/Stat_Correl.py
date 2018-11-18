@@ -75,3 +75,14 @@ class Stat_Correl(AbstractCommand):
                     cmap='jet', ax=ax)
         win.show()
         return VizContainer.createResult(win, array_datas, ['correlation'])
+
+    def ArgNotFoundResponse(self,arg_name):
+        Printer.Print("Which variables do you want me to correlate?")
+    
+    def ArgFoundResponse(self,arg_name):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, arg_name):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to correlate?")

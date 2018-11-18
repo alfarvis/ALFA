@@ -370,9 +370,13 @@ class AlfaDataParser:
             #Printer.Print("\nChecking for arguments...\n")
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
-                Printer.Print("Argument ", arg, "found")
-                Printer.Print("Matching argument: ",
-                self.printArguments(self.argumentsFound[arg]))
+                try:
+                    self.currentCommand.ArgFoundResponse(arg)
+                    self.printArguments(self.argumentsFound[arg])
+                except:  
+                    Printer.Print("Argument ", arg, "found")
+                    Printer.Print("Matching argument: ",
+                    self.printArguments(self.argumentsFound[arg]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
                     try:

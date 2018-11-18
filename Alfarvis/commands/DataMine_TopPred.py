@@ -105,3 +105,21 @@ class DM_topPredictor(AbstractCommand):
                           set_keyword_list=True)
 
         return result_object
+    
+    def ArgNotFoundResponse(self,arg_name):
+        if arg_name=="data_frame":
+            Printer.Print("Which data frame do you want me to classify?")
+        else:
+            Printer.Print("How many predictors do you want?")
+    
+    def ArgFoundResponse(self,arg_name):
+        if arg_name=="data_frame":
+            Printer.Print("Found the data frame") 
+        else:
+            Printer.Print("Number of top predictors to extract:") 
+        
+    def MultipleArgsFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("I found multiple data frames that seem to match your query")
+            Printer.Print("Could you please look at the following data frames and tell me which one you "
+                  "want to classify?")

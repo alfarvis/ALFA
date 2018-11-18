@@ -45,7 +45,7 @@ class DM_TrainClassifier(AbstractCommand):
         # TODO Add an argument for k = number of clusters
         return [Argument(keyword="data_frame", optional=True,
                          argument_type=DataType.csv, number=1),
-                         Argument(keyword="classifier_algo", optional=True,
+                         Argument(keyword="classifier_algo", optional=False,
                          argument_type=DataType.algorithm_arg)]
 
     def evaluate(self, data_frame, classifier_algo):
@@ -99,3 +99,22 @@ class DM_TrainClassifier(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
         return result_object
+
+    def ArgNotFoundResponse(self,arg_name):
+        if arg_name=="data_frame":
+            Printer.Print("Which data frame do you want me to classify?")
+        else:
+            Printer.Print("Which classifiers do you want me to test?")
+    
+    def ArgFoundResponse(self,arg_name):
+        if arg_name=="data_frame":
+            Printer.Print("Found the data frame") 
+        else:
+            Printer.Print("Found the classification models to test") 
+        
+    def MultipleArgsFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("I found multiple data frames that seem to match your query")
+            Printer.Print("Could you please look at the following data frames and tell me which one you "
+                  "want to classify?")
+        

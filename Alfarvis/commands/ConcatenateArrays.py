@@ -57,3 +57,14 @@ class ConcatenateArrays(AbstractCommand):
         TablePrinter.printDataFrame(df)
         
         return result_object
+    
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable(s) do you want me to concatenate?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to concatenate?")

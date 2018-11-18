@@ -172,6 +172,16 @@ class FilterTopN(AbstractCommand):
             result = ResultObject(None, None, None, CommandStatus.Success)
         return result
 
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable do you want me to filter?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to filter?")
 
 class FilterBottomN(FilterTopN):
 
@@ -327,6 +337,17 @@ class LessThan(AbstractCommand):
             out[non_filt_idx] = False
         return self.createResult(out, keyword_list, create_name)
 
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable do you want me to filter?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to filter?")
+
 
 class LessThanEqual(LessThan):
 
@@ -463,6 +484,17 @@ class Between(AbstractCommand):
             return self.createResult(out, array_data.keyword_list)
         return ResultObject(None, None, None, CommandStatus.Error)
 
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable do you want me to filter?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to filter?")
+
 
 class Outside(AbstractCommand):
     """
@@ -499,6 +531,17 @@ class Outside(AbstractCommand):
         result.createName(array_data.keyword_list, command_name='outside',
                           set_keyword_list=True)
         return result
+
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable do you want me to filter?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to filter?")
 
 
 class Contains(AbstractCommand):
@@ -546,6 +589,17 @@ class Contains(AbstractCommand):
         result.createName(array_data.keyword_list, split_target,
                           command_name='contains', set_keyword_list=True)
         return result
+
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable do you want me to filter?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to filter?")
 
 # Combine conditions
 
@@ -615,6 +669,17 @@ class LogicalAnd(AbstractCommand):
                           command_name=self._add_tags[0],
                           set_keyword_list=True)
         return result
+
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable do you want me to filter?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to filter?")
 
 
 class LogicalOr(LogicalAnd):

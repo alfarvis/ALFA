@@ -100,3 +100,14 @@ class StatSigTest(AbstractCommand):
         result_object.createName(cname, command_name='ttest',
                           set_keyword_list=True)
         return result_object
+    
+    def ArgNotFoundResponse(self,array_datas):
+        Printer.Print("Which variable(s) do you want me to analyze?")
+    
+    def ArgFoundResponse(self,array_datas):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
+    def MultipleArgsFoundResponse(self, array_datas):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to analyze?")
