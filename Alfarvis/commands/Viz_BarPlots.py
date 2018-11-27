@@ -16,12 +16,14 @@ from .Stat_Container import StatContainer
 from .Viz_Container import VizContainer
 import pandas as pd
 from Alfarvis.Toolboxes.DataGuru import DataGuru
+from .modify_figure import ModifyFigure
 
 
 class VizBarPlots(AbstractCommand):
     """
     Plot multiple features on a single bar plot with error bars
     """
+    modify_figure = ModifyFigure()
 
     def briefDescription(self):
         return "bar plot an array"
@@ -127,6 +129,7 @@ class VizBarPlots(AbstractCommand):
         result_object = VizContainer.createResult(win, array_datas, ['bar'])
         result_object.data = [win, properties, [df_mean, df_errors], self.updateFigure]
         self.updateFigure(result_object.data)
+        self.modify_figure.evaluate(result_object)
         return result_object
 
     def updateFigure(self, result_data):
