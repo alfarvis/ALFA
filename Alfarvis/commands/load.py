@@ -79,16 +79,8 @@ class Load(AbstractCommand):
                           "in the specified location")
         return result_object
 
-    def ArgNotFoundResponse(self,file_name):
-        Printer.Print("Couldn't find the file you are looking for...")
-        Printer.Print("Which file do you want me to load?")
-    
-    def ArgFoundResponse(self,file_name):
-        Printer.Print("Found file") #Won't be called for load
-        
+    def ArgNotFoundResponse(self, file_name):
+        super().ArgNotFoundResponse(file_name, 'file', 0)
+
     def MultipleArgsFoundResponse(self, file_name):
-        Printer.Print("I found multiple files that seem to match your query")
-        Printer.Print("Could you please look at the following files and tell me which one you "
-              "want to load?")
-        
-        
+        super().MultipleArgsFoundResponse(file_name, 'files', 0)

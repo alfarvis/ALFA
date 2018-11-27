@@ -109,16 +109,12 @@ class Stat_Labelwise_Count(AbstractCommand):
 
         return result_objects
 
-    def ArgNotFoundResponse(self,arg_name):
-        Printer.Print("Which variables do you want me to analyze?")
-    
-    def ArgFoundResponse(self,arg_name):
-        Printer.Print("Found variables") # will only be called for commands with multiple arg types
-        
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
     def MultipleArgsFoundResponse(self, arg_name):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to analyze?")
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)
+
 
 class Stat_Labelwise_Mean(Stat_Labelwise_Count):
     def briefDescription(self):

@@ -51,16 +51,6 @@ class SetGT(AbstractCommand):
             array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
 
-    def ArgNotFoundResponse(self,array_datas):
-        Printer.Print("Which variable do you want me to set as reference?")
-    
-    def ArgFoundResponse(self,array_datas):
-        Printer.Print("Found variables") # will only be called for commands with multiple arg types
-        
-    def MultipleArgsFoundResponse(self, array_datas):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to set as reference?")
 
 class ClearGT(AbstractCommand):
     """

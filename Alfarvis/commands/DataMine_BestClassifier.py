@@ -59,7 +59,7 @@ class DM_BestClassifier(AbstractCommand):
         sns.set(color_codes=True)
         df = data_frame.data
         #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        #if command_status == CommandStatus.Error:
+        # if command_status == CommandStatus.Error:
         #    return ResultObject(None, None, None, CommandStatus.Error)
 
         # Get the ground truth array
@@ -97,13 +97,13 @@ class DM_BestClassifier(AbstractCommand):
                       'k fold cross validation...')
 
         all_cv_scores, all_mean_cv_scores, all_confusion_matrices = DataGuru.FindBestClassifier(X, Y, modelList, 10)
-        
+
         Printer.Print('\n\nPlotting the confusion matrices...\n')
         for iter in range(len(modelList)):
             win = Window.window()
             f = win.gcf()
             ax = f.add_subplot(111)
-            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), ax,title=modelList[iter]['Name'])
+            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), ax, title=modelList[iter]['Name'])
             win.show()
 
         Printer.Print("\n\nBest classifier is " + modelList[np.argmax(all_mean_cv_scores)]['Name'] + " with an accuracy of -  %.2f%% " % max(all_mean_cv_scores))
@@ -113,22 +113,11 @@ class DM_BestClassifier(AbstractCommand):
 
         return result_object
 
-    def ArgNotFoundResponse(self,arg_name):
-        if arg_name=="data_frame":
-            Printer.Print("Which data frame do you want me to classify?")
-        else:
-            Printer.Print("Which classifiers do you want me to test?")
-    
-    def ArgFoundResponse(self,arg_name):
-        if arg_name=="data_frame":
-            Printer.Print("Found the data frame") 
-        else:
-            Printer.Print("Found the classification models to test") 
-        
+    def ArgNotFoundResponse(self, arg_name):
+        super().DataMineArgNotFoundResponse(arg_name)
+
+    def ArgFoundResponse(self, arg_name):
+        super().DataMineArgFoundResponse(arg_name)
+
     def MultipleArgsFoundResponse(self, arg_name):
-        if arg_name == "data_frame":
-            Printer.Print("I found multiple data frames that seem to match your query")
-            Printer.Print("Could you please look at the following data frames and tell me which one you "
-                  "want to classify?")
-        
-                
+        super().DataMineMultipleArgsFoundResponse(arg_name)

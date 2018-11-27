@@ -22,7 +22,7 @@ class SetRowLabels(AbstractCommand):
         """
         return tags that are used to identify set row labels command
         """
-        return ["setrl", "set","row","labels"]
+        return ["setrl", "set", "row", "labels", "row labels"]
 
     def argumentTypes(self):
         """
@@ -41,21 +41,11 @@ class SetRowLabels(AbstractCommand):
         if StatContainer.row_labels is not None:
             TablePrinter.clearBackGround(StatContainer.row_labels.name)
         StatContainer.row_labels = array_data
-        TablePrinter.highlight(StatContainer.row_labels.name,color='b')
+        TablePrinter.highlight(StatContainer.row_labels.name, color='b')
         Printer.Print("Setting row label to ", " ".join(
             array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)
 
-    def ArgNotFoundResponse(self,array_datas):
-        Printer.Print("Which variable do you want me to set as row labels?")
-    
-    def ArgFoundResponse(self,array_datas):
-        Printer.Print("Found variables") # will only be called for commands with multiple arg types
-        
-    def MultipleArgsFoundResponse(self, array_datas):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to set as row labels?")
 
 class ClearRL(AbstractCommand):
     """

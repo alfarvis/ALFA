@@ -12,6 +12,7 @@ from .Stat_Container import StatContainer
 import numpy as np
 from Alfarvis.printers import Printer
 
+
 class StatDiff(AbstractCommand):
     """
     subtract two arrays
@@ -62,13 +63,8 @@ class StatDiff(AbstractCommand):
                 set_keyword_list=True)
         return result_object
 
-    def ArgNotFoundResponse(self,arg_name):
-        Printer.Print("Which variables do you want me to subtract?")
-    
-    def ArgFoundResponse(self,arg_name):
-        Printer.Print("Found variables") # will only be called for commands with multiple arg types
-        
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'subtract')
+
     def MultipleArgsFoundResponse(self, arg_name):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to subtract?")
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'subtract')

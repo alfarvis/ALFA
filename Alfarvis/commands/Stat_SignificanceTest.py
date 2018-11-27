@@ -20,6 +20,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from Alfarvis.Toolboxes.DataGuru import DataGuru
 
+
 class StatSigTest(AbstractCommand):
     """
     Calculates ttest for a predictor variable
@@ -67,7 +68,7 @@ class StatSigTest(AbstractCommand):
                 print("The size of the ground truth does not match with arrays being analyzed")
                 print(len(gtVals), df.shape[0])
                 return ResultObject(None, None, None, CommandStatus.Error)
-        
+
         uniqVals = StatContainer.isCategorical(gtVals)
         df[ground_truth] = gtVals
         df_new = pd.DataFrame()
@@ -75,39 +76,34 @@ class StatSigTest(AbstractCommand):
             df_new['features'] = df.columns.drop(ground_truth).values
         else:
             df_new['features'] = df.columns
-        
+
         allCols = df_new['features']
         for iter in range(len(uniqVals)):
-            for iter1 in range(iter+1,len(uniqVals)):
+            for iter1 in range(iter + 1, len(uniqVals)):
                 df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)] = np.zeros(df_new.shape[0])
-                    
+
         for iter_feature in range(len(df_new['features'])):
             arr = df[allCols[iter_feature]]
             for iter in range(len(uniqVals)):
                 uniV = uniqVals[iter]
                 a = arr[gtVals == uniV]
-                for iter1 in range(iter+1, len(uniqVals)):
+                for iter1 in range(iter + 1, len(uniqVals)):
                     b = arr[gtVals == uniqVals[iter1]]
                     if uniV != uniqVals[iter1]:
                         ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
                         df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = (ttest_val.pvalue)
                     else:
                         df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
-                        
+
         TablePrinter.printDataFrame(df_new)
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
         result_object.createName(cname, command_name='ttest',
                           set_keyword_list=True)
         return result_object
-    
-    def ArgNotFoundResponse(self,array_datas):
-        Printer.Print("Which variable(s) do you want me to analyze?")
-    
-    def ArgFoundResponse(self,array_datas):
-        Printer.Print("Found variables") # will only be called for commands with multiple arg types
-        
-    def MultipleArgsFoundResponse(self, array_datas):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to analyze?")
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)

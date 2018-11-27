@@ -57,7 +57,7 @@ class VizBarPlots(AbstractCommand):
 
         if StatContainer.ground_truth is None:
             gtVals = np.ones(df.shape[0])
-            ground_truth = 'ground_truth';
+            ground_truth = 'ground_truth'
         else:
             gtVals = StatContainer.filterGroundTruth()
             ground_truth = StatContainer.ground_truth.name
@@ -66,7 +66,7 @@ class VizBarPlots(AbstractCommand):
                 print(len(gtVals), df.shape[0])
                 gtVals = np.ones(df.shape[0])
                 ground_truth = 'ground_truth'
-                
+
         # Remove nans:
         df[ground_truth] = gtVals
         df.dropna(inplace=True)
@@ -120,13 +120,8 @@ class VizBarPlots(AbstractCommand):
 
         return VizContainer.createResult(win, array_datas, ['bar'])
 
-    def ArgNotFoundResponse(self,array_datas):
-        Printer.Print("Which variables do you want me to plot?")
-    
-    def ArgFoundResponse(self,array_datas):
-        Printer.Print("Found variables") # will only be called for commands with multiple args
-        
-    def MultipleArgsFoundResponse(self, array_datas):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to plot?")
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'plot')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'plot')
