@@ -8,8 +8,9 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import numpy
+import pandas as pd
 
 
 class StatStdev(AbstractCommand):
@@ -56,8 +57,13 @@ class StatStdev(AbstractCommand):
                     array_data.keyword_list,
                     command_name=self.commandTags()[0],
                     set_keyword_list=True)
-            Printer.Print("Standard deviation of", array_data.name,
-                          "is", std_val)
+            df_new = pd.DataFrame()
+            df_new['Feature']=[array_data.name]
+            df_new['Standard Deviation']=[std_val]
+            TablePrinter.printDataFrame(df_new)
+            
+            #Printer.Print("Standard deviation of", array_data.name,
+            #              "is", std_val)
         else:
             Printer.Print("The array is not of numeric type so cannot",
                           "find stdev")

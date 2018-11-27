@@ -33,7 +33,7 @@ class VizBarPlots(AbstractCommand):
         """
         Tags to identify the bar plot command
         """
-        return ["bar plot", "plot"]
+        return ["bar", "plot"]
 
     def argumentTypes(self):
         """

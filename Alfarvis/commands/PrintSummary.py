@@ -97,7 +97,7 @@ class DataGroupSummary(DataSummary):
                 df_new[str(uniqVals[iter]) + '_mean'] = gb_mean.values[:, iter]
                 df_new[str(uniqVals[iter]) + '_stdev'] = gb_std.values[:, iter]
             for iter in range(len(uniqVals)):
-                for iter1 in range(len(uniqVals)):
+                for iter1 in range(iter+1,len(uniqVals)):
                     df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)] = np.zeros(df_new.shape[0])
             allCols = df_new['features']
             for iter_feature in range(len(df_new['features'])):
@@ -105,11 +105,11 @@ class DataGroupSummary(DataSummary):
                 for iter in range(len(uniqVals)):
                     uniV = uniqVals[iter]
                     a = arr[gtVals == uniV]
-                    for iter1 in range(len(uniqVals)):
+                    for iter1 in range(iter+1,len(uniqVals)):
                         b = arr[gtVals == uniqVals[iter1]]
                         if uniV != uniqVals[iter1]:
                             ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
                             df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = (ttest_val.pvalue)
-                        else:
-                            df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
+                        #else:
+                        #    df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
         return df_new

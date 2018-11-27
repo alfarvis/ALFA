@@ -7,9 +7,10 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import numpy
 from .Stat_Container import StatContainer
+import pandas as pd
 
 
 class StatMin(AbstractCommand):
@@ -81,9 +82,14 @@ class StatMin(AbstractCommand):
                 set_keyword_list=True)
         result_objects.append(result_object)
 
+        # Create a dataframe to store the results
+        df_new = pd.DataFrame()
+        df_new['Feature'] = [array_data.name]
+        df_new['Minimum'] = [min_val]
         if StatContainer.row_labels is not None:
-            Printer.Print("Minimum of", array_data.name, "is", min_val, "corresponding to", min_rl)
-        else:
-            Printer.Print("Minimum of", array_data.name, "is", min_val)
-
+            df_new[StatContainer.row_labels.name] = [min_rl]
+            #Printer.Print("Minimum of", array_data.name, "is", min_val, "corresponding to", min_rl)
+        #else:
+            #Printer.Print("Minimum of", array_data.name, "is", min_val)
+        TablePrinter.printDataFrame(df_new)
         return result_objects
