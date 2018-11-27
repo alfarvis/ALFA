@@ -69,13 +69,8 @@ class CreateCategoricalFromLogical(AbstractCommand):
         Printer.Print('Saving filter as', result_filter.name)
         return [result, result_filter]
 
-    def ArgNotFoundResponse(self,array_datas):
-        Printer.Print("Which variable(s) do you want me to combine?")
-    
-    def ArgFoundResponse(self,array_datas):
-        Printer.Print("Found variables") # will only be called for commands with multiple arg types
-        
-    def MultipleArgsFoundResponse(self, array_datas):
-        Printer.Print("I found multiple variables that seem to match your query")
-        Printer.Print("Could you please look at the following variables and tell me which one you "
-              "want to combine?")
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'combine')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'combine')
