@@ -53,6 +53,8 @@ class Stat_Labelwise_Count(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        if isinstance(array_datas, list) and len(array_datas) == 0:
+            return result_object
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
             array_datas)
         if command_status == CommandStatus.Error:
