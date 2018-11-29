@@ -172,6 +172,12 @@ class FilterTopN(AbstractCommand):
             result = ResultObject(None, None, None, CommandStatus.Success)
         return result
 
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'filter')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'filter')
+
 
 class FilterBottomN(FilterTopN):
 
@@ -327,6 +333,12 @@ class LessThan(AbstractCommand):
             out[non_filt_idx] = False
         return self.createResult(out, keyword_list, create_name)
 
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'filter')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'filter')
+
 
 class LessThanEqual(LessThan):
 
@@ -463,6 +475,12 @@ class Between(AbstractCommand):
             return self.createResult(out, array_data.keyword_list)
         return ResultObject(None, None, None, CommandStatus.Error)
 
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'filter')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'filter')
+
 
 class Outside(AbstractCommand):
     """
@@ -499,6 +517,12 @@ class Outside(AbstractCommand):
         result.createName(array_data.keyword_list, command_name='outside',
                           set_keyword_list=True)
         return result
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'filter')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'filter')
 
 
 class Contains(AbstractCommand):
@@ -546,6 +570,13 @@ class Contains(AbstractCommand):
         result.createName(array_data.keyword_list, split_target,
                           command_name='contains', set_keyword_list=True)
         return result
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'filter')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'filter')
+
 
 # Combine conditions
 
@@ -615,6 +646,12 @@ class LogicalAnd(AbstractCommand):
                           command_name=self._add_tags[0],
                           set_keyword_list=True)
         return result
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'filter')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'filter')
 
 
 class LogicalOr(LogicalAnd):

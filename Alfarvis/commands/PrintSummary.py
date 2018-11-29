@@ -66,6 +66,15 @@ class DataSummary(AbstractCommand):
 
         return result_object
 
+    def ArgNotFoundResponse(self, arg_name):
+        Printer.Print("Which data frame do you want me to summarize?")
+
+    def ArgFoundResponse(self, arg_name):
+        Printer.Print("Found the data frame")
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().MultipleArgsFoundResponse(file_name, 'data frames', 0)
+
 
 class DataGroupSummary(DataSummary):
 

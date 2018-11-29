@@ -111,8 +111,15 @@ class Stat_Labelwise_Count(AbstractCommand):
 
         return result_objects
 
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)
+
 
 class Stat_Labelwise_Mean(Stat_Labelwise_Count):
+
     def briefDescription(self):
         return "find labelwise mean of categories in an array"
 
@@ -124,6 +131,7 @@ class Stat_Labelwise_Mean(Stat_Labelwise_Count):
 
 
 class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
+
     def briefDescription(self):
         return "find labelwise stdev of categories in an array"
 
@@ -135,6 +143,7 @@ class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
 
 
 class Stat_Labelwise_Sum(Stat_Labelwise_Count):
+
     def briefDescription(self):
         return "find labelwise sum of elements in categories"
 

@@ -94,3 +94,9 @@ class VizHistogram(AbstractCommand):
         win.show()
 
         return VizContainer.createResult(win, array_datas, ['histogram', 'hist'])
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'plot')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'plot')
