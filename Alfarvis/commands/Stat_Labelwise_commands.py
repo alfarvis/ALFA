@@ -53,6 +53,8 @@ class Stat_Labelwise_Count(AbstractCommand):
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
+        if isinstance(array_datas, list) and len(array_datas) == 0:
+            return result_object
         command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
             array_datas)
         if command_status == CommandStatus.Error:
@@ -117,6 +119,7 @@ class Stat_Labelwise_Count(AbstractCommand):
 
 
 class Stat_Labelwise_Mean(Stat_Labelwise_Count):
+
     def briefDescription(self):
         return "find labelwise mean of categories in an array"
 
@@ -128,6 +131,7 @@ class Stat_Labelwise_Mean(Stat_Labelwise_Count):
 
 
 class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
+
     def briefDescription(self):
         return "find labelwise stdev of categories in an array"
 
@@ -139,6 +143,7 @@ class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
 
 
 class Stat_Labelwise_Sum(Stat_Labelwise_Count):
+
     def briefDescription(self):
         return "find labelwise sum of elements in categories"
 

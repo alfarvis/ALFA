@@ -373,7 +373,7 @@ class AlfaDataParser:
                 try:
                     self.currentCommand.ArgFoundResponse(arg)
                     self.printArguments(self.argumentsFound[arg])
-                except:  
+                except:
                     Printer.Print("Argument ", arg, "found")
                     Printer.Print("Matching argument: ",
                     self.printArguments(self.argumentsFound[arg]))
@@ -393,7 +393,7 @@ class AlfaDataParser:
             if len(unknownList) > 0:
                 print()
                 # Do nothing
-                #Printer.Print("\nPlease provide more clues to help me resolve",
+                # Printer.Print("\nPlease provide more clues to help me resolve",
                 #              "these arguments")
 
     def executeCommand(self, command, arguments):
