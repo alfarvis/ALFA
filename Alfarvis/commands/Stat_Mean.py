@@ -69,3 +69,9 @@ class StatMean(AbstractCommand):
                           "take mean")
 
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)

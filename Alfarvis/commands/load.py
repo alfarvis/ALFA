@@ -78,3 +78,9 @@ class Load(AbstractCommand):
             Printer.Print("File not found.\n Please make sure the file exists "
                           "in the specified location")
         return result_object
+
+    def ArgNotFoundResponse(self, file_name):
+        super().ArgNotFoundResponse(file_name, 'file', 0)
+
+    def MultipleArgsFoundResponse(self, file_name):
+        super().MultipleArgsFoundResponse(file_name, 'files', 0)

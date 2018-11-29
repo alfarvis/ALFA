@@ -68,3 +68,9 @@ class CreateCategoricalFromLogical(AbstractCommand):
         Printer.Print('Saving categorical array as', result.name)
         Printer.Print('Saving filter as', result_filter.name)
         return [result, result_filter]
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'combine')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'combine')

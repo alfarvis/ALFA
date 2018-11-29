@@ -45,7 +45,7 @@ class DM_TrainClassifier(AbstractCommand):
         # TODO Add an argument for k = number of clusters
         return [Argument(keyword="data_frame", optional=True,
                          argument_type=DataType.csv, number=1),
-                         Argument(keyword="classifier_algo", optional=True,
+                         Argument(keyword="classifier_algo", optional=False,
                          argument_type=DataType.algorithm_arg)]
 
     def evaluate(self, data_frame, classifier_algo):
@@ -59,7 +59,7 @@ class DM_TrainClassifier(AbstractCommand):
         sns.set(color_codes=True)
         df = data_frame.data
         #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        #if command_status == CommandStatus.Error:
+        # if command_status == CommandStatus.Error:
         #    return ResultObject(None, None, None, CommandStatus.Error)
 
         # Get the ground truth array
@@ -99,3 +99,12 @@ class DM_TrainClassifier(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().DataMineArgNotFoundResponse(arg_name)
+
+    def ArgFoundResponse(self, arg_name):
+        super().DataMineArgFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().DataMineMultipleArgsFoundResponse(arg_name)

@@ -57,7 +57,7 @@ class VizBarPlots(AbstractCommand):
 
         if StatContainer.ground_truth is None:
             gtVals = np.ones(df.shape[0])
-            ground_truth = 'ground_truth';
+            ground_truth = 'ground_truth'
         else:
             gtVals = StatContainer.filterGroundTruth()
             ground_truth = StatContainer.ground_truth.name
@@ -66,7 +66,7 @@ class VizBarPlots(AbstractCommand):
                 print(len(gtVals), df.shape[0])
                 gtVals = np.ones(df.shape[0])
                 ground_truth = 'ground_truth'
-                
+
         # Remove nans:
         df[ground_truth] = gtVals
         df.dropna(inplace=True)
@@ -119,3 +119,9 @@ class VizBarPlots(AbstractCommand):
         win.show()
 
         return VizContainer.createResult(win, array_datas, ['bar'])
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'plot')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'plot')

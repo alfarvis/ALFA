@@ -95,3 +95,9 @@ class StatMax(AbstractCommand):
             #Printer.Print("Maximum of", array_data.name, "is", max_val)
         TablePrinter.printDataFrame(df_new)
         return result_objects
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)
