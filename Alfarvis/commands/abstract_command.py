@@ -76,6 +76,45 @@ class AbstractCommand(object):
         """
         return ''.join(random.choice(chars) for x in range(size))
 
+    def ArgNotFoundResponse(self, arg_name, data_name='variable(s)', tag_ind=-1):
+        Printer.Print("Couldn't find the ", data_name, " you are looking for...")
+        Printer.Print("Which file do you want me to ", self.commandTags[ind], "?")
+
+    def ArgFoundResponse(self, arg_name):
+        # Will only be called for command with multiple arg types
+        Printer.Print("Found variable")
+
+    def MultipleArgsFoundResponse(self, arg_name, data_name='variables', tag_ind=-1):
+        Printer.Print("I found multiple ", data_name, " that seem to match your query")
+        Printer.Print("Could you please look at the following", data_name, "and tell me which one you "
+                "want to ", self.commandTags[tag_ind], "?")
+
+    def AnalyzeArgNotFoundResponse(self, arg_name, keyword='analyze'):
+        Printer.Print("Which variable do you want me to ", keyword, "?")
+
+    def AnalyzeMultipleArgsFoundResponse(self, arg_name, keyword='analyze'):
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to ", keyword, "?")
+
+    def DataMineArgNotFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("Which data frame do you want me to classify?")
+        else:
+            Printer.Print("Which classifiers do you want me to test?")
+
+    def DataMineArgFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("Found the data frame")
+        else:
+            Printer.Print("Found the classification models to test")
+
+    def DataMineMultipleArgsFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("I found multiple data frames that seem to match your query")
+            Printer.Print("Could you please look at the following data frames and tell me which one you "
+                  "want to classify?")
+
     def addCommandToKeywords(self, keyword_set):
         """
         Add command tags to keyword set

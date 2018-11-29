@@ -89,7 +89,7 @@ class StatMin(AbstractCommand):
         if StatContainer.row_labels is not None:
             df_new[StatContainer.row_labels.name] = [min_rl]
             #Printer.Print("Minimum of", array_data.name, "is", min_val, "corresponding to", min_rl)
-        #else:
+        # else:
             #Printer.Print("Minimum of", array_data.name, "is", min_val)
         TablePrinter.printDataFrame(df_new)
         return result_objects

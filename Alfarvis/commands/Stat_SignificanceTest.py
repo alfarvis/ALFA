@@ -12,12 +12,13 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .argument import Argument
 from .abstract_command import AbstractCommand
 from .Stat_Container import StatContainer
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import scipy
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from Alfarvis.Toolboxes.DataGuru import DataGuru
 
 
 class StatSigTest(AbstractCommand):
@@ -35,76 +36,74 @@ class StatSigTest(AbstractCommand):
         """
         return tags that are used to identify ttest command
         """
-        return ["ttest", "p", "value", "t test"]
+        return ["ttest", "p value", "t test"]
 
     def argumentTypes(self):
         """
         A list of  argument objects that specify the inputs needed for
         executing the ttest command
         """
-        return [Argument(keyword="array_data", optional=True,
-                         argument_type=DataType.array)]
+        return [Argument(keyword="array_datas", optional=False,
+                         argument_type=DataType.array, number=-1)]
 
-    def evaluate(self, array_data=None):
+    def evaluate(self, array_datas):
         """
         Calculate ttest of the array and store it to history
         Parameters:
 
         """
-        result_object = ResultObject(None, None, None, CommandStatus.Error)
-        arr = array_data.data
-        if np.issubdtype(arr.dtype, np.number):
-            if StatContainer.ground_truth is not None:
-                gt1 = (StatContainer.ground_truth.data)
-                uniqVals = np.unique(gt1)
-                pVals = []
-                startFlag = 1
-                # TODO: Remove nans from arrays!!
-                # TODO COmplete this: Idea is to create a heatmap like the one
-                # we did for correlation
-                for uniV in uniqVals:
+        command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
+            array_datas)
+        if command_status == CommandStatus.Error:
+            return ResultObject(None, None, None, CommandStatus.Error)
 
-                    stTitle = " ".join(["group ", str(uniV)])
-                    a = arr[gt1 == uniV]
-                    allp = []
-                    for iter in range(len(uniqVals)):
-                        b = arr[gt1 == uniqVals[iter]]
-                        if uniV == uniqVals[iter]:
-                            allp.append(0)
-                        else:
-                            ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
-                            allp.append(ttest_val.pvalue)
-                    if startFlag == 1:
-                        pVals = pd.DataFrame({stTitle: allp})
-                        startFlag = 0
-                    else:
-                        pVals[stTitle] = allp
-            else:
-                Printer.Print("Please set ground truth before running",
-                              "this command")
-                return result_object
+        if StatContainer.ground_truth is None:
+            print("Could not find the reference variable.")
+            print("Please set the reference variable")
+            return ResultObject(None, None, None, CommandStatus.Error)
         else:
-            Printer.Print("Please provide numerical array for ttest")
-            return result_object
+            gtVals = StatContainer.filterGroundTruth()
+            ground_truth = StatContainer.ground_truth.name
+            if len(gtVals) != df.shape[0]:
+                print("The size of the ground truth does not match with arrays being analyzed")
+                print(len(gtVals), df.shape[0])
+                return ResultObject(None, None, None, CommandStatus.Error)
 
-        Printer.Print("Displaying the result as a heatmap")
-        sns.heatmap(pVals, cbar=True, square=True, annot=True, fmt='.2f', annot_kws={'size': 15},
-           xticklabels=pVals.columns, yticklabels=pVals.columns,
-           cmap='jet')
-        plt.show(block=False)
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
+        uniqVals = StatContainer.isCategorical(gtVals)
+        df[ground_truth] = gtVals
+        df_new = pd.DataFrame()
+        if ground_truth in df.columns:
+            df_new['features'] = df.columns.drop(ground_truth).values
+        else:
+            df_new['features'] = df.columns
+
+        allCols = df_new['features']
+        for iter in range(len(uniqVals)):
+            for iter1 in range(iter + 1, len(uniqVals)):
+                df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)] = np.zeros(df_new.shape[0])
+
+        for iter_feature in range(len(df_new['features'])):
+            arr = df[allCols[iter_feature]]
+            for iter in range(len(uniqVals)):
+                uniV = uniqVals[iter]
+                a = arr[gtVals == uniV]
+                for iter1 in range(iter + 1, len(uniqVals)):
+                    b = arr[gtVals == uniqVals[iter1]]
+                    if uniV != uniqVals[iter1]:
+                        ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
+                        df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = (ttest_val.pvalue)
+                    else:
+                        df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
+
+        TablePrinter.printDataFrame(df_new)
+        result_object = ResultObject(df_new, [], DataType.csv,
+                              CommandStatus.Success)
+        result_object.createName(cname, command_name='ttest',
+                          set_keyword_list=True)
         return result_object
-        # Debug this @Vishwa
-        # keyword_list = array_data.keyword_list
-        # array = array_data.data
-        # ground_truth = StatContainer.ground_truth
-        # if ground_truth is not None:
-        #     # TODO: THis will only run if the ground truth has only two labels
-        #     a = array[ground_truth.data == 1]
-        #     b = array[ground_truth.data == 2]
-        #     ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
-        #     Printer.Print("p value for prediction of ",
-        #           " ".join(ground_truth.keyword_list),
-        #           "using ", " ".join(keyword_list), " is ", ttest_val.pvalue)
-        #     result_object = ResultObject(ttest_val.pvalue, keyword_list,
-        # DataType.array, CommandStatus.Success)
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)

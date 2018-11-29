@@ -45,7 +45,7 @@ class DM_BestClassifier(AbstractCommand):
         # TODO Add an argument for k = number of clusters
         return [Argument(keyword="data_frame", optional=True,
                          argument_type=DataType.csv, number=1),
-                         Argument(keyword="classifier_algos", optional=True,
+                         Argument(keyword="classifier_algos", optional=False,
                          argument_type=DataType.algorithm_arg, number=-1)]
 
     def evaluate(self, data_frame, classifier_algos):
@@ -59,7 +59,7 @@ class DM_BestClassifier(AbstractCommand):
         sns.set(color_codes=True)
         df = data_frame.data
         #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        #if command_status == CommandStatus.Error:
+        # if command_status == CommandStatus.Error:
         #    return ResultObject(None, None, None, CommandStatus.Error)
 
         # Get the ground truth array
@@ -97,13 +97,13 @@ class DM_BestClassifier(AbstractCommand):
                       'k fold cross validation...')
 
         all_cv_scores, all_mean_cv_scores, all_confusion_matrices = DataGuru.FindBestClassifier(X, Y, modelList, 10)
-        
+
         Printer.Print('\n\nPlotting the confusion matrices...\n')
         for iter in range(len(modelList)):
             win = Window.window()
             f = win.gcf()
             ax = f.add_subplot(111)
-            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), ax,title=modelList[iter]['Name'])
+            DataGuru.plot_confusion_matrix(all_confusion_matrices[iter], np.unique(Y), ax, title=modelList[iter]['Name'])
             win.show()
 
         Printer.Print("\n\nBest classifier is " + modelList[np.argmax(all_mean_cv_scores)]['Name'] + " with an accuracy of -  %.2f%% " % max(all_mean_cv_scores))
@@ -112,3 +112,12 @@ class DM_BestClassifier(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().DataMineArgNotFoundResponse(arg_name)
+
+    def ArgFoundResponse(self, arg_name):
+        super().DataMineArgFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().DataMineMultipleArgsFoundResponse(arg_name)

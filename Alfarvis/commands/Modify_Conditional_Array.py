@@ -46,6 +46,15 @@ class SetConditionalArray(AbstractCommand):
         Printer.Print("Setting filter to ", array_data.name)
         return ResultObject(None, None, None, CommandStatus.Success)
 
+    def ArgNotFoundResponse(self, arg_name):
+        Printer.Print("Which condition do you want to set?")
+
+    def ArgFoundResponse(self, arg_name):
+        Printer.Print("Found variables")
+
+    def MultipleArgsFoundResponse(self, file_name):
+        super().MultipleArgsFoundResponse(file_name, 'conditional variables', 1)
+
 
 class ClearConditionalArray(AbstractCommand):
     """

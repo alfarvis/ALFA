@@ -97,9 +97,9 @@ class AlfaDataParser:
             in_keyword_list = self.keyword_list + ext_list
             res = self.command_database.search(in_keyword_list)
         if len(res) == 0:
-            Printer.Print("Command not found")
-            Printer.Print("If you would like to know about existing commands,"
-                  " please say Find commands or Please help me")
+            Printer.Print("Sorry, I am not able to understand what you want to do")
+            Printer.Print("If you would like to know about my capabilities,"
+                  " please say Find commands")
             self.clearCommandSearchResults()
         elif len(res) == 1:
             self.foundCommand(res[0])
@@ -112,8 +112,9 @@ class AlfaDataParser:
                     self.command_search_result, res)
                 if len(intersection_set) == 0:
                     self.command_search_result = res
-                    Printer.Print("The new commands do not match with the",
-                                  "old input.")
+                    Printer.Print("Sorry, I don't understand. There is a ",
+                                  "discrepancy between your previous ",
+                                  "command and this command")
                 elif len(intersection_set) == 1:
                     self.foundCommand(intersection_set.pop())
                 else:
@@ -124,7 +125,7 @@ class AlfaDataParser:
                 self.printCommands(self.command_search_result)
 
     def foundCommand(self, res):
-        Printer.Print("Found command", res.name)
+        #Printer.Print("Found command", res.name)
         self.currentState = ParserStates.command_known
         self.currentCommand = res.data
         self.resolveArguments(self.keyword_list)
@@ -366,22 +367,34 @@ class AlfaDataParser:
             unknown_args = all_arg_names.difference(
                 set(self.argumentsFound.keys()))
             # Get a list of unknown arguments"
-            Printer.Print("\nChecking for arguments...\n")
+            #Printer.Print("\nChecking for arguments...\n")
             unknownList = list(unknown_args)
             for arg in self.argumentsFound:
-                Printer.Print("Argument ", arg, "found")
-                Printer.Print("Matching argument: ",
-                self.printArguments(self.argumentsFound[arg]))
+                try:
+                    self.currentCommand.ArgFoundResponse(arg)
+                    self.printArguments(self.argumentsFound[arg])
+                except:
+                    Printer.Print("Argument ", arg, "found")
+                    Printer.Print("Matching argument: ",
+                    self.printArguments(self.argumentsFound[arg]))
             for arg in unknown_args:
                 if arg in self.argument_search_result:
-                    Printer.Print("\nMultiple arguments found for ", arg)
+                    try:
+                        self.currentCommand.MultipleArgsFoundResponse(arg)
+                    except:
+                        Printer.Print("\nMultiple arguments found for ", arg)
                     (self.printArguments(
-                        self.argument_search_result[arg]))
+                            self.argument_search_result[arg]))
                 else:
-                    Printer.Print("Could not find any match for ", arg)
+                    try:
+                        self.currentCommand.ArgNotFoundResponse(arg)
+                    except:
+                        Printer.Print("Could not find any match for ", arg)
             if len(unknownList) > 0:
-                Printer.Print("\nPlease provide more clues to help me resolve",
-                              "these arguments")
+                print()
+                # Do nothing
+                # Printer.Print("\nPlease provide more clues to help me resolve",
+                #              "these arguments")
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result

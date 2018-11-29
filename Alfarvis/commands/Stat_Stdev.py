@@ -58,11 +58,11 @@ class StatStdev(AbstractCommand):
                     command_name=self.commandTags()[0],
                     set_keyword_list=True)
             df_new = pd.DataFrame()
-            df_new['Feature']=[array_data.name]
-            df_new['Standard Deviation']=[std_val]
+            df_new['Feature'] = [array_data.name]
+            df_new['Standard Deviation'] = [std_val]
             TablePrinter.printDataFrame(df_new)
-            
-            #Printer.Print("Standard deviation of", array_data.name,
+
+            # Printer.Print("Standard deviation of", array_data.name,
             #              "is", std_val)
         else:
             Printer.Print("The array is not of numeric type so cannot",

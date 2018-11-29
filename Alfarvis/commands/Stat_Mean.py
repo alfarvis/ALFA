@@ -61,11 +61,17 @@ class StatMean(AbstractCommand):
                     set_keyword_list=True)
             #Printer.Print("Mean of", array_data.name, "is", mean_val)
             df_new = pd.DataFrame()
-            df_new['Feature']=[array_data.name]
-            df_new['Mean']=[mean_val]
+            df_new['Feature'] = [array_data.name]
+            df_new['Mean'] = [mean_val]
             TablePrinter.printDataFrame(df_new)
         else:
             Printer.Print("The array is not of numeric type so cannot",
                           "take mean")
 
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)

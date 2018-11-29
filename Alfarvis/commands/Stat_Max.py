@@ -83,15 +83,21 @@ class StatMax(AbstractCommand):
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         result_objects.append(result_object)
-        
-        #Create a dataframe to store the results
+
+        # Create a dataframe to store the results
         df_new = pd.DataFrame()
         df_new['Feature'] = [array_data.name]
         df_new['Maximum'] = [max_val]
         if StatContainer.row_labels is not None:
             df_new[StatContainer.row_labels.name] = [max_rl]
             #Printer.Print("Maximum of", array_data.name, "is", max_val, "corresponding to", max_rl)
-        #else:
+        # else:
             #Printer.Print("Maximum of", array_data.name, "is", max_val)
         TablePrinter.printDataFrame(df_new)
         return result_objects
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name)
