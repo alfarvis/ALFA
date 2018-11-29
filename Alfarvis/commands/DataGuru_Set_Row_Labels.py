@@ -41,7 +41,6 @@ class SetRowLabels(AbstractCommand):
         if StatContainer.row_labels is not None:
             TablePrinter.clearBackGround(StatContainer.row_labels.name)
         StatContainer.row_labels = array_data
-        TablePrinter.highlight(StatContainer.row_labels.name, color='b')
         Printer.Print("Setting row label to ", " ".join(
             array_data.keyword_list))
         return ResultObject(None, None, None, CommandStatus.Success)

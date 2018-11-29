@@ -118,7 +118,5 @@ class DataGroupSummary(DataSummary):
                         b = arr[gtVals == uniqVals[iter1]]
                         if uniV != uniqVals[iter1]:
                             ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
-                            df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = (ttest_val.pvalue)
-                        # else:
-                        #    df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
+                            df_new.at[iter_feature, 'pValue: ' + str(iter) + ' vs ' + str(iter1)] = (ttest_val.pvalue)
         return df_new

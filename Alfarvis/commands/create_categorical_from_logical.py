@@ -18,6 +18,7 @@ import collections
 
 
 class CreateCategoricalFromLogical(AbstractCommand):
+
     def briefDescription(self):
         return "create categorical array from logical arrays"
 
