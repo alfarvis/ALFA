@@ -75,3 +75,9 @@ class Stat_Correl(AbstractCommand):
                     cmap='jet', ax=ax)
         win.show()
         return VizContainer.createResult(win, array_datas, ['correlation'])
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().ArgNotFoundResponse(arg_name, 'variables', -1)
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().MultipleArgsFoundResponse(arg_name, 'variables', -1)

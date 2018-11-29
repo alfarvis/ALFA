@@ -10,6 +10,7 @@ from .abstract_command import AbstractCommand
 from .argument import Argument
 from .Stat_Container import StatContainer
 import numpy as np
+from Alfarvis.printers import Printer
 
 
 class StatDiff(AbstractCommand):
@@ -61,3 +62,9 @@ class StatDiff(AbstractCommand):
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'subtract')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'subtract')

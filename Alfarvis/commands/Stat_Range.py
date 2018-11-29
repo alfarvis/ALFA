@@ -8,8 +8,9 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .Stat_Container import StatContainer
 from .abstract_command import AbstractCommand
 from .argument import Argument
-from Alfarvis.printers import Printer
+from Alfarvis.printers import Printer, TablePrinter
 import numpy
+import pandas as pd
 
 
 class StatRange(AbstractCommand):
@@ -65,7 +66,15 @@ class StatRange(AbstractCommand):
                 array_data.keyword_list,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
-        Printer.Print("Range of", array_data.name, "is", range_val,
-               "from", min_val, "to", max_val)
+
+        df_new = pd.DataFrame()
+        df_new['Feature'] = [array_data.name]
+        df_new['Range'] = [range_val]
+        df_new['Minimum'] = [min_val]
+        df_new['Maximum'] = [max_val]
+
+        TablePrinter.printDataFrame(df_new)
+        # Printer.Print("Range of", array_data.name, "is", range_val,
+        #       "from", min_val, "to", max_val)
 
         return result_object

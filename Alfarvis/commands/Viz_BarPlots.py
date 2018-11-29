@@ -35,7 +35,7 @@ class VizBarPlots(AbstractCommand):
         """
         Tags to identify the bar plot command
         """
-        return ["bar plot", "plot"]
+        return ["bar", "plot"]
 
     def argumentTypes(self):
         """
@@ -151,3 +151,10 @@ class VizBarPlots(AbstractCommand):
             ax.set_ylabel(properties["ylabel"])
         ax.set_title(properties["title"])
         win.show()
+        return VizContainer.createResult(win, array_datas, ['bar'])
+
+    def ArgNotFoundResponse(self, arg_name):
+        super().AnalyzeArgNotFoundResponse(arg_name, 'plot')
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().AnalyzeMultipleArgsFoundResponse(arg_name, 'plot')

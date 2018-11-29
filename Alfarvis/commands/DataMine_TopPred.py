@@ -88,14 +88,12 @@ class DM_topPredictor(AbstractCommand):
         featImpVals = model.feature_importances_
 
         featimp = pd.Series(featImpVals, index=df.columns).sort_values(ascending=False)
-        
+
         df_show = pd.DataFrame()
         df_show['top features'] = featimp.index[0:num]
         df_show['feature importance'] = featimp.values[0:num]
         TablePrinter.printDataFrame(df_show)
-        df_new = df[featimp.index[0:num]]        
-
-                
+        df_new = df[featimp.index[0:num]]
 
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
@@ -105,3 +103,18 @@ class DM_topPredictor(AbstractCommand):
                           set_keyword_list=True)
 
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("Which data frame do you want me to classify?")
+        else:
+            Printer.Print("How many predictors do you want?")
+
+    def ArgFoundResponse(self, arg_name):
+        if arg_name == "data_frame":
+            Printer.Print("Found the data frame")
+        else:
+            Printer.Print("Number of top predictors to extract:")
+
+    def MultipleArgsFoundResponse(self, arg_name):
+        super().DataMineMultipleArgsFoundResponse(arg_name)

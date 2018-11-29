@@ -70,3 +70,6 @@ class Evaluate_AlphaScript(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Success)
 
         return result_object
+
+    def ArgNotFoundResponse(self, arg_name):
+        Printer.Print("Which file do you want me to run?")
