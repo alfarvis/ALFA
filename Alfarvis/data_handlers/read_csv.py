@@ -41,6 +41,7 @@ class ReadCSV(AbstractReader):
         new_column_names = []
         for column in data.columns:
             if self.col_head_pattern.match(column):
+                data.drop(column, axis=1, inplace=True)
                 continue
             else:
                 col_split = splitPattern(column)

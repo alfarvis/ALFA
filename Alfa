@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 PS1='$ '
-source ~/.bashrc
+source ~/.bash_profile
 conda activate alfarvis
 if [ $? -ne 0 ]; then
   echo "Failed to activate conda environment"

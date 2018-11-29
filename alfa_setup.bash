@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 PS1='$ '
 # Check if conda already installed
-source ~/.bashrc
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  BASH_FILE="~/.bashrc"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  BASH_FILE="~/.bash_profile"
+else
+  echo "Unknown OS"
+  exit
+fi
+source $BASH_FILE
 conda info > /dev/null
 if [ $? -eq 0 ]; then
   echo "Conda already installed"
@@ -28,10 +36,10 @@ if [ $CONDA_INSTALLED = false ]; then
   fi
   wget "https://repo.continuum.io/archive/$FILE_NAME"
   bash $FILE_NAME -b -p ~/anaconda
-  echo 'export PATH="~/anaconda/bin:$PATH"' >> ~/.bashrc 
+  echo 'export PATH="~/anaconda/bin:$PATH"' >> $BASH_FILE
 
   # Refresh basically
-  source ~/.bashrc
+  source $BASH_FILE
 
   conda update conda
 
@@ -43,26 +51,52 @@ if [ $CONDA_INSTALLED = false ]; then
   cd $CURRENT_DIR
 fi
 cd $HOME
-rm -rf .Alfarvis
-git clone https://github.com/garimellagowtham/Alfarvis .Alfarvis
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  rm -rf .Alfarvis
+  TARGET_FOLDER=".Alfarvis"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  rm -rf Alfa.app
+  mkdir -p Alfa.app/Contents/
+  cd Alfa.app/Contents
+  TARGET_FOLDER="MacOS"
+fi
+git clone https://github.com/garimellagowtham/Alfarvis $TARGET_FOLDER
 if [ $? -ne 0 ]; then
   echo "Failed to clone Alfa"
   exit
 fi
-cd .Alfarvis
-git checkout installation_script
+cd $TARGET_FOLDER
 chmod +x alfa alfa_notebook.py alfa_gui.py alfa_terminal.py
 conda env create -f environment.yaml
-#if [ $? -ne 0 ]; then
-#  echo "Failed to create environment"
-#  exit
-#fi
 # Create a database in Home folder
 mkdir $HOME/AlfaDatabase
 cp ./Alfarvis/resources/* $HOME/AlfaDatabase/
-# Add to path maynot be necessary
-echo 'export PATH="~/.Alfarvis:$PATH"' >> ~/.bashrc
-# Copy desktop file
-cp alfarvis.desktop ~/Desktop/
-cp ./alfa.png ~/.local/share/icons/
-source ~/.bashrc
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  echo 'export PATH="~/.Alfarvis:$PATH"' >> ~/.bashrc
+  # Copy desktop file
+  cp alfarvis.desktop ~/Desktop/
+  cp ./alfa.png ~/.local/share/icons/
+  source ~/.bashrc
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  ### Create ICONS
+  ORIGICON=./alfa.png
+  PROJECT=Alfa
+  ICONDIR=../Resources/$PROJECT.iconset
+
+  mkdir -p $ICONDIR
+
+  # Normal screen icons
+  for SIZE in 16 32 64 128 256 512; do
+  sips -z $SIZE $SIZE $ORIGICON --out $ICONDIR/icon_${SIZE}x${SIZE}.png ;
+  done
+
+  # Retina display icons
+  for SIZE in 32 64 256 512 1024; do
+  sips -z $SIZE $SIZE $ORIGICON --out $ICONDIR/icon_$(expr $SIZE / 2)x$(expr $SIZE / 2)@2x.png ;
+  done
+
+  # Make a multi-resolution Icon
+  iconutil -c icns -o $HOME/$PROJECT.app/Contents/Resources/$PROJECT.icns $ICONDIR
+  rm -rf $ICONDIR #it is useless now
+  #########
+fi
