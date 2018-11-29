@@ -6,6 +6,7 @@ import importlib
 import os
 import pkgutil
 from .window_interface import Window
+from .property_editor import PropertyEditor
 
 pkg_dir = os.path.dirname(__file__)
 
