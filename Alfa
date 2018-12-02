@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+PS1='$ '
+source ~/.bash_profile
+conda activate alfarvis
+if [ $? -ne 0 ]; then
+  echo "Failed to activate conda environment"
+  exit
+fi
+CUR_DIR=`dirname "$0"`
+
+python $CUR_DIR/alfa_notebook.py

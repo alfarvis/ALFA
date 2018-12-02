@@ -13,7 +13,7 @@ class TestDataHandlers(unittest.TestCase):
 
     def test_read_csv(self):
         csv_handler = self.handlers[DataType.csv]
-        file_path = os.path.join(package_directory, 'resources/data.csv')
+        file_path = os.path.join(package_directory, 'test_data/data.csv')
         keyword_list = ['tumor', 'data']
         res_list = csv_handler.read(file_path, keyword_list)
         self.assertEqual(len(res_list), 35)
@@ -27,7 +27,7 @@ class TestDataHandlers(unittest.TestCase):
 
     def test_read_image(self):
         image_handler = self.handlers[DataType.image]
-        file_path = os.path.join(package_directory, 'resources/image.jpg')
+        file_path = os.path.join(package_directory, 'test_data/image.jpg')
         keyword_list = ['cell', 'phone', 'image']
         image_handler.read(file_path, keyword_list)
         # Check image is loaded correctly
@@ -39,6 +39,7 @@ class TestDataHandlers(unittest.TestCase):
                                  'resources/file_database.csv')
         keyword_list = ['base', 'database']
         data_base_handler.read(file_path, keyword_list)
+
 
 if __name__ == '__main__':
     unittest.main()

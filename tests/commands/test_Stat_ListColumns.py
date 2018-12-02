@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import unittest
 from Alfarvis.basic_definitions import DataType, CommandStatus, DataObject
 from Alfarvis import package_directory, create_command_database
@@ -29,7 +29,7 @@ class TestStatListColumns(unittest.TestCase):
         list_columns_command = StatListColumns()
         arg = list_columns_command.argumentTypes()[0]
         file_path = os.path.join(
-            package_directory, 'resources', 'data.csv')
+            package_directory, 'test_data', 'data.csv')
         data = pd.read_csv(file_path)
         data_object = DataObject(data, ['random', 'dataset'])
         user_conv = DataObject('list categorical columns'.split(' '),

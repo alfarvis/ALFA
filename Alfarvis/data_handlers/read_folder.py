@@ -31,7 +31,9 @@ class ReadFolder(AbstractReader):
         return False
 
     def addFile(self, dir_entry, file_type, folder_database, parent_path):
-        keywords = splitPattern(os.path.basename(dir_entry.name))
+        base_name = os.path.basename(dir_entry.name)
+        keywords = splitPattern(base_name)
+        print(base_name, " Keywords: ", keywords)
         file_object = FileObject(os.path.join(parent_path, dir_entry.name), file_type,
                 '', False)  # Future can generate some description
         file_name, _ = createName(folder_database._argument_database[file_type].name_dict.keys(), keywords)
@@ -62,7 +64,7 @@ class ReadFolder(AbstractReader):
         for dir_entry in os.scandir(file_path):
             if self.checkEndsWith(dir_entry.name, ['.csv']) and dir_entry.is_file():
                 self.addFile(dir_entry, DataType.csv, folder_database, file_path)
-            elif self.checkEndsWith(dir_entry.name, ['.png', 'jpg', 'jpeg']) and dir_entry.is_file():
+            elif self.checkEndsWith(dir_entry.name, ['.png', '.jpg', '.JPG', '.jpeg']) and dir_entry.is_file():
                 self.addFile(dir_entry, DataType.image, folder_database, file_path)
             if recursive and dir_entry.is_dir():
                 dir_keywords = splitPattern(dir_entry.name)
