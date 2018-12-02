@@ -128,11 +128,11 @@ class VizBarPlots(AbstractCommand):
         win = Window.window()
         result_object = VizContainer.createResult(win, array_datas, ['bar'])
         result_object.data = [win, properties, [df_mean, df_errors], self.updateFigure]
-        self.updateFigure(result_object.data)
+        self.updateFigure(result_object.data,array_datas)
         self.modify_figure.evaluate(result_object)
         return result_object
 
-    def updateFigure(self, result_data):
+    def updateFigure(self, result_data, array_datas):
         win = result_data[0]
         f = win.gcf()
         f.clear()
