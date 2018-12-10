@@ -9,6 +9,7 @@ from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, Fi
 from Alfarvis import package_directory
 from Alfarvis.printers import Printer
 from .read_folder import ReadFolder
+from pathlib import Path
 import pandas as pd
 import os
 
@@ -34,6 +35,19 @@ class ReadDatabase(AbstractReader):
                 return False
         return True
 
+    def getFilePath(self, file_path):
+        if not os.path.isfile(file_path):
+            mod_file_path = os.path.join(package_directory, 'resources',
+                    file_path)
+            if not os.path.isfile(mod_file_path):
+                mod_file_path = os.path.join(str(Path.home()),
+                                  'AlfaDatabase', file_path)
+            if not os.path.isfile(mod_file_path):
+                mod_file_path = None
+        else:
+            mod_file_path = file_path
+        return mod_file_path
+
     def read(self, file_path, keyword_list):
         """
         Load the file name specified and store it in history
@@ -43,12 +57,10 @@ class ReadDatabase(AbstractReader):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         skipped_files = 0
-        if not os.path.isfile(file_path):
-            file_path = os.path.join(package_directory, 'resources',
-                    file_path)
-        if os.path.isfile(file_path):
+        mod_file_path = self.getFilePath(file_path)
+        if mod_file_path is not None:
             # try:
-            data_frame = pd.read_csv(file_path)
+            data_frame = pd.read_csv(mod_file_path)
             self.checkHeaders(data_frame.columns.values)
             result_list = []
             for idx, row in data_frame.iterrows():
@@ -73,15 +85,11 @@ class ReadDatabase(AbstractReader):
                         Printer.Print("Failed to load folder: ", row['file_name'])
                     continue
 
-                if os.path.isfile(row['file_name']):
-                    file_path = row['file_name']
-                else:
-                    file_path = os.path.join(package_directory, 'resources',
-                                             row['file_name'])
-                    if not os.path.isfile(file_path):
-                        Printer.Print("Cannot find file: ", row['file_name'])
-                        continue
-                file_object = FileObject(file_path, file_type,
+                row_file_path = self.getFilePath(row['file_name'])
+                if row_file_path is None:
+                    Printer.Print("Cannot find file: ", row['file_name'])
+                    continue
+                file_object = FileObject(row_file_path, file_type,
                                          row['description'], False)
                 keywords = row['keywords'].split(' ')
                 file_res = ResultObject(file_object, keywords,
