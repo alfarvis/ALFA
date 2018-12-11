@@ -14,6 +14,13 @@ class QtWindow(AbstractWindow):
     def __init__(self, *args, **kwargs):
         self.tab_index = QTabManager.current_index_count
         figure_tab, layout = QTabManager.createTab("Figure")
+        # Close existing figure
+        if QTabManager.current_index_count != 0:
+            fig_index = QTabManager.current_index_count
+        else:
+            fig_index = QTabManager.max_tab_count
+        plt.close(fig_index)
+        kwargs['num'] = fig_index
         # Create Figure
         self.figure = plt.figure(*args, **kwargs)
         self.canvas = FigureCanvas(self.figure)

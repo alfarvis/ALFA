@@ -32,6 +32,10 @@ class QtPrinter(AbstractPrinter):
         self.align = mapAlignment(alignment)
         self.bg_color = mapColor(bgcolor)
 
+    def getFileName(self):
+        file_name = QFileDialog.getSaveFileName()
+        return file_name
+
     def save(self, name):
         file_name = QFileDialog.getSaveFileName()
         text = self.text_box.toHtml()

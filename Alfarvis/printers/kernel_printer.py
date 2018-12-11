@@ -9,3 +9,7 @@ class KernelPrinter(AbstractPrinter):
 
     def Print(self, *args, **kwargs):
         print(*args, **kwargs)
+
+    def getFileName(self):
+        file_name = input("Please enter file name: ")
+        return file_name
