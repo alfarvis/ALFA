@@ -4,7 +4,8 @@ Cluster using kmeans
 """
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
-                                        ResultObject)
+                                        ResultObject, splitPattern,
+                                        findNumbers, searchDateTime)
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer, TablePrinter
@@ -51,9 +52,11 @@ class Cluster_kmeans(AbstractCommand):
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array, number=-1, fill_from_cache=False), 
                 Argument(keyword="data_frame", optional=True,
-                         argument_type=DataType.csv, number=1, fill_from_cache=False)]
+                         argument_type=DataType.csv, number=1, fill_from_cache=False),
+                         Argument(keyword="target", optional=False,
+                         argument_type=DataType.user_conversation)]
 
-    def evaluate(self, data_frame, array_datas):
+    def evaluate(self, data_frame, array_datas,target):
         """
         Run clustering on a dataset of multiple arrays
 
@@ -90,7 +93,12 @@ class Cluster_kmeans(AbstractCommand):
         X = scaler.transform(X)
 
         # Train the classifier
-        kY = self.performOperation(X)
+        numbers = findNumbers(target.data, 1)
+        if numbers != [] and numbers[0].data > 0:
+            num_clusters = int(numbers[0].data)
+        else:
+            num_clusters = 2  # If not specified select top 10 features
+        kY = self.performOperation(X,num_clusters)
         
         result_object = ResultObject(kY, [],
                                          DataType.array,
@@ -103,8 +111,8 @@ class Cluster_kmeans(AbstractCommand):
         
         return result_object
     
-    def performOperation(self,X):
-        kmns = KMeans(n_clusters=2, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
+    def performOperation(self,X,num_clusters):
+        kmns = KMeans(n_clusters=num_clusters, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
         kY = kmns.fit_predict(X)
         return kY
         
@@ -115,20 +123,20 @@ class Cluster_spectral(Cluster_kmeans):
     def briefDescription(self):
         return "cluster using spectral clustering"
 
-    def performOperation(self, X):
-        kmns = SpectralClustering(n_clusters=2,  gamma=0.5, affinity='rbf', eigen_tol=0.0, assign_labels='kmeans', degree=3, coef0=1, kernel_params=None, n_jobs=1)
+    def performOperation(self, X,num_clusters):
+        kmns = SpectralClustering(n_clusters=num_clusters,  gamma=0.5, affinity='rbf', eigen_tol=0.0, assign_labels='kmeans', degree=3, coef0=1, kernel_params=None, n_jobs=1)
         kY = kmns.fit_predict(X)
         return kY
     
 
-class Cluster_spectral(Cluster_kmeans):
+class Cluster_hierarchical(Cluster_kmeans):
     def __init__(self):
-        super(Cluster_spectral, self).__init__(["hierarchical clustering","hierarchical","cluster"])
+        super(Cluster_hierarchical, self).__init__(["hierarchical clustering","hierarchical","cluster"])
 
     def briefDescription(self):
         return "cluster using hierarchical clustering"
 
-    def performOperation(self, X):
-        aggC = AgglomerativeClustering(n_clusters=2, linkage='ward')
+    def performOperation(self, X,num_clusters):
+        aggC = AgglomerativeClustering(n_clusters=num_clusters, linkage='ward')
         kY = aggC.fit_predict(X)
         return kY
