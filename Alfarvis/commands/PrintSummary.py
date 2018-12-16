@@ -26,14 +26,14 @@ class DataSummary(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def __init__(self, condition=["summary"]):
+    def __init__(self, condition=["summary","summarize"]):
         self._condition = condition
 
     def commandTags(self):
         """
         return tags that are used to identify print summary command
         """
-        return (["print"] + self._condition)
+        return (self._condition)
 
     def argumentTypes(self):
         """
@@ -63,8 +63,31 @@ class DataSummary(AbstractCommand):
 
         df_new = self.performOperation(data_frame.data)
         TablePrinter.printDataFrame(df_new)
+        
+        result_objects = []
+        # Adding the newly created CSV
+        result_object = ResultObject(df_new, [], DataType.csv,
+                              CommandStatus.Success)
+        command_name = self._condition[0]
+        result_object.createName(data_frame.name, command_name=command_name,
+                          set_keyword_list=True)
+        
+        result_objects.append(result_object)
+        # create an updated list of column names by removing the common names
+        kl1 = df_new.columns
+        truncated_kl1, common_name = StatContainer.removeCommonNames(kl1)
+        for col in range (0,len(kl1)):
+            arr = df_new[kl1[col]]
+            result_object = ResultObject(arr, [], DataType.array,
+                              CommandStatus.Success)
+            
+            result_object.createName(truncated_kl1[col], command_name=command_name,
+                      set_keyword_list=True)
 
-        return result_object
+            result_objects.append(result_object)
+            
+        return result_objects
+        
 
     def ArgNotFoundResponse(self, arg_name):
         Printer.Print("Which data frame do you want me to summarize?")
@@ -79,7 +102,7 @@ class DataSummary(AbstractCommand):
 class DataGroupSummary(DataSummary):
 
     def __init__(self):
-        super(DataGroupSummary, self).__init__(["groupwise", "labelwise", "summary", "label wise", "group wise"])
+        super(DataGroupSummary, self).__init__(["groupwise", "labelwise", "summary","label wise", "group wise"])
 
     def briefDescription(self):
         return "print label wise summary"
