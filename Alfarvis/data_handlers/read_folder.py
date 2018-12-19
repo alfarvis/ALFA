@@ -62,7 +62,7 @@ class ReadFolder(AbstractReader):
                 print("Cannot find folder: ", file_path)
                 return result_object
         for dir_entry in os.scandir(file_path):
-            if self.checkEndsWith(dir_entry.name, ['.csv']) and dir_entry.is_file():
+            if self.checkEndsWith(dir_entry.name, ['.csv','.xlsx']) and dir_entry.is_file():
                 self.addFile(dir_entry, DataType.csv, folder_database, file_path)
             elif self.checkEndsWith(dir_entry.name, ['.png', '.jpg', '.JPG', '.jpeg']) and dir_entry.is_file():
                 self.addFile(dir_entry, DataType.image, folder_database, file_path)

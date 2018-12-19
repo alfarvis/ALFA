@@ -22,8 +22,11 @@ class ReadCSV(AbstractReader):
         try:
             data = pd.read_csv(file_path)
         except:
-            Printer.Print("File not found")
-            return ResultObject(None, None, None, CommandStatus.Error)
+            try:
+                data = pd.read_excel(file_path)
+            except:
+                Printer.Print("File not found")
+                return ResultObject(None, None, None, CommandStatus.Error)
 
         command_status = CommandStatus.Success
 

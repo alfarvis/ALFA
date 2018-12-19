@@ -1,10 +1,1 @@
-file_name,file_type,keywords,description
-AlfaDatabase,folder,alfa database,recursive
-Downloads,folder,downloads folder,Downloads
-Documents,folder,documents folder,Documents
-SVM.csv,algorithm_arg,svm support vector machine,SVM Model for training a classifier on the data
-RF.csv,algorithm_arg,rf random forest,random forest model for training a classifier on the data
-LR.csv,algorithm_arg,logisitic regression,logistic regression model for training a classifier
-DT.csv,algorithm_arg,dt decision tree,decision tree model for training a classifier
-kmeans.csv,algorithm_arg,k means ,Model for running basic k means
-hierarchical_clustering.csv,algorithm_arg,hierarchical clustering,Model for running basic ward linkage based hierarchical clustering
+file_name,file_type,keywords,descriptionAlfaDatabase,folder,alfa database,recursiveDownloads,folder,downloads folder,DownloadsDocuments,folder,documents folder,DocumentsSVM.csv,algorithm_arg,svm support vector machine,SVM Model for training a classifier on the dataRF.csv,algorithm_arg,rf random forest,random forest model for training a classifier on the dataLR.csv,algorithm_arg,logisitic regression,logistic regression model for training a classifierDT.csv,algorithm_arg,dt decision tree,decision tree model for training a classifierkmeans.csv,algorithm_arg,k means ,Model for running basic k meanshierarchical_clustering.csv,algorithm_arg,hierarchical clustering,Model for running basic ward linkage based hierarchical clustering
