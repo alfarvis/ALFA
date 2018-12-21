@@ -16,8 +16,12 @@ def save_table(path, user_conv):
         Printer.Print("Not in Qt GUI mode! Cannot save tables")
         return False
     current_widget = QTabManager.parent_tab_widget.widget(number)
-    table = current_widget.findChild(QTableWidget)
-    save_table_as_csv(table, path)
+    if current_widget is not None:
+        table = current_widget.findChild(QTableWidget)
+        save_table_as_csv(table, path)
+    else:
+        Printer.Print("No tab available to print yet")
+        return False
     return True
 
 
