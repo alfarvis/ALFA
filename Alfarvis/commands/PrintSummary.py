@@ -40,8 +40,10 @@ class DataSummary(AbstractCommand):
         A list of  argument structs that specify the inputs needed for
         executing the print summary command
         """
-        return [Argument(keyword="data_frame", optional=False,
-                         argument_type=DataType.csv, number=1)]
+        return [Argument(keyword="array_datas", optional=True,
+                         argument_type=DataType.array, number=-1, fill_from_cache=False), 
+                Argument(keyword="data_frame", optional=True,
+                         argument_type=DataType.csv, number=1, fill_from_cache=False)]
 
     def performOperation(self, df):
         df_new = pd.DataFrame()
@@ -53,23 +55,37 @@ class DataSummary(AbstractCommand):
 
         return df_new
 
-    def evaluate(self, data_frame):
+    def evaluate(self, array_datas,data_frame):
         """
         Calculate label-wise mean array store it to history
         Parameters:
 
         """
         result_object = ResultObject(None, None, None, CommandStatus.Success)
+        
+        if data_frame is not None:
+            df = data_frame.data
+            cname = data_frame.name
+        elif array_datas is not None:
+            command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
+                array_datas)
+            if len(cname)==0:
+                cname = ".".join(kl1)
+            if command_status == CommandStatus.Error:
+                return ResultObject(None, None, None, CommandStatus.Error)
+        else: 
+            Printer.Print("Please provide data frame or arrays to analyze")
+            return ResultObject(None, None, None, CommandStatus.Error)
 
-        df_new = self.performOperation(data_frame.data)
+        df_new = self.performOperation(df)
         TablePrinter.printDataFrame(df_new)
         
         result_objects = []
         # Adding the newly created CSV
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
-        command_name = self._condition[0]
-        result_object.createName(data_frame.name, command_name=command_name,
+        command_name = "smry"
+        result_object.createName(cname, command_name=command_name,
                           set_keyword_list=True)
         
         result_objects.append(result_object)

@@ -116,7 +116,7 @@ class StatROC(AbstractCommand):
         result_objects = []
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
-        result_object.createName(cname, command_name='roc',
+        result_object.createName(cname, command_name='rcurve',
                           set_keyword_list=True)
         
         result_objects.append(result_object)
@@ -128,7 +128,7 @@ class StatROC(AbstractCommand):
             arr = df_new[kl1[col]]
             result_object = ResultObject(arr, [], DataType.array,
                               CommandStatus.Success)
-            command_name = 'roc'
+            command_name = 'rcurve'
             result_object.createName(truncated_kl1[col], command_name=command_name,
                       set_keyword_list=True)
 

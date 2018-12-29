@@ -111,7 +111,7 @@ class StatSigTest(AbstractCommand):
         # Adding the newly created csv
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
-        result_object.createName(cname, command_name='ttest',
+        result_object.createName(cname, command_name='sigtest',
                           set_keyword_list=True)
         
         result_objects.append(result_object)
@@ -122,7 +122,7 @@ class StatSigTest(AbstractCommand):
             arr = df_new[kl1[col]]
             result_object = ResultObject(arr, [], DataType.array,
                               CommandStatus.Success)
-            command_name = 'ttest'
+            command_name = 'sigtest'
             result_object.createName(truncated_kl1[col], command_name=command_name,
                       set_keyword_list=True)
 

@@ -34,14 +34,14 @@ class Cluster_kmeans(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
     
-    def __init__(self, condition=["kmeans"]):
+    def __init__(self, condition=["cluster"]):
         self._condition = condition
 
     def commandTags(self):
         """
         Tags to identify the clustering command
         """
-        return self._condition + ["cluster","k means"]
+        return self._condition + ["kmeans","k means"]
 
     def argumentTypes(self):
         """
@@ -105,7 +105,7 @@ class Cluster_kmeans(AbstractCommand):
                                          CommandStatus.Success)
         result_object.createName(
                     cname,
-                    command_name = self._condition[0],
+                    command_name = "clstr",
                     set_keyword_list=True)
         
         
@@ -118,7 +118,7 @@ class Cluster_kmeans(AbstractCommand):
         
 class Cluster_spectral(Cluster_kmeans):
     def __init__(self):
-        super(Cluster_spectral, self).__init__(["spectral clustering","spectral","cluster"])
+        super(Cluster_spectral, self).__init__(["cluster","spectral clustering","spectral"])
 
     def briefDescription(self):
         return "cluster using spectral clustering"
@@ -131,7 +131,7 @@ class Cluster_spectral(Cluster_kmeans):
 
 class Cluster_hierarchical(Cluster_kmeans):
     def __init__(self):
-        super(Cluster_hierarchical, self).__init__(["hierarchical clustering","hierarchical","cluster"])
+        super(Cluster_hierarchical, self).__init__(["cluster","hierarchical clustering","hierarchical"])
 
     def briefDescription(self):
         return "cluster using hierarchical clustering"
