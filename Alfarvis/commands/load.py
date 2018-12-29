@@ -62,7 +62,7 @@ class Load(AbstractCommand):
             win.show()
             return ResultObject(None, None, None, CommandStatus.Success)
 
-        if file_name.data.loaded:
+        if file_name.data.loaded and file_name.data.data_type is not DataType.algorithm_arg:
             Printer.Print("File already loaded!")
             return ResultObject(None, None, None, CommandStatus.Success)
 

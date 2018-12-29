@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (QFormLayout, QLabel, QCheckBox, QLineEdit, QSpinBox
 from .map_qt_checkstate import mapBool, mapCheckedState
 from .property_editor import PropertyEditor
 from PyQt5.QtCore import Qt
+import numpy as np
 
 
 class UpdateKey(object):
@@ -39,38 +40,40 @@ class QtPropertyEditor(QWidget):
     def fillForm(self, properties):
         form_layout = QFormLayout()
         for key, value in properties.items():
-            if type(value) == bool:
+            if isinstance(value, np.bool_):
                 check_box = QCheckBox()
                 check_box.setCheckState(mapBool(value))
                 check_box.stateChanged.connect(UpdateBool(properties, key))
                 form_layout.addRow(key, check_box)
-            elif type(value) == str:
+            elif isinstance(value, str):
                 line_edit = QLineEdit(value)
                 line_edit.textChanged.connect(UpdateKey(properties, key))
                 form_layout.addRow(key, line_edit)
-            elif type(value) == int:
+            elif isinstance(value, np.int_):
                 spin_box = QSpinBox()
                 spin_box.setValue(value)
                 spin_box.valueChanged.connect(UpdateKey(properties, key))
                 form_layout.addRow(key, spin_box)
-            elif type(value) == double:
+            elif isinstance(value, float):
                 spin_box = QDoubleSpinBox()
                 spin_box.setValue(value)
                 spin_box.valueChanged.connect(UpdateKey(properties, key))
                 form_layout.addRow(key, spin_box)
+            else:
+                print("Unknown value type", type(value))
         # Connect signals everywhere :)
-        update_figure = QPushButton()
-        update_figure.setText("Update")
+        update_target = QPushButton()
+        update_target.setText("Update")
         close_form = QPushButton()
         close_form.setText("Close")
         close_form.clicked.connect(self.closeForm)
         hlayout = QHBoxLayout()
-        hlayout.addWidget(update_figure)
+        hlayout.addWidget(update_target)
         hlayout.addWidget(close_form)
         form_layout.addRow(hlayout)
-        return form_layout, update_figure
+        return form_layout, update_target
 
-    def updateFigure(self):
+    def updateTarget(self):
         properties = self.result.data[1]
         #print("Updated properties")
         # for key, value in properties.items():
@@ -82,6 +85,6 @@ class QtPropertyEditor(QWidget):
             return
         properties = self.result.data[1]
         form_layout, button = self.fillForm(properties)
-        button.clicked.connect(self.updateFigure)
+        button.clicked.connect(self.updateTarget)
         self.setLayout(form_layout)
         self.show()
