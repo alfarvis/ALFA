@@ -40,7 +40,7 @@ class QtPropertyEditor(QWidget):
     def fillForm(self, properties):
         form_layout = QFormLayout()
         for key, value in properties.items():
-            if isinstance(value, np.bool_):
+            if isinstance(value, (bool, np.bool_)):
                 check_box = QCheckBox()
                 check_box.setCheckState(mapBool(value))
                 check_box.stateChanged.connect(UpdateBool(properties, key))
@@ -49,7 +49,7 @@ class QtPropertyEditor(QWidget):
                 line_edit = QLineEdit(value)
                 line_edit.textChanged.connect(UpdateKey(properties, key))
                 form_layout.addRow(key, line_edit)
-            elif isinstance(value, np.int_):
+            elif isinstance(value, (int, np.int_)):
                 spin_box = QSpinBox()
                 spin_box.setValue(value)
                 spin_box.valueChanged.connect(UpdateKey(properties, key))
