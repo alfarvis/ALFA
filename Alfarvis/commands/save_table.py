@@ -35,26 +35,29 @@ def save_table_as_csv(table, path):
     else:
         path = path.data
     Printer.Print("Saving table as csv: ", path)
-    with open(path, 'w') as stream:
-        writer = csv.writer(stream)
-        header_data = []
-        for column in range(table.columnCount()):
-            item = table.horizontalHeaderItem(column)
-            if item is not None:
-                header_data.append(str(item.text()))
-            else:
-                header_data.append('')
-        writer.writerow(header_data)
-        for row in range(table.rowCount()):
-            rowdata = []
+    try:
+        with open(path, 'w') as stream:
+            writer = csv.writer(stream)
+            header_data = []
             for column in range(table.columnCount()):
-                item = table.item(row, column)
+                item = table.horizontalHeaderItem(column)
                 if item is not None:
-                    rowdata.append(
-                        str(item.text()))
+                    header_data.append(str(item.text()))
                 else:
-                    rowdata.append('')
-            writer.writerow(rowdata)
+                    header_data.append('')
+            writer.writerow(header_data)
+            for row in range(table.rowCount()):
+                rowdata = []
+                for column in range(table.columnCount()):
+                    item = table.item(row, column)
+                    if item is not None:
+                        rowdata.append(
+                            str(item.text()))
+                    else:
+                        rowdata.append('')
+                writer.writerow(rowdata)
+    except FileNotFoundError:
+        Printer.Print("Cannot save to file: ", path)
     # try:
     # except:
     #    Printer.Print("Cannot save table")
