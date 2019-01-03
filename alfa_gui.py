@@ -60,8 +60,9 @@ class UserInputHandler(object):
         Printer.UserPrint("User: " + input_text)
         Printer.Print("Alfa: ")
         lower_text = input_text.lower()
-        if (('bye' in lower_text) or
-            (('quit' in lower_text or 'exit' in lower_text) and
+        lower_text_split = lower_text.split(' ')
+        if (('bye' in lower_text_split) or
+            (('quit' in lower_text_split or 'exit' in lower_text_split) and
              self.alpha.parser.currentState != ParserStates.command_known_data_unknown)):
             print("Qutting Application!")
             self.qt_app.quit()
