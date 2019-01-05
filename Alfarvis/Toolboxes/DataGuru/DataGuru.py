@@ -129,6 +129,16 @@ class DataGuru:
         return command_status, df, df.columns.values.tolist(), common_name
 
     @classmethod
+    def convertStrCols_toNumeric(self,df):
+        for col in df.columns:
+            if (np.issubdtype(df[col], np.number)) == False:
+                arr_data = pd.Series(df[col])
+                lut = dict(zip(arr_data.unique(), np.linspace(0, 1, arr_data.unique().size)))
+                # Creating a new data object by mapping strings to numbers
+                df[col] = arr_data.map(lut)
+        return df
+    
+    @classmethod
     def removenan(self, df, gt):
         df['ground_truth'] = gt
         df.dropna(inplace=True)

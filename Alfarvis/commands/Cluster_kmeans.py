@@ -9,6 +9,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer, TablePrinter
+from Alfarvis.windows import Window
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -65,10 +66,11 @@ class Cluster_kmeans(AbstractCommand):
         # Get the data frame        
         if data_frame is not None:
             df = data_frame.data
+            df = DataGuru.convertStrCols_toNumeric(df)
             cname = data_frame.name
         elif array_datas is not None:
             command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
-                array_datas)
+                array_datas,useCategorical=True)
             if command_status == CommandStatus.Error:
                 return ResultObject(None, None, None, CommandStatus.Error)
         else: 
@@ -78,9 +80,10 @@ class Cluster_kmeans(AbstractCommand):
         if StatContainer.ground_truth is not None:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
             Y = StatContainer.filterGroundTruth()            
-
-        # Remove nans:
-        df, Y = DataGuru.removenan(df, Y)
+            # Remove nans:
+            df, Y = DataGuru.removenan(df, Y)
+        else:
+            df.dropna(inplace=True)
 
         # Get the tsne model
         
@@ -97,8 +100,24 @@ class Cluster_kmeans(AbstractCommand):
         if numbers != [] and numbers[0].data > 0:
             num_clusters = int(numbers[0].data)
         else:
-            num_clusters = 2  # If not specified select top 10 features
+            num_clusters = 2  # If not specified use 2 clusters
         kY = self.performOperation(X,num_clusters)
+        result_objects = []
+        if StatContainer.ground_truth is not None:
+            df_res = pd.DataFrame()
+            df_res['ground_truth'] = Y
+            df_res['clustering_result'] = kY
+            df_res.pivot_table(index=df_res.columns[0], columns=df_res.columns[1], aggfunc=np.size, fill_value=0)
+            win = Window.window()
+            f = win.gcf()
+            ax = f.add_subplot(111)
+            sns.heatmap(df_res, ax=ax)
+            win.show()
+            if data_frame is not None:
+                result_object = VizContainer.createResult(win, data_frame, ['clstr.fig'])
+            else:
+                result_object = VizContainer.createResult(win, array_datas, ['clstr.fig'])
+            result_objects.append(result_object)
         
         result_object = ResultObject(kY, [],
                                          DataType.array,
@@ -108,8 +127,8 @@ class Cluster_kmeans(AbstractCommand):
                     command_name = "clstr",
                     set_keyword_list=True)
         
-        
-        return result_object
+        result_objects.append(result_object)
+        return result_objects
     
     def performOperation(self,X,num_clusters):
         kmns = KMeans(n_clusters=num_clusters, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')

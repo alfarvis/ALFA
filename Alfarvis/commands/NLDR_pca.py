@@ -57,6 +57,7 @@ class NLDR_pca(AbstractCommand):
         # Get the data frame        
         if data_frame is not None:
             df = data_frame.data
+            df = DataGuru.convertStrCols_toNumeric(df)
             cname = data_frame.name
         elif array_datas is not None:
             command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
@@ -70,10 +71,10 @@ class NLDR_pca(AbstractCommand):
         if StatContainer.ground_truth is not None:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
             Y = StatContainer.filterGroundTruth()            
-
-        # Remove nans:
-        df, Y = DataGuru.removenan(df, Y)
-
+            # Remove nans:
+            df, Y = DataGuru.removenan(df, Y)
+        else:
+            df.dropna(inplace=True)
         # Get the tsne model
         
 
