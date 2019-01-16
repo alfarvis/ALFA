@@ -4,6 +4,7 @@ Load the file data base into history
 """
 
 from collections import namedtuple
+from pathlib import Path
 from .abstract_reader import AbstractReader
 from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, FileObject
 from Alfarvis import package_directory
@@ -35,17 +36,16 @@ class ReadDatabase(AbstractReader):
                 return False
         return True
 
-    def getFilePath(self, file_path):
-        if not os.path.isfile(file_path):
+    def findFilePath(self, file_path):
+        mod_file_path = file_path
+        if not os.path.isfile(mod_file_path):
+            mod_file_path = os.path.join(str(Path.home()),
+                                  'AlfaDatabase', file_path)
+        if not os.path.isfile(mod_file_path):
             mod_file_path = os.path.join(package_directory, 'resources',
                     file_path)
-            if not os.path.isfile(mod_file_path):
-                mod_file_path = os.path.join(str(Path.home()),
-                                  'AlfaDatabase', file_path)
-            if not os.path.isfile(mod_file_path):
-                mod_file_path = None
-        else:
-            mod_file_path = file_path
+        if not os.path.isfile(mod_file_path):
+            return None
         return mod_file_path
 
     def read(self, file_path, keyword_list):
@@ -57,7 +57,7 @@ class ReadDatabase(AbstractReader):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         skipped_files = 0
-        mod_file_path = self.getFilePath(file_path)
+        mod_file_path = self.findFilePath(file_path)
         if mod_file_path is not None:
             # try:
             data_frame = pd.read_csv(mod_file_path)
@@ -84,8 +84,7 @@ class ReadDatabase(AbstractReader):
                     else:
                         Printer.Print("Failed to load folder: ", row['file_name'])
                     continue
-
-                row_file_path = self.getFilePath(row['file_name'])
+                row_file_path = self.findFilePath(row['file_name'])
                 if row_file_path is None:
                     Printer.Print("Cannot find file: ", row['file_name'])
                     continue

@@ -128,6 +128,16 @@ class DataGuru:
         return command_status, df, df.columns.values.tolist(), common_name
 
     @classmethod
+    def convertStrCols_toNumeric(self,df):
+        for col in df.columns:
+            if (np.issubdtype(df[col], np.number)) == False:
+                arr_data = pd.Series(df[col])
+                lut = dict(zip(arr_data.unique(), np.linspace(0, 1, arr_data.unique().size)))
+                # Creating a new data object by mapping strings to numbers
+                df[col] = arr_data.map(lut)
+        return df
+    
+    @classmethod
     def removenan(self, df, gt):
         df['ground_truth'] = gt
         df.dropna(inplace=True)
@@ -182,6 +192,53 @@ class DataGuru:
         allTrue = []
         allPred = []
         for train, test in kfold.split(X, Y):
+
+            # Get the training and test dataset for this run
+            X_train = X[train]
+            X_test = X[test]
+
+            # Fit the model
+            model.fit(X_train, Y[train])
+            # evaluate the model
+            scores = model.score(X_test, Y[test])
+            Y_Pr = model.predict_proba(X_test)
+            cvscores.append(scores * 100)
+            #fpr, tpr, thresholds = metrics.roc_curve(Y[test], Y_Pr[:, 0], pos_label=1)
+            #auc_val = metrics.auc(fpr, tpr)
+            # aucscores.append(auc_val)
+
+            allTrue = allTrue + (list(Y[test]))
+            allPred = allPred + (list(model.predict(X_test)))
+        allTrue = np.array(allTrue) - 1
+        allPred = np.array(allPred) - 1
+        #TP,FP,TN,FN = self.perf_measure(self,allTrue,allPred)
+        #Sens = TP/(TP+FN)
+        #Spec = TN/(FP+TN)
+
+        cm = metrics.confusion_matrix(allTrue, allPred)
+
+        #Printer.Print("%d-fold cross validation accuracy -  %.2f%% (+/- %.2f%%)" % (num_folds, np.mean(cvscores), np.std(cvscores)))
+        #Printer.Print("%d-fold cross validation AUC -  %.2f (+/- %.2f)" % (num_folds, np.mean(aucscores), np.std(aucscores)))
+        #Printer.Print("%d-fold cross validation Sens -  %.2f " % (num_folds, Sens, ))
+        #Printer.Print("%d-fold cross validation Spec -  %.2f " % (num_folds, Spec, ))
+
+        return cm, cvscores
+    
+    @classmethod
+    def runLOOCV(self, X, Y, model):
+
+        # Setting a seed for randomly splitting the data for k fold CV
+        seed = 3
+        np.random.seed(seed)
+
+        # Getting the training and testing splits for CV        
+        loo = LeaveOneOut()
+        cvscores = []
+        aucscores = []
+
+        allTrue = []
+        allPred = []
+        for train, test in loo.split(X, Y):
 
             # Get the training and test dataset for this run
             X_train = X[train]
