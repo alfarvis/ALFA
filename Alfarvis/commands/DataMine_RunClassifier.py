@@ -34,7 +34,7 @@ class DM_Classify(AbstractCommand):
         """
         Tags to identify the train a classifier command
         """
-        return ["classify", "classifier", "run"]
+        return ["classify", "classifier", "run", "test"]
 
     def argumentTypes(self):
         """

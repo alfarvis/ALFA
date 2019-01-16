@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import (QFormLayout, QLabel, QCheckBox, QLineEdit, QSpinBox,
-                             QDoubleSpinBox, QPushButton, QHBoxLayout)
+                             QDoubleSpinBox, QPushButton, QHBoxLayout, QComboBox)
 from .map_qt_checkstate import mapBool, mapCheckedState
 from .property_editor import PropertyEditor
 from PyQt5.QtCore import Qt
@@ -58,6 +58,7 @@ class QtPropertyEditor(QWidget):
                 spin_box.setValue(value)
                 spin_box.valueChanged.connect(UpdateKey(properties, key))
                 form_layout.addRow(key, spin_box)
+
         # Connect signals everywhere :)
         update_figure = QPushButton()
         update_figure.setText("Update")

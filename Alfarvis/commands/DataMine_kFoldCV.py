@@ -18,13 +18,15 @@ from Alfarvis.Toolboxes.DataGuru import DataGuru
 from sklearn import metrics  # for the check the error and accuracy of the model
 from sklearn import preprocessing
 from Alfarvis.windows import Window
+from .Viz_Container import VizContainer
+from .modify_figure import ModifyFigure
 
 
-class DM_TrainClassifier(AbstractCommand):
+class DM_RunCrossValidation(AbstractCommand):
     """
     Run k fold CV on a bunch of arrays
     """
-
+    modify_figure = ModifyFigure()
     def briefDescription(self):
         return "train classifier on a dataset"
 
@@ -43,12 +45,16 @@ class DM_TrainClassifier(AbstractCommand):
         executing the train classifier command
         """
         # TODO Add an argument for k = number of clusters
-        return [Argument(keyword="data_frame", optional=True,
-                         argument_type=DataType.csv, number=1),
-                         Argument(keyword="classifier_algo", optional=False,
-                         argument_type=DataType.algorithm_arg)]
-
-    def evaluate(self, data_frame, classifier_algo):
+        return [Argument(keyword="data_frame", optional=True, argument_type=DataType.csv, number=1, fill_from_cache=False),
+                Argument(keyword="array_datas", optional=True,argument_type=DataType.array, number=-1, fill_from_cache=False),
+                Argument(keyword="classifier_algo", optional=False, argument_type=DataType.algorithm_arg)]
+    
+    def createDefaultProperties(self):
+        properties = {}
+        properties["k (default: LOOCV)"] = "0"
+        return properties
+    
+    def evaluate(self, data_frame, array_datas, classifier_algo):
         """
         Train a classifier on multiple arrays
 
@@ -57,7 +63,17 @@ class DM_TrainClassifier(AbstractCommand):
 
         # Get the data frame
         sns.set(color_codes=True)
-        df = data_frame.data
+        if data_frame is not None:
+            df = data_frame.data
+            cname = data_frame.name
+        elif array_datas is not None:
+            command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
+                array_datas)
+            if command_status == CommandStatus.Error:
+                return ResultObject(None, None, None, CommandStatus.Error)
+        else: 
+            Printer.Print("Please provide data frame or arrays to analyze")
+            return ResultObject(None, None, None, CommandStatus.Error)
         #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
         # if command_status == CommandStatus.Error:
         #    return ResultObject(None, None, None, CommandStatus.Error)
@@ -84,22 +100,63 @@ class DM_TrainClassifier(AbstractCommand):
         # Get a standard scaler for the extracted data X
         scaler = preprocessing.StandardScaler().fit(X)
         X = scaler.transform(X)
-
-        Printer.Print('Running k fold cross validation...')
-
-        cm, cvscores = DataGuru.runKFoldCV(X, Y, model, 10)
+        
+        properties = self.createDefaultProperties()
+        properties['title'] = cname
         win = Window.window()
-        f = win.gcf()
-        ax = f.add_subplot(111)
-        DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
-        win.show()
+        
+        if data_frame is not None:
+            result_object =  VizContainer.createResult(win, data_frame, ['cval'])
+        else:
+            result_object = VizContainer.createResult(win, array_datas, ['cval'])
 
-        # TODO Need to save the model
-        # Ask user for a name for the model
-        result_object = ResultObject(None, None, None, CommandStatus.Success)
-
+        
+        result_object.data = [win, properties, [X,Y,model], self.updateFigure]
+        self.updateFigure(result_object.data)
+        self.modify_figure.evaluate(result_object)
         return result_object
-
+        
+        #cm, cvscores = DataGuru.runLOOCV(X, Y, model)
+        #cm, cvscores = DataGuru.runKFoldCV(X, Y, model,2)
+        
+        
+        #f = win.gcf()
+        #ax = f.add_subplot(111)
+        #DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
+        #win.show()
+    
+    def updateFigure(self, result_data):
+        win = result_data[0]
+        f = win.gcf()
+        f.clear()
+        ax = f.add_subplot(111)
+        properties = result_data[1]
+        data = result_data[2]
+        X = data[0]
+        Y = data[1]
+        model = data[2]
+        try:
+            kValue = int(properties["k (default: LOOCV)"])
+            if kValue==0:
+                Printer.Print("Using leave one out cross validation")
+            else:
+                Printer.Print("Using",kValue,"fold cross validation")
+        except:
+            Printer.Print("Using leave one out cross validation")
+            kValue = 0
+        
+        if kValue > X.shape[0]:
+            kValue = 0
+            Printer.Print("k too high. Using leave one out cross validation")
+        
+        if kValue == 0:
+            cm, cvscores = DataGuru.runLOOCV(X, Y, model)
+        else:
+            cm, cvscores = DataGuru.runKFoldCV(X, Y, model,kValue)
+        DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
+        ax.set_title(properties["title"])
+        win.show()
+    
     def ArgNotFoundResponse(self, arg_name):
         super().DataMineArgNotFoundResponse(arg_name)
 

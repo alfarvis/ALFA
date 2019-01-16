@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Define ttest calculator command
+Define ROC calculator command
 
 Created on Thu Mar  8 00:33:34 2018
 
@@ -19,29 +19,29 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from Alfarvis.Toolboxes.DataGuru import DataGuru
-
-
-class StatSigTest(AbstractCommand):
+from sklearn import metrics
+from sklearn.linear_model import LogisticRegression
+class StatROC(AbstractCommand):
     """
-    Calculates ttest for a predictor variable
+    Calculates ROC for a predictor variable
     """
 
     def briefDescription(self):
-        return "calculate ttest for an array"
+        return "calculate ROC for an array"
 
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
     def commandTags(self):
         """
-        return tags that are used to identify ttest command
+        return tags that are used to identify ROC command
         """
-        return ["ttest", "p value", "t test"]
+        return ["roc", "auc"]
 
     def argumentTypes(self):
         """
         A list of  argument objects that specify the inputs needed for
-        executing the ttest command
+        executing the ROC command
         """
         return [Argument(keyword="array_datas", optional=True,
                          argument_type=DataType.array, number=-1, fill_from_cache=False), 
@@ -50,11 +50,10 @@ class StatSigTest(AbstractCommand):
 
     def evaluate(self, array_datas,data_frame):
         """
-        Calculate ttest of the array and store it to history
+        Calculate ROC of the array and store it to history
         Parameters:
 
         """
-        
         if data_frame is not None:
             df = data_frame.data
             cname = data_frame.name
@@ -68,17 +67,17 @@ class StatSigTest(AbstractCommand):
             return ResultObject(None, None, None, CommandStatus.Error)
 
         if StatContainer.ground_truth is None:
-            print("Could not find the reference variable.")
-            print("Please set the reference variable")
+            Printer.Print("Could not find the reference variable.")
+            Printer.Print("Please set the reference variable")
             return ResultObject(None, None, None, CommandStatus.Error)
         else:
             gtVals = StatContainer.filterGroundTruth()
             ground_truth = StatContainer.ground_truth.name
             if len(gtVals) != df.shape[0]:
-                print("The size of the ground truth does not match with arrays being analyzed")
-                print(len(gtVals), df.shape[0])
+                Printer.Print("The size of the ground truth does not match with arrays being analyzed")
+                Printer.Print(len(gtVals), df.shape[0])
                 return ResultObject(None, None, None, CommandStatus.Error)
-
+        
         uniqVals = StatContainer.isCategorical(gtVals)
         df[ground_truth] = gtVals
         df_new = pd.DataFrame()
@@ -86,35 +85,42 @@ class StatSigTest(AbstractCommand):
             df_new['features'] = df.columns.drop(ground_truth).values
         else:
             df_new['features'] = df.columns
-
+        
         allCols = df_new['features']
         for iter in range(len(uniqVals)):
-            for iter1 in range(iter + 1, len(uniqVals)):
-                df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)] = np.zeros(df_new.shape[0])
-
+            for iter1 in range(iter+1,len(uniqVals)):
+                df_new['AUC'] = 0
+                    
+        avgAUC = []
         for iter_feature in range(len(df_new['features'])):
             arr = df[allCols[iter_feature]]
-            for iter in range(len(uniqVals)):
-                uniV = uniqVals[iter]
-                a = arr[gtVals == uniV]
-                for iter1 in range(iter + 1, len(uniqVals)):
-                    b = arr[gtVals == uniqVals[iter1]]
-                    if uniV != uniqVals[iter1]:
-                        ttest_val = scipy.stats.ttest_ind(a, b, axis=0, equal_var=False)
-                        df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = (ttest_val.pvalue)
-                    else:
-                        df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
-
+            model = LogisticRegression()
+            X = arr.values
+            X1 = X.reshape(-1,1)
+            model.fit(X1, gtVals)
+            # evaluate the model            
+            allAUC = []
+            Y_Pr = model.predict_proba(X1)           
+            for iter in range (len(uniqVals)):
+                fpr, tpr, thresholds = metrics.roc_curve(gtVals, Y_Pr[:, iter], pos_label=uniqVals[iter])
+                fpr, tpr, thresholds = metrics.roc_curve(gtVals, Y_Pr[:, iter], pos_label=uniqVals[iter])
+                auc_val = metrics.auc(fpr, tpr)
+                allAUC.append(auc_val)
+            avgAUC.append(np.mean(allAUC))
+        df_new['AUC'] = avgAUC
+                    
+                        
         TablePrinter.printDataFrame(df_new)
         
+        # New data frame
         result_objects = []
-        # Adding the newly created csv
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
-        result_object.createName(cname, command_name='sigtest',
+        result_object.createName(cname, command_name='rcurve',
                           set_keyword_list=True)
         
         result_objects.append(result_object)
+        
         # create an updated list of column names by removing the common names
         kl1 = df_new.columns
         truncated_kl1, common_name = StatContainer.removeCommonNames(kl1)
@@ -122,15 +128,21 @@ class StatSigTest(AbstractCommand):
             arr = df_new[kl1[col]]
             result_object = ResultObject(arr, [], DataType.array,
                               CommandStatus.Success)
-            command_name = 'sigtest'
+            command_name = 'rcurve'
             result_object.createName(truncated_kl1[col], command_name=command_name,
                       set_keyword_list=True)
 
             result_objects.append(result_object)
+        
         return result_objects
-
-    def ArgNotFoundResponse(self, arg_name):
-        super().AnalyzeArgNotFoundResponse(arg_name)
-
+    
+    def ArgNotFoundResponse(self,arg_name):
+        Printer.Print("Which variable(s) do you want me to analyze?")
+    
+    def ArgFoundResponse(self,arg_name):
+        Printer.Print("Found variables") # will only be called for commands with multiple arg types
+        
     def MultipleArgsFoundResponse(self, arg_name):
-        super().AnalyzeMultipleArgsFoundResponse(arg_name)
+        Printer.Print("I found multiple variables that seem to match your query")
+        Printer.Print("Could you please look at the following variables and tell me which one you "
+              "want to analyze?")

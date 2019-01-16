@@ -14,6 +14,7 @@ dependencies:
   - nose
   - lazyasd
   - pyqt
+  - xlrd
   - pip:
     - namedlist==1.7
     - pep8
