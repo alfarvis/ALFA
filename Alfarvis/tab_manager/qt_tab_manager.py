@@ -30,6 +30,7 @@ class QTabManager(object):
             layout = QVBoxLayout()
         else:
             figure_tab = self.parent_tab_widget.widget(self.current_index_count)
+            figure_tab.setWindowTitle(title + " " + str(self.current_index_count + 1))
             layout = figure_tab.layout()
             clearLayout(layout)
         # Update index and connect event

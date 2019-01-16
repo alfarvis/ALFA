@@ -41,7 +41,7 @@ class DM_TrainClassifier(AbstractCommand):
         A list of  argument structs that specify the inputs needed for
         executing the train classifier command
         """
-        
+
         return [Argument(keyword="data_frame", optional=True,
                          argument_type=DataType.csv, number=1),
                          Argument(keyword="classifier_algo", optional=True,
@@ -54,10 +54,10 @@ class DM_TrainClassifier(AbstractCommand):
         """
         result_object = ResultObject(None, None, None, CommandStatus.Error)
 
-        # Get the data frame        
+        # Get the data frame
         df = data_frame.data
         #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        
+
         if StatContainer.ground_truth is None:
             Printer.Print("Please set a feature vector to ground truth by",
                           "typing set ground truth before using this command")
@@ -71,7 +71,7 @@ class DM_TrainClassifier(AbstractCommand):
         df, Y = DataGuru.removenan(df, Y)
 
         # Get the classifier model
-        model = classifier_algo.data
+        model = classifier_algo.data[0]
 
         # Code to run the classifier
         X = df.values
@@ -84,7 +84,7 @@ class DM_TrainClassifier(AbstractCommand):
         Printer.Print("Training the classifier")
         df_show = pd.DataFrame()
         df_show['Features'] = df.columns
-        
+
         TablePrinter.printDataFrame(df_show)
         model.fit(X, Y)
 
@@ -95,16 +95,14 @@ class DM_TrainClassifier(AbstractCommand):
         predictions = model.predict(X)
         accuracy = metrics.accuracy_score(predictions, Y)
         Printer.Print("Accuracy on training set : %s" % "{0:.3%}".format(accuracy))
-        
 
         trained_model = {'Scaler': scaler, 'Model': model}
 
         result_object = ResultObject(trained_model, [], DataType.trained_model,
                               CommandStatus.Success)
-        
-        
-        result_object.createName(data_frame.keyword_list, command_name=classifier_algo.name,
-                          set_keyword_list=True)
 
+        classifier_algo_name = classifier_algo.name.replace('.', ' ')
+        result_object.createName(data_frame.keyword_list, command_name=classifier_algo_name,
+                          set_keyword_list=True)
 
         return result_object

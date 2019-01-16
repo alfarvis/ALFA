@@ -90,6 +90,10 @@ class QtNotebookTablePrinter(AbstractTablePrinter):
         else:
             self.table_widget.show()
 
+    def getFileName(self):
+        file_name = QFileDialog.getSaveFileName()
+        return file_name
+
     def highlight(self, name, color='g'):
         if not self.tab_initialized:
             table_widget = self.table_widget

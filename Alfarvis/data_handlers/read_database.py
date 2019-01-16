@@ -10,6 +10,7 @@ from Alfarvis.basic_definitions import DataType, ResultObject, CommandStatus, Fi
 from Alfarvis import package_directory
 from Alfarvis.printers import Printer
 from .read_folder import ReadFolder
+from pathlib import Path
 import pandas as pd
 import os
 
@@ -83,7 +84,6 @@ class ReadDatabase(AbstractReader):
                     else:
                         Printer.Print("Failed to load folder: ", row['file_name'])
                     continue
-
                 row_file_path = self.findFilePath(row['file_name'])
                 if row_file_path is None:
                     Printer.Print("Cannot find file: ", row['file_name'])

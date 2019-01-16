@@ -82,7 +82,7 @@ class DM_BestClassifier(AbstractCommand):
         modelList = []
         Printer.Print("Testing the following classifiers: ")
         for classifier_algo in classifier_algos:
-            model = (classifier_algo.data)
+            model = (classifier_algo.data[0])
             Printer.Print(classifier_algo.name)
             modelList.append({'Name': classifier_algo.name, 'Model': model})
 

@@ -8,6 +8,7 @@ from Alfarvis.basic_definitions import (DataType, CommandStatus,
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
+from .save_table import save_table
 
 
 class SavePreviousResult(AbstractCommand):
@@ -16,7 +17,9 @@ class SavePreviousResult(AbstractCommand):
     """
 
     def briefDescription(self):
-        return "Rename variable as user specified name"
+        return "Rename variable as user specified name \
+                save table to csv \
+                save notebook to html format"
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
@@ -25,7 +28,8 @@ class SavePreviousResult(AbstractCommand):
         """
         return tags that are used to identify save previous result command
         """
-        return ["save", "previous", "result", "save chat", "save notebook"]
+        return ["save", "previous", "result", "save chat", "save notebook" "save table",
+                "export", "export table"]
 
     def argumentTypes(self):
         """
@@ -49,6 +53,11 @@ class SavePreviousResult(AbstractCommand):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
         if 'notebook' in user_conv.data or 'chat' in user_conv.data:
             Printer.save(name)
+            return ResultObject(None, None, None, CommandStatus.Success)
+        elif 'table' in user_conv.data:
+            result = save_table(name, user_conv)
+            if not result:
+                return result_object
             return ResultObject(None, None, None, CommandStatus.Success)
         if name is None:
             return result_object

@@ -92,7 +92,7 @@ class DM_RunCrossValidation(AbstractCommand):
         df, Y = DataGuru.removenan(df, Y)
 
         # Get the classifier model
-        model = classifier_algo.data
+        model = classifier_algo.data[0]
 
         # Code to run the classifier
         X = df.values

@@ -17,8 +17,8 @@ import re
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.linear_model import LogisticRegression  # to apply the Logistic regression
-from sklearn.model_selection import train_test_split # to split the data into two parts
-from sklearn.model_selection import GridSearchCV# for tuning parameter
+from sklearn.model_selection import train_test_split  # to split the data into two parts
+from sklearn.model_selection import GridSearchCV  # for tuning parameter
 from sklearn.ensemble import RandomForestClassifier  # for random forest classifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
@@ -29,14 +29,13 @@ from sklearn.model_selection import LeaveOneOut
 from sklearn.model_selection import StratifiedKFold
 
 
-
 @lazyobject
 def cluster():
     return importlib.import_module('sklearn.cluster')
 
 
-#@lazyobject
-#def StratifiedKFold():
+# @lazyobject
+# def StratifiedKFold():
 #    return importlib.import_module('sklearn.model_selection.StratifiedKFold')
 
 
@@ -162,6 +161,18 @@ class DataGuru:
                 str2 = 'True'
             if str2 == 'FALSE':
                 str2 = 'False'
+            str_to_evaluate = str1 + " = " + str2
+            exec(str_to_evaluate)
+        return model
+
+    @classmethod
+    def createModel(self, properties, model_name):
+        model = eval(model_name)
+        for key in properties:
+            if key == 'title':
+                continue
+            str1 = "model." + str(key)
+            str2 = str(properties[key])
             str_to_evaluate = str1 + " = " + str2
             exec(str_to_evaluate)
         return model
@@ -324,7 +335,7 @@ class DataGuru:
 
         ax.imshow(cm, interpolation='nearest', cmap=cmap)
         ax.set_title(title)
-        #ax.colorbar()
+        # ax.colorbar()
         #tick_marks = np.arange(len(classes))
         #ax.xticks(tick_marks, classes, rotation=45)
         #ax.yticks(tick_marks, classes)
@@ -336,7 +347,7 @@ class DataGuru:
                      horizontalalignment="center",
                      color="white" if cm[i, j] > thresh else "black")
 
-        #ax.tight_layout()
+        # ax.tight_layout()
         ax.set_ylabel('True label')
         ax.set_xlabel('Predicted label')
 

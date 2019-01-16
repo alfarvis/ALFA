@@ -17,5 +17,8 @@ class AbstractPrinter(object):
     def Print(self, *args, **kwargs):
         pass
 
+    def getFileName(self):
+        return None
+
     def save(self, name):
         pass
