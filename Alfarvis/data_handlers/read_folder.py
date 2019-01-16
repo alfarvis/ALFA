@@ -33,7 +33,6 @@ class ReadFolder(AbstractReader):
     def addFile(self, dir_entry, file_type, folder_database, parent_path):
         base_name = os.path.basename(dir_entry.name)
         keywords = splitPattern(base_name)
-        print(base_name, " Keywords: ", keywords)
         file_object = FileObject(os.path.join(parent_path, dir_entry.name), file_type,
                 '', False)  # Future can generate some description
         file_name, _ = createName(folder_database._argument_database[file_type].name_dict.keys(), keywords)
