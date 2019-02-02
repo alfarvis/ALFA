@@ -20,7 +20,11 @@ def create_command_database():
         cls_instance = cls()
         split_tags = sum([tag.split(' ') for tag
                           in cls_instance.commandTags()], [])
-        name, _ = createName(command_name_set, split_tags)
+        try:
+            name = cls_instance.commandName()
+        except:
+            name, _ = createName(command_name_set, split_tags)
+            
         command_database.add(cls_instance.commandTags(), cls_instance, name=name)
         command_name_set.add(name)
     return command_database

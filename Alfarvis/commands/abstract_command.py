@@ -32,6 +32,13 @@ class AbstractCommand(object):
         """
         pass
 
+    @abstractproperty
+    def commandName(self):
+        """
+        Returns a unique name for the command
+        """
+        pass
+
     @abstractmethod
     def briefDescription(self):
         return "No description provided"

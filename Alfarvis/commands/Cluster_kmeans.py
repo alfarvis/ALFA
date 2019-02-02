@@ -37,6 +37,9 @@ class Cluster_kmeans(AbstractCommand):
     
     def __init__(self, condition=["cluster"]):
         self._condition = condition
+    
+    def commandName(self):
+        return "clustering.kmeans"
 
     def commandTags(self):
         """
@@ -139,6 +142,9 @@ class Cluster_spectral(Cluster_kmeans):
     def __init__(self):
         super(Cluster_spectral, self).__init__(["cluster","spectral clustering","spectral"])
 
+    def commandName(self):
+        return "clustering.spectral"
+    
     def briefDescription(self):
         return "cluster using spectral clustering"
 
@@ -152,6 +158,9 @@ class Cluster_hierarchical(Cluster_kmeans):
     def __init__(self):
         super(Cluster_hierarchical, self).__init__(["cluster","hierarchical clustering","hierarchical"])
 
+    def commandName(self):
+        return "clustering.hierarchical"
+    
     def briefDescription(self):
         return "cluster using hierarchical clustering"
 

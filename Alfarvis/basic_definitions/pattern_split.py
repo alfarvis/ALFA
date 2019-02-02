@@ -19,7 +19,7 @@ def splitPattern(input_string):
                     for key_val in pattern.split(input_string)]
     else:
         # Add space before upper case
-        input_string = re.sub(r"([A-Z])", r" \1", input_string)
+        #input_string = re.sub(r"([A-Z])", r" \1", input_string)
         out_list = [key_val.lower()
                     for key_val in pattern.split(input_string) if key_val != '']
     return out_list
