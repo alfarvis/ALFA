@@ -28,6 +28,9 @@ class NLDR_tsne(AbstractCommand):
     def briefDescription(self):
         return "visualize data using tsne"
 
+    def commandName(self):
+        return "visualization.tsne"
+
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 

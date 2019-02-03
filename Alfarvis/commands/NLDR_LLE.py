@@ -31,6 +31,9 @@ class NLDR_LLE(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
+    def commandName(self):
+        return "visualization.lle"
+    
     def commandTags(self):
         """
         Tags to identify the LLE command

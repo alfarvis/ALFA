@@ -32,6 +32,9 @@ class DM_topPredictor(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
+    def commandName(self):
+        return "ml.findTopPredictors"
+
     def commandTags(self):
         """
         Tags to identify the "Find top predictors" command

@@ -26,6 +26,9 @@ class DataSummary(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
+    def commandName(self):
+        return "statistics.summary"
+
     def __init__(self, condition=["summary","summarize"]):
         self._condition = condition
 
@@ -122,6 +125,9 @@ class DataGroupSummary(DataSummary):
 
     def briefDescription(self):
         return "print label wise summary"
+
+    def commandName(self):
+        return "statistics.groupwiseSummary"
 
     def performOperation(self, df):
         if StatContainer.ground_truth is None or len(StatContainer.ground_truth.data) != df.shape[0]:

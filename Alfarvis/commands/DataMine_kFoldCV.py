@@ -32,7 +32,10 @@ class DM_RunCrossValidation(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
-
+    
+    def commandName(self):
+        return "ml.kFoldCV"
+    
     def commandTags(self):
         """
         Tags to identify the train a classifier command

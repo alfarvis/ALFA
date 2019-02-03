@@ -25,6 +25,9 @@ class ImageDisplay(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
+    
+    def commandName(self):
+        return "image.display"
 
     def __init__(self):
         self.reader_dictionary = create_reader_dictionary()

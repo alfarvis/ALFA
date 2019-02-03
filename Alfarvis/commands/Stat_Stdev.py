@@ -24,6 +24,9 @@ class StatStdev(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
+    def commandName(self):
+        return "statistics.stdev"
+
     def commandTags(self):
         """
         return tags that are used to identify stdev command

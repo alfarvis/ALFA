@@ -27,6 +27,9 @@ class DM_Classify(AbstractCommand):
     def briefDescription(self):
         return "run trained classifier on a bunch of arrays"
 
+    def commandName(self):
+        return "ml.classify"
+
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 

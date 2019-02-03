@@ -28,6 +28,9 @@ class Load(AbstractCommand):
     def __init__(self):
         self.reader_dictionary = create_reader_dictionary()
 
+    def commandName(self):
+        return "datahandling.load"
+    
     def commandTags(self):
         """
         return tags that are used to identify load command

@@ -28,6 +28,9 @@ class Stat_Correl(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
+    def commandName(self):
+        return "statistics.correlation"
+
     def commandTags(self):
         """
         Tags to identify the correlation command

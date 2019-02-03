@@ -31,6 +31,9 @@ class ListHistory(AbstractCommand):
                 self.datatype_database.add(key_split, DataType[key],
                                            name=key_up)
 
+    def commandName(self):
+        return "list.history"
+    
     def commandTags(self):
         """
         return tags that are used to identify load command

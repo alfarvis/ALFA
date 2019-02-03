@@ -29,6 +29,9 @@ class VizMultiScatter2D(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
+    def commandName(self):
+        return "visualization.multiScatterplot"
+
     def commandTags(self):
         """
         Tags to identify the multidimensional scatterplot command

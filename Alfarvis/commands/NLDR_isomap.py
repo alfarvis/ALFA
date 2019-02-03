@@ -28,6 +28,9 @@ class NLDR_isomap(AbstractCommand):
     def briefDescription(self):
         return "visualize data using Isomap"
 
+    def commandName(self):
+        return "visualization.isomap"
+    
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 

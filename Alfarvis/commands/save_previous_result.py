@@ -24,6 +24,9 @@ class SavePreviousResult(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
+    def commandName(self):
+        return "datahandling.savePrevious"
+
     def commandTags(self):
         """
         return tags that are used to identify save previous result command

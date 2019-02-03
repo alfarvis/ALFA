@@ -30,6 +30,9 @@ class CreateCategoricalFromLogical(AbstractCommand):
         Tags to identify the create categorical command
         """
         return ["create", "categorical", "combine"]
+    
+    def commandName(self):
+        return "dataHandling.createCategorical"
 
     def argumentTypes(self):
         """

@@ -31,6 +31,9 @@ class DM_BestClassifier(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
+    def commandName(self):
+        return "ml.findBestClassifier"
+    
     def commandTags(self):
         """
         Tags to identify the train a classifier command

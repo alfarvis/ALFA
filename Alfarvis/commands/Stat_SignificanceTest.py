@@ -38,6 +38,9 @@ class StatSigTest(AbstractCommand):
         """
         return ["ttest", "p value", "t test"]
 
+    def commandName(self):
+        return "statistics.ttest"
+
     def argumentTypes(self):
         """
         A list of  argument objects that specify the inputs needed for

@@ -28,6 +28,9 @@ class Stat_RelationMap(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
+    def commandName(self):
+        return "visualization.relationship"
+
     def commandTags(self):
         """
         Tags to identify the relationship visualization

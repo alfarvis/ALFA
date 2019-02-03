@@ -30,6 +30,9 @@ class DM_TrainClassifier(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
+    def commandName(self):
+        return "ml.train"
+
     def commandTags(self):
         """
         Tags to identify the train a classifier command

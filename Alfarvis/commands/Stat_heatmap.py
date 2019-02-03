@@ -29,6 +29,9 @@ class Stat_Clustermap(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
+    def commandName(self):
+        return "statistics.heatmap"
+
     def commandTags(self):
         """
         Tags to identify the heatmap command

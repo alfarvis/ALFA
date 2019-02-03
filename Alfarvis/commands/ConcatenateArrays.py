@@ -21,6 +21,9 @@ class ConcatenateArrays(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
+    
+    def commandName(self):
+        return "dataHandling.concatenate"
 
     def commandTags(self):
         """

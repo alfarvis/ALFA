@@ -24,6 +24,9 @@ class SetRowLabels(AbstractCommand):
         """
         return ["setrl", "set", "row", "labels", "row labels"]
 
+    def commandName(self):
+        return "statistics.setRowLabels"
+    
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
@@ -56,6 +59,9 @@ class ClearRL(AbstractCommand):
         return tags that are used to identify set ground truth command
         """
         return ["clearrl", "clear", "row labels"]
+
+    def commandName(self):
+        return "statistics.clearRowLabels"
 
     def argumentTypes(self):
         """

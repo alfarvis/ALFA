@@ -31,6 +31,9 @@ class NLDR_pca(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
+    def commandName(self):
+        return "visualization.pca"
+    
     def commandTags(self):
         """
         Tags to identify the pca command

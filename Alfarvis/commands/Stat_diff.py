@@ -24,6 +24,9 @@ class StatDiff(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
+    def commandName(self):
+        return "statistics.subtract"
+
     def commandTags(self):
         """
         Tags to identify the scatterplot command

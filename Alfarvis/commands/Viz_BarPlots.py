@@ -28,6 +28,9 @@ class VizBarPlots(AbstractCommand):
     def briefDescription(self):
         return "bar plot an array"
 
+    def commandName(self):
+        return "visualization.barplot"
+
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 

@@ -28,6 +28,9 @@ class VizBoxPlot(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
+    def commandName(self):
+        return "visualization.boxplot"
+
     def commandTags(self):
         """
         Tags to identify the box plot

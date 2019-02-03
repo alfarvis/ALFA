@@ -26,6 +26,9 @@ class StatMax(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
+    def commandName(self):
+        return "statistics.max"
+
     def commandTags(self):
         """
         return tags that are used to identify max command
