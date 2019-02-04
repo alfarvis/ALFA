@@ -17,7 +17,7 @@ class ConvertToDateTime(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
-    
+
     def commandName(self):
         return "dataHandling.convertDataTime"
 
@@ -71,10 +71,10 @@ class FilterTopN(AbstractCommand):
 
     def __init__(self, condition=["top", "best", "largest"]):
         self._condition = condition
-    
+
     def commandName(self):
         return "dataHandling.topN"
-    
+
     def commandTags(self):
         """
         Tags to identify the condition
@@ -193,8 +193,10 @@ class FilterBottomN(FilterTopN):
     def __init__(self):
         super(FilterBottomN, self).__init__(["bottom", "worst", "smallest",
              "last"])
+
     def commandName(self):
         return "dataHandling.bottomN"
+
 
 class FilterFirstN(FilterTopN):
 
@@ -206,7 +208,8 @@ class FilterFirstN(FilterTopN):
 
     def commandName(self):
         return "dataHandling.firstN"
-    
+
+
 class LessThan(AbstractCommand):
     """
     create logical array with elements less than
@@ -223,7 +226,7 @@ class LessThan(AbstractCommand):
                  operator='<'):
         self._condition = condition
         self._operator = operator
-        
+
     def commandName(self):
         return "dataHandling.lessThan"
 
@@ -361,8 +364,10 @@ class LessThanEqual(LessThan):
         super(LessThanEqual, self).__init__(["equal", "less than",
                                              "smaller than", "before or"],
                                             '<=')
+
     def commandName(self):
         return "dataHandling.lessThanEq"
+
 
 class GreaterThan(LessThan):
 
@@ -376,6 +381,7 @@ class GreaterThan(LessThan):
     def commandName(self):
         return "dataHandling.greaterThan"
 
+
 class GreaterThanEqual(LessThan):
 
     def briefDescription(self):
@@ -388,8 +394,10 @@ class GreaterThanEqual(LessThan):
 
     def commandName(self):
         return "dataHandling.greaterThanEq"
-    
+
 # in between
+
+
 class Between(AbstractCommand):
     """
     create logical array with elements between
@@ -403,7 +411,7 @@ class Between(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
-    
+
     def commandName(self):
         return "dataHandling.between"
 
@@ -558,10 +566,10 @@ class Contains(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
-    
+
     def commandName(self):
         return "dataHandling.contains"
-    
+
     def commandTags(self):
         """
         Tags to identify the command
@@ -690,9 +698,9 @@ class LogicalOr(LogicalAnd):
 
     def __init__(self):
         super(LogicalOr, self).__init__(["or"], '||')
-        
+
     def commandName(self):
-        return "dataHandling.logicalOr
+        return "dataHandling.logicalOr"
 
 
 class LogicalNot(LogicalAnd):
@@ -702,9 +710,9 @@ class LogicalNot(LogicalAnd):
 
     def __init__(self):
         super(LogicalNot, self).__init__(["not"], '!')
-        
+
     def commandName(self):
-        return "dataHandling.logicalNot
+        return "dataHandling.logicalNot"
 
 
 class LogicalXor(LogicalAnd):
@@ -714,6 +722,6 @@ class LogicalXor(LogicalAnd):
 
     def __init__(self):
         super(LogicalXor, self).__init__(["xor"], '^')
-        
+
     def commandName(self):
-        return "dataHandling.logicalXor
+        return "dataHandling.logicalXor"
