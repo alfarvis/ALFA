@@ -34,12 +34,12 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
     """
     foundName = False
     # Remove common keywords from the second keyword list
-    keyword_list2_mod = [keyword for keyword in keyword_list2 if keyword not in keyword_list1]
-    if keyword_list2_mod == []:
-        # If keyword list2 is part of first one can remove first
-        keyword_list2 = []
-    else:
-        keyword_list2 = keyword_list2_mod
+    #keyword_list2_mod = [keyword for keyword in keyword_list2 if keyword not in keyword_list1]
+    # if keyword_list2_mod == []:
+    #    # If keyword list2 is part of first one can remove first
+    #    keyword_list2 = []
+    # else:
+    #    keyword_list2 = keyword_list2_mod
     command_name_list = []
     first_keyword_list = []
     second_keyword_list = []
