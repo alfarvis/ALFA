@@ -38,26 +38,23 @@ class StatSigTest(AbstractCommand):
         """
         return ["ttest", "p value", "t test"]
 
-    def commandName(self):
-        return "statistics.ttest"
-
     def argumentTypes(self):
         """
         A list of  argument objects that specify the inputs needed for
         executing the ttest command
         """
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array, number=-1, fill_from_cache=False), 
+                         argument_type=DataType.array, number=-1, fill_from_cache=False),
                 Argument(keyword="data_frame", optional=True,
                          argument_type=DataType.csv, number=1, fill_from_cache=False)]
 
-    def evaluate(self, array_datas,data_frame):
+    def evaluate(self, array_datas, data_frame):
         """
         Calculate ttest of the array and store it to history
         Parameters:
 
         """
-        
+
         if data_frame is not None:
             df = data_frame.data
             cname = data_frame.name
@@ -66,7 +63,7 @@ class StatSigTest(AbstractCommand):
                 array_datas)
             if command_status == CommandStatus.Error:
                 return ResultObject(None, None, None, CommandStatus.Error)
-        else: 
+        else:
             Printer.Print("Please provide data frame or arrays to analyze")
             return ResultObject(None, None, None, CommandStatus.Error)
 
@@ -109,19 +106,19 @@ class StatSigTest(AbstractCommand):
                         df_new['pValue: ' + str(iter) + ' vs ' + str(iter1)][iter_feature] = 0
 
         TablePrinter.printDataFrame(df_new)
-        
+
         result_objects = []
         # Adding the newly created csv
         result_object = ResultObject(df_new, [], DataType.csv,
                               CommandStatus.Success)
         result_object.createName(cname, command_name='sigtest',
                           set_keyword_list=True)
-        
+
         result_objects.append(result_object)
         # create an updated list of column names by removing the common names
         kl1 = df_new.columns
         truncated_kl1, common_name = StatContainer.removeCommonNames(kl1)
-        for col in range (0,len(kl1)):
+        for col in range(0, len(kl1)):
             arr = df_new[kl1[col]]
             result_object = ResultObject(arr, [], DataType.array,
                               CommandStatus.Success)

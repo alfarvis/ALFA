@@ -27,9 +27,6 @@ class VizHistogram(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
-    def commandName(self):
-        return "visualization.histogram"
-
     def commandTags(self):
         """
         Tags to identify the histogram command

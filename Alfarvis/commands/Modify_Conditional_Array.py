@@ -22,14 +22,11 @@ class SetConditionalArray(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
-    def commandName(self):
-        return "datahandling.setFilter"
-
     def commandTags(self):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["setca", "set", "conditional", "format", "filter"]
+        return ["set filter", "setca", "set", "conditional", "format", "filter"]
 
     def argumentTypes(self):
         """

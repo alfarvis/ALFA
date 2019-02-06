@@ -29,9 +29,6 @@ class VizScatter2D(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
-    def commandName(self):
-        return "visualization.scatterplot"
-
     def commandTags(self):
         """
         Tags to identify the scatterplot command

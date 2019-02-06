@@ -23,9 +23,6 @@ class StatCount(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.count"
-
     def commandTags(self):
         """
         return tags that are used to identify count command

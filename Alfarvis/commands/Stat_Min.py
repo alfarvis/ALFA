@@ -24,9 +24,6 @@ class StatMin(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.min"
-
     def commandTags(self):
         """
         return tags that are used to identify min command

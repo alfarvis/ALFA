@@ -22,14 +22,11 @@ class Evaluate_AlphaScript(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
-    def commandName(self):
-        return "evaluate.script"
-    
     def commandTags(self):
         """
         Tags to identify the command
         """
-        return ["evalate", "execute"]
+        return ["evaluate", "execute"]
 
     def argumentTypes(self):
         """

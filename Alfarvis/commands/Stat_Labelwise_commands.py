@@ -28,9 +28,6 @@ class Stat_Labelwise_Count(AbstractCommand):
     def __init__(self, condition=["count"]):
         self._condition = condition
 
-    def commandName(self):
-        return "statistics.groupwiseCount"
-
     def commandTags(self):
         """
         return tags that are used to identify labelwise count command
@@ -129,9 +126,6 @@ class Stat_Labelwise_Mean(Stat_Labelwise_Count):
     def __init__(self):
         super(Stat_Labelwise_Mean, self).__init__(["mean", "average"])
 
-    def commandName(self):
-        return "statistics.groupwiseMean"
-
     def performOperation(self, df, gtName):
         return df.groupby(gtName).mean()
 
@@ -146,9 +140,6 @@ class Stat_Labelwise_Stdev(Stat_Labelwise_Count):
 
     def performOperation(self, df, gtName):
         return df.groupby(gtName).std()
-    
-    def commandName(self):
-        return "statistics.groupwiseStdev"
 
 
 class Stat_Labelwise_Sum(Stat_Labelwise_Count):
@@ -161,18 +152,12 @@ class Stat_Labelwise_Sum(Stat_Labelwise_Count):
 
     def performOperation(self, df, gtName):
         return df.groupby(gtName).sum()
-    
-    def commandName(self):
-        return "statistics.groupwiseSum"
 
 
 class Stat_Labelwise_Max(Stat_Labelwise_Count):
 
     def __init__(self):
         super(Stat_Labelwise_Max, self).__init__(['max', 'maximum'])
-
-    def commandName(self):
-        return "statistics.groupwiseSum"
 
     def performOperation(self, df, gtName):
         df1 = df.groupby(gtName).max()
@@ -188,10 +173,6 @@ class Stat_Labelwise_Min(Stat_Labelwise_Count):
 
     def __init__(self):
         super(Stat_Labelwise_Min, self).__init__(['min', 'minimum'])
-        
-    def commandName(self):
-        return "statistics.groupwiseMin"
-
 
     def performOperation(self, df, gtName):
         df1 = df.groupby(gtName).min()

@@ -24,9 +24,6 @@ class StatRange(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.range"
-
     def commandTags(self):
         """
         return tags that are used to identify range command

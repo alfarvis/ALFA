@@ -31,14 +31,11 @@ class ListHistory(AbstractCommand):
                 self.datatype_database.add(key_split, DataType[key],
                                            name=key_up)
 
-    def commandName(self):
-        return "list.history"
-    
     def commandTags(self):
         """
         return tags that are used to identify load command
         """
-        return ["list", "history", "variables", "array", "file", "workspace"]
+        return ["list history", "list", "history", "variables", "array", "file", "workspace"]
 
     def argumentTypes(self):
         """

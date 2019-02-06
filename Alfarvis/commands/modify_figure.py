@@ -16,11 +16,8 @@ class ModifyFigure(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 
-    def commandName(self):
-        return "visualization.modifyFigure"
-
     def commandTags(self):
-        return ["manipulate figure", "modify figure", "modify", "manipulate"]
+        return ["modify figure", "manipulate figure", "modify", "manipulate"]
 
     def argumentTypes(self):
         return [Argument(keyword="figure_object", optional=True,

@@ -11,7 +11,7 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
 install:
-  - conda install -c conda-forge --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy nose pandas seaborn scikit-image scikit-learn lazyasd xlrd dsdale24 pyqt5
+  - conda install -c conda-forge --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy nose pandas seaborn scikit-image scikit-learn lazyasd xlrd pyqt
   - pip install namedlist
   - pip install pep8 python-coveralls
   - pip install .

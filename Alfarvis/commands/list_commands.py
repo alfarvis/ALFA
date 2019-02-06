@@ -30,14 +30,11 @@ class ListCommands(AbstractCommand):
             command_name = '.'.join(keywords)
             self.commandtype_database.add(keywords, command_type, name=command_name)
 
-    def commandName(self):
-        return "list.commands"
-    
     def commandTags(self):
         """
         return tags that are used to identify load command
         """
-        return ["list", "commands", "statistics", "machine learning",
+        return ["list commands", "list", "commands", "statistics", "machine learning",
                 "data handling", "visualization"]
 
     def argumentTypes(self):

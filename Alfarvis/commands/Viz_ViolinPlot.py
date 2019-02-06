@@ -25,9 +25,6 @@ class Viz_VioloinPlot(AbstractCommand):
     def briefDescription(self):
         return "violin plot of multiple arrays"
 
-    def commandName(self):
-        return "visualization.violinplot"
-
     def commandType(self):
         return AbstractCommand.CommandType.Visualization
 

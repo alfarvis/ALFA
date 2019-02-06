@@ -24,9 +24,6 @@ class StatListColumns(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "list.columns"
-
     def __init__(self):
         self.column_type_db = Database()
         self.column_type_db.add(['string', 'str'], 'String')
@@ -39,7 +36,7 @@ class StatListColumns(AbstractCommand):
         """
         return tags that are used to identify mean command
         """
-        return ["list", "columns"]
+        return ["list columns", "list", "columns"]
 
     def argumentTypes(self):
         """

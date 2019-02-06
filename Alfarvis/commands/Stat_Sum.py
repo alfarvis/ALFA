@@ -29,9 +29,6 @@ class StatSum(AbstractCommand):
         """
         return ["sum", "add elements"]
 
-    def commandName(self):
-        return "statistics.sum"
-
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for

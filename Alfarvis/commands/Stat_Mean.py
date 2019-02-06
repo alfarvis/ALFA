@@ -24,9 +24,6 @@ class StatMean(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.mean"
-
     def commandTags(self):
         """
         return tags that are used to identify mean command

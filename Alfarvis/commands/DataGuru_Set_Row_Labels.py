@@ -22,11 +22,8 @@ class SetRowLabels(AbstractCommand):
         """
         return tags that are used to identify set row labels command
         """
-        return ["setrl", "set", "row", "labels", "row labels"]
+        return ["setrowlabels", "setrl", "set", "row", "labels", "row labels"]
 
-    def commandName(self):
-        return "statistics.setRowLabels"
-    
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for

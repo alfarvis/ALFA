@@ -24,14 +24,11 @@ class SetGT(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.setReference"
-    
     def commandTags(self):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["setgt", "set", "ground", "truth", "labels", "reference"]
+        return ["set reference", "setgt", "set", "ground", "truth", "labels", "reference"]
 
     def argumentTypes(self):
         """
@@ -63,14 +60,11 @@ class ClearGT(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.clearReference"
-
     def commandTags(self):
         """
         return tags that are used to identify clear ground truth command
         """
-        return ["cleargt", "clear", "ground", "truth", "labels", "reference"]
+        return ["clear reference", "cleargt", "clear", "ground", "truth", "labels", "reference"]
 
     def argumentTypes(self):
         """

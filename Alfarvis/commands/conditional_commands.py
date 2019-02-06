@@ -18,11 +18,8 @@ class ConvertToDateTime(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
-    def commandName(self):
-        return "dataHandling.convertDataTime"
-
     def commandTags(self):
-        return ["convert", "extract", "to date", "date time"]
+        return ["convert todate", "convert", "extract", "to date", "date time"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -69,11 +66,8 @@ class FilterTopN(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
-    def __init__(self, condition=["top", "best", "largest"]):
+    def __init__(self, condition=["topN", "top", "best", "largest"]):
         self._condition = condition
-
-    def commandName(self):
-        return "dataHandling.topN"
 
     def commandTags(self):
         """
@@ -191,11 +185,8 @@ class FilterBottomN(FilterTopN):
         return "find bottom N values in an array"
 
     def __init__(self):
-        super(FilterBottomN, self).__init__(["bottom", "worst", "smallest",
+        super(FilterBottomN, self).__init__(["bottomN", "bottom", "worst", "smallest",
              "last"])
-
-    def commandName(self):
-        return "dataHandling.bottomN"
 
 
 class FilterFirstN(FilterTopN):
@@ -204,10 +195,7 @@ class FilterFirstN(FilterTopN):
         return "print first N values of an array"
 
     def __init__(self):
-        super(FilterFirstN, self).__init__(["first", "print"])
-
-    def commandName(self):
-        return "dataHandling.firstN"
+        super(FilterFirstN, self).__init__(["firstN", "first", "print"])
 
 
 class LessThan(AbstractCommand):
@@ -226,9 +214,6 @@ class LessThan(AbstractCommand):
                  operator='<'):
         self._condition = condition
         self._operator = operator
-
-    def commandName(self):
-        return "dataHandling.lessThan"
 
     def commandTags(self):
         """
@@ -361,12 +346,9 @@ class LessThanEqual(LessThan):
         return "find elements of an array less than equal to target"
 
     def __init__(self):
-        super(LessThanEqual, self).__init__(["equal", "less than",
+        super(LessThanEqual, self).__init__(["lessthanEq", "equal", "less than",
                                              "smaller than", "before or"],
                                             '<=')
-
-    def commandName(self):
-        return "dataHandling.lessThanEq"
 
 
 class GreaterThan(LessThan):
@@ -378,9 +360,6 @@ class GreaterThan(LessThan):
         super(GreaterThan, self).__init__(["greater than", "bigger than",
                                            "after"], '>')
 
-    def commandName(self):
-        return "dataHandling.greaterThan"
-
 
 class GreaterThanEqual(LessThan):
 
@@ -389,11 +368,9 @@ class GreaterThanEqual(LessThan):
 
     def __init__(self):
         super(GreaterThanEqual, self).__init__(
-            ["equal",
+            ["greaterthanEq", "equal",
              "after or", "greater than", "bigger than"], '>=')
 
-    def commandName(self):
-        return "dataHandling.greaterThanEq"
 
 # in between
 
@@ -411,9 +388,6 @@ class Between(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
-
-    def commandName(self):
-        return "dataHandling.between"
 
     def commandTags(self):
         """
@@ -523,9 +497,6 @@ class Outside(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
-    def commandName(self):
-        return "dataHandling.outside"
-
     def commandTags(self):
         """
         Tags to identify the condition
@@ -566,9 +537,6 @@ class Contains(AbstractCommand):
 
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
-
-    def commandName(self):
-        return "dataHandling.contains"
 
     def commandTags(self):
         """
@@ -630,17 +598,14 @@ class LogicalAnd(AbstractCommand):
         self._add_tags = add_tags
         self._operator = operator
 
-    def commandName(self):
-        return "dataHandling.logicalAnd"
-
     def commandTags(self):
         """
         Tags to identify the condition
         """
         tags = []
         for tag in self._add_tags:
-            tags.append("logic " + tag)
             tags.append("logical " + tag)
+            tags.append("logic " + tag)
         tags.append(self._operator)
         tags = tags + ["conditional array", "create"]
         return tags
@@ -699,9 +664,6 @@ class LogicalOr(LogicalAnd):
     def __init__(self):
         super(LogicalOr, self).__init__(["or"], '||')
 
-    def commandName(self):
-        return "dataHandling.logicalOr"
-
 
 class LogicalNot(LogicalAnd):
 
@@ -711,9 +673,6 @@ class LogicalNot(LogicalAnd):
     def __init__(self):
         super(LogicalNot, self).__init__(["not"], '!')
 
-    def commandName(self):
-        return "dataHandling.logicalNot"
-
 
 class LogicalXor(LogicalAnd):
 
@@ -722,6 +681,3 @@ class LogicalXor(LogicalAnd):
 
     def __init__(self):
         super(LogicalXor, self).__init__(["xor"], '^')
-
-    def commandName(self):
-        return "dataHandling.logicalXor"

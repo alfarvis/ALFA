@@ -26,9 +26,6 @@ class Stat_Standardize(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.Statistics
 
-    def commandName(self):
-        return "statistics.standardize"
-
     def commandTags(self):
         """
         return tags that are used to identify standardize command
