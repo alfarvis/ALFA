@@ -66,7 +66,7 @@ class FilterTopN(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.DataHandling
 
-    def __init__(self, condition=["topN", "top", "best", "largest"]):
+    def __init__(self, condition=["top", "best", "largest"]):
         self._condition = condition
 
     def commandTags(self):
@@ -185,7 +185,7 @@ class FilterBottomN(FilterTopN):
         return "find bottom N values in an array"
 
     def __init__(self):
-        super(FilterBottomN, self).__init__(["bottomN", "bottom", "worst", "smallest",
+        super(FilterBottomN, self).__init__(["bottom", "worst", "smallest",
              "last"])
 
 
@@ -195,7 +195,7 @@ class FilterFirstN(FilterTopN):
         return "print first N values of an array"
 
     def __init__(self):
-        super(FilterFirstN, self).__init__(["firstN", "first", "print"])
+        super(FilterFirstN, self).__init__(["first", "print"])
 
 
 class LessThan(AbstractCommand):
