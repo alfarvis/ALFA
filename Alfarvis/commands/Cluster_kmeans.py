@@ -35,14 +35,14 @@ class Cluster_kmeans(AbstractCommand):
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
-    def __init__(self, condition=["cluster"]):
+    def __init__(self, condition=["kmeans","k means"]):
         self._condition = condition
 
     def commandTags(self):
         """
         Tags to identify the clustering command
         """
-        return self._condition + ["kmeans", "k means"]
+        return self._condition + ["cluster"]
 
     def argumentTypes(self):
         """
