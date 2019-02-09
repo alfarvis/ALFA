@@ -35,16 +35,16 @@ class NLDR_tsne(AbstractCommand):
         """
         Tags to identify the tsne command
         """
-        return ["tsne","t sne"]
+        return ["tsne", "t sne"]
 
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
         executing the tsne command
         """
-        
+
         return [Argument(keyword="array_datas", optional=True,
-                         argument_type=DataType.array, number=-1, fill_from_cache=False), 
+                         argument_type=DataType.array, number=-1, fill_from_cache=False),
                 Argument(keyword="data_frame", optional=True,
                          argument_type=DataType.csv, number=1, fill_from_cache=False)]
 
@@ -53,31 +53,31 @@ class NLDR_tsne(AbstractCommand):
         Run tsne on a dataset of multiple arrays
 
         """
-        
-        # Get the data frame        
+
+        # Get the data frame
         if data_frame is not None:
             df = data_frame.data
             df = DataGuru.convertStrCols_toNumeric(df)
             cname = data_frame.name
         elif array_datas is not None:
             command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
-                array_datas,useCategorical=True)
+                array_datas, useCategorical=True)
             if command_status == CommandStatus.Error:
                 return ResultObject(None, None, None, CommandStatus.Error)
-        else: 
+        else:
             Printer.Print("Please provide data frame or arrays to analyze")
             return ResultObject(None, None, None, CommandStatus.Error)
-        Y = None        
+        Y = None
         if StatContainer.ground_truth is not None:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
-            Y = StatContainer.filterGroundTruth()            
+            Y = StatContainer.filterGroundTruth()
             # Remove nans:
             df, Y = DataGuru.removenan(df, Y)
         else:
             df.dropna(inplace=True)
 
         # Get the tsne model
-        tsne = TSNE(verbose=1, perplexity=40, n_iter= 4000)
+        tsne = TSNE(verbose=1, perplexity=40, n_iter=4000)
 
         # Code to run the classifier
         X = df.values
@@ -91,12 +91,12 @@ class NLDR_tsne(AbstractCommand):
         win = Window.window()
         f = win.gcf()
         ax = f.add_subplot(111)
-        
+
         if Y is None:
             sc = ax.scatter(tsne[:, 0], tsne[:, 1], cmap="jet",
                        edgecolor="None", alpha=0.35)
-        else: 
-            sc = ax.scatter(tsne[:, 0], tsne[:, 1], c=Y,cmap="jet",
+        else:
+            sc = ax.scatter(tsne[:, 0], tsne[:, 1], c=Y, cmap="jet",
                        edgecolor="None", alpha=0.35)
             cbar = plt.colorbar(sc)
             cbar.ax.get_yaxis().labelpad = 15
@@ -104,8 +104,8 @@ class NLDR_tsne(AbstractCommand):
 
         ax.set_title(cname)
         win.show()
-        #return ResultObject(None, None, None, CommandStatus.Success)
-        
+        # return ResultObject(None, None, None, CommandStatus.Success)
+
         if data_frame is not None:
             return VizContainer.createResult(win, data_frame, ['tsne'])
         else:

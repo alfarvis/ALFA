@@ -26,7 +26,7 @@ class SetConditionalArray(AbstractCommand):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["setca", "set", "conditional", "format", "filter"]
+        return ["set filter", "setca", "set", "conditional", "format", "filter"]
 
     def argumentTypes(self):
         """

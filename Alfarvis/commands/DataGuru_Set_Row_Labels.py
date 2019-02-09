@@ -22,7 +22,7 @@ class SetRowLabels(AbstractCommand):
         """
         return tags that are used to identify set row labels command
         """
-        return ["setrl", "set", "row", "labels", "row labels"]
+        return ["setrowlabels", "setrl", "set", "row", "labels", "row labels"]
 
     def argumentTypes(self):
         """
@@ -56,6 +56,9 @@ class ClearRL(AbstractCommand):
         return tags that are used to identify set ground truth command
         """
         return ["clearrl", "clear", "row labels"]
+
+    def commandName(self):
+        return "statistics.clearRowLabels"
 
     def argumentTypes(self):
         """

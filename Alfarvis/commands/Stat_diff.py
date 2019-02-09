@@ -59,6 +59,7 @@ class StatDiff(AbstractCommand):
                                      CommandStatus.Success)
         result_object.createName(
                 array_datas[0].keyword_list,
+                array_datas[1].keyword_list,
                 command_name=self.commandTags()[0],
                 set_keyword_list=True)
         return result_object

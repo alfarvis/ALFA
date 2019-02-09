@@ -35,7 +35,7 @@ class ListHistory(AbstractCommand):
         """
         return tags that are used to identify load command
         """
-        return ["list", "history", "variables", "array", "file", "workspace"]
+        return ["list history", "list", "history", "variables", "array", "file", "workspace"]
 
     def argumentTypes(self):
         """

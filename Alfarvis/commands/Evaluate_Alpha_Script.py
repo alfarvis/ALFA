@@ -26,7 +26,7 @@ class Evaluate_AlphaScript(AbstractCommand):
         """
         Tags to identify the command
         """
-        return ["evalate", "execute"]
+        return ["evaluate", "execute"]
 
     def argumentTypes(self):
         """

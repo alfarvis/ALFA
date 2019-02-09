@@ -12,23 +12,18 @@ class TestCreateName(unittest.TestCase):
         name_dict = {}
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'mean.x.y')
-        self.assertEqual(components, ['mean', 'x', 'y'])
+        self.assertEqual(name, 'mean.rms.x.rms.y')
+        self.assertEqual(components, ['mean', 'rms', 'x', 'rms', 'y'])
 
     def testExistingName(self):
         command_name = 'mean'
         keyword_list1 = ['rms', 'x']
         keyword_list2 = ['rms', 'y', 'z']
-        name_dict = {'mean.x.y': 'Hello'}
+        name_dict = {'mean.rms.x.rms.y.z': 'Hello'}
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'mean.x.y.z')
-        self.assertEqual(components, ['mean', 'x', 'y', 'z'])
-        name_dict[name] = 'Hello'
-        name, components = createName(name_dict, keyword_list1, keyword_list2,
-                                      command_name)
-        self.assertEqual(name, 'mean.x.y.z.1')
-        self.assertEqual(components, ['mean', 'x', 'y', 'z', '1'])
+        self.assertEqual(name, 'mean.rms.x.rms.y.z.1')
+        self.assertEqual(components, ['mean', 'rms', 'x', 'rms', 'y', 'z', '1'])
 
     def testCompositeName(self):
         command_name = 'mean'
@@ -43,13 +38,13 @@ class TestCreateName(unittest.TestCase):
         keyword_list2 = []
         name, components = createName(name_dict, keyword_list1, keyword_list2,
                                       command_name)
-        self.assertEqual(name, 'median.mean.x')
-        self.assertEqual(components, ['median', 'mean', 'x'])
+        self.assertEqual(name, 'median.mean.rms.x.rms.y')
+        self.assertEqual(components, ['median', 'mean', 'rms', 'x', 'rms', 'y'])
 
     def testLastResort(self):
         command_name = 'mean'
-        keyword_list1 = ['rms', 'x', 'z']
-        keyword_list2 = ['rms', 'y', 'a']
+        keyword_list1 = ['x', 'z']
+        keyword_list2 = ['y', 'a']
         name_dict = {'mean.x.y': 'Hello', 'mean.x.z.y': 'Hello',
                      'mean.x.z.y.a': 'Hello'}
         name, components = createName(name_dict, keyword_list1, keyword_list2,

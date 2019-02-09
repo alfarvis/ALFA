@@ -18,8 +18,8 @@ def create_command_database():
     command_database = Database()
     for cls in get_subclasses(abstract_command.AbstractCommand):
         cls_instance = cls()
-        split_tags = sum([tag.split(' ') for tag
-                          in cls_instance.commandTags()], [])
+        command_type = str(cls_instance.commandType()).split('.')[-1]
+        split_tags = [command_type] + cls_instance.commandTags()[0].split(' ')
         name, _ = createName(command_name_set, split_tags)
         command_database.add(cls_instance.commandTags(), cls_instance, name=name)
         command_name_set.add(name)

@@ -35,7 +35,7 @@ class DM_BestClassifier(AbstractCommand):
         """
         Tags to identify the train a classifier command
         """
-        return ["best", "classifier", "top"]
+        return ["best classifier", "best", "classifier", "top"]
 
     def argumentTypes(self):
         """

@@ -36,7 +36,7 @@ class StatListColumns(AbstractCommand):
         """
         return tags that are used to identify mean command
         """
-        return ["list", "columns"]
+        return ["list columns", "list", "columns"]
 
     def argumentTypes(self):
         """

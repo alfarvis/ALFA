@@ -19,7 +19,7 @@ class ConvertToDateTime(AbstractCommand):
         return AbstractCommand.CommandType.DataHandling
 
     def commandTags(self):
-        return ["convert", "extract", "to date", "date time"]
+        return ["convert todate", "convert", "extract", "to date", "date time"]
 
     def argumentTypes(self):
         return [Argument(keyword="array_data", optional=True,
@@ -346,7 +346,7 @@ class LessThanEqual(LessThan):
         return "find elements of an array less than equal to target"
 
     def __init__(self):
-        super(LessThanEqual, self).__init__(["equal", "less than",
+        super(LessThanEqual, self).__init__(["lessthanEq", "equal", "less than",
                                              "smaller than", "before or"],
                                             '<=')
 
@@ -368,11 +368,13 @@ class GreaterThanEqual(LessThan):
 
     def __init__(self):
         super(GreaterThanEqual, self).__init__(
-            ["equal",
+            ["greaterthanEq", "equal",
              "after or", "greater than", "bigger than"], '>=')
 
 
 # in between
+
+
 class Between(AbstractCommand):
     """
     create logical array with elements between
@@ -602,8 +604,8 @@ class LogicalAnd(AbstractCommand):
         """
         tags = []
         for tag in self._add_tags:
-            tags.append("logic " + tag)
             tags.append("logical " + tag)
+            tags.append("logic " + tag)
         tags.append(self._operator)
         tags = tags + ["conditional array", "create"]
         return tags

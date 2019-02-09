@@ -28,7 +28,7 @@ class SetGT(AbstractCommand):
         """
         return tags that are used to identify set ground truth command
         """
-        return ["setgt", "set", "ground", "truth", "labels", "reference"]
+        return ["set reference", "setgt", "set", "ground", "truth", "labels", "reference"]
 
     def argumentTypes(self):
         """
@@ -64,7 +64,7 @@ class ClearGT(AbstractCommand):
         """
         return tags that are used to identify clear ground truth command
         """
-        return ["cleargt", "clear", "ground", "truth", "labels", "reference"]
+        return ["clear reference", "cleargt", "clear", "ground", "truth", "labels", "reference"]
 
     def argumentTypes(self):
         """

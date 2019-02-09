@@ -34,7 +34,7 @@ class ListCommands(AbstractCommand):
         """
         return tags that are used to identify load command
         """
-        return ["list", "commands", "statistics", "machine learning",
+        return ["list commands", "list", "commands", "statistics", "machine learning",
                 "data handling", "visualization"]
 
     def argumentTypes(self):

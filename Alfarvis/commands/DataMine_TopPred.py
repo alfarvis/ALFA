@@ -36,7 +36,7 @@ class DM_topPredictor(AbstractCommand):
         """
         Tags to identify the "Find top predictors" command
         """
-        return ["top", "predictor"]
+        return ["top predictor", "top", "predictor"]
 
     def argumentTypes(self):
         """
