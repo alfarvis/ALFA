@@ -10,6 +10,7 @@ from Alfarvis.windows.qt_notebook_window import QtNotebookWindow
 from Alfarvis.windows.qt_property_editor import QtPropertyEditor
 from Alfarvis.printers.qt_printer import QtPrinter
 from Alfarvis.printers.qt_notebook_table_printer import QtNotebookTablePrinter
+from Alfarvis.printers.qt_table_printer import QtTablePrinter
 from Alfarvis.printers.qt_custom_text_edit import QCustomTextEdit
 from Alfarvis.printers import Printer, TablePrinter
 from Alfarvis.windows import Window, PropertyEditor
@@ -26,6 +27,7 @@ class QtNotebookGUI(QDialog):
         self.notebook = QCustomTextEdit(max_text_size=24, div=80)
         self.qt_printer = QtPrinter(self.notebook)
         self.qt_table_printer = QtNotebookTablePrinter(self.notebook)
+        self.variable_history = QtTablePrinter()
         self.user_input = QCustomLineEdit()
         self.completion_model = QStringListModel()
         self.labels = [QLineEdit("None"), QLineEdit("None"), QLineEdit("None")]
@@ -64,6 +66,8 @@ class QtNotebookGUI(QDialog):
                                     QSizePolicy.Expanding)
         self.qt_table_printer.table_widget.setSizePolicy(
                 QSizePolicy.MinimumExpanding, QSizePolicy.Expanding)
+        self.variable_history.table_widget.setSizePolicy(
+                QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.ground_truth.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         # Layout
         layout = QVBoxLayout()
@@ -72,9 +76,13 @@ class QtNotebookGUI(QDialog):
         for i in range(3):
             hlayout.addWidget(self.ref_labels[i])
             hlayout.addWidget(self.labels[i])
+        # Add tabs for table and past history
+        self.right_tab_widget = QTabWidget()
+        self.right_tab_widget.addTab(self.qt_table_printer.table_widget, "Data Summary")
+        self.right_tab_widget.addTab(self.variable_history.table_widget, "Past variables")
         # Add separate splitter for table and property editor
         h_splitter = QSplitter(Qt.Vertical)
-        h_splitter.addWidget(self.qt_table_printer.table_widget)
+        h_splitter.addWidget(self.right_tab_widget)
         h_splitter.setStretchFactor(0, 2)
         PropertyEditor.parent_widget = h_splitter
         # Add chat,window, tab

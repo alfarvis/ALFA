@@ -18,12 +18,15 @@ from Alfarvis.parsers.parser_states import ParserStates
 
 class UserInputHandler(object):
     def __init__(self, user_input, completion_model,
-                 update_labels, qt_app, alpha_module_dictionary):
+                 update_labels, variable_history, qt_app,
+                 alpha_module_dictionary):
         self.user_input = user_input
         self.cmp = completion_model
         self.previous_input_text = deque(maxlen=10)
+        self.previous_variables = deque(maxlen=5)
         self.buffer_index = -1
         self.update_labels = update_labels
+        self.variable_history = variable_history
         self.qt_app = qt_app
         self.alpha_module_dictionary = alpha_module_dictionary
         self.user_input.returnPressed.connect(self.userPressedEnter)
@@ -53,6 +56,14 @@ class UserInputHandler(object):
                 self.addStringListToModel(self.cmp, cnames)
         except:
             print("Cannot find names to autocomplete")
+
+    def updateVariables(self):
+        if self.alpha.parser.history.last_data_object and (self.alpha.parser.history.last_data_object.name not in self.previous_variables):
+            self.previous_variables.appendleft(
+                    self.alpha.parser.history.last_data_object.name)
+        self.variable_history.initialize(1, headers=['Past Variables'], tabbed=False)
+        for past_variable in self.previous_variables:
+            self.variable_history.addRow([past_variable])
 
     def userPressedEnter(self):
         input_text = self.user_input.text()
@@ -95,6 +106,7 @@ class UserInputHandler(object):
         self.previous_input_text.appendleft(input_text)
         self.user_input.clear()
         self.buffer_index = -1
+        self.updateVariables()
 
     def userPressedUpArrow(self):
         N = len(self.previous_input_text)
@@ -138,7 +150,8 @@ def main(gui_type='regular'):
     Printer.Print("Enter Bye to close the program")
     user_input_handler = UserInputHandler(qt_gui.user_input,
                                           qt_gui.completion_model,
-                                          qt_gui.updateLabels, app,
+                                          qt_gui.updateLabels,
+                                          qt_gui.variable_history, app,
                                           alpha_module_dictionary)
     qt_gui.showMaximized()
     app.exec_()

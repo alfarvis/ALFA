@@ -34,6 +34,7 @@ class QtGUI(QDialog):
         completer = QCompleter()
         completer.setModel(self.completion_model)
         self.user_input.setCompleter(completer)
+        self.variable_history = QtTablePrinter()
         # Select global configs
         QTabManager.setParentWidget(self.tab_container)
         Window.selectWindowType(QtWindow)
@@ -65,6 +66,8 @@ class QtGUI(QDialog):
                                          QSizePolicy.Expanding)
         self.qt_table_printer.table_widget.setSizePolicy(
                 QSizePolicy.MinimumExpanding, QSizePolicy.Expanding)
+        self.variable_history.table_widget.setSizePolicy(
+                QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.ground_truth.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         # Layout
         layout = QVBoxLayout()
@@ -73,9 +76,13 @@ class QtGUI(QDialog):
         for i in range(3):
             hlayout.addWidget(self.ref_labels[i])
             hlayout.addWidget(self.labels[i])
+        # Add tabs for table and past history
+        self.right_tab_widget = QTabWidget()
+        self.right_tab_widget.addTab(self.qt_table_printer.table_widget, "Data Summary")
+        self.right_tab_widget.addTab(self.variable_history.table_widget, "Past variables")
         # Add separate splitter for table and property editor
         h_splitter = QSplitter(Qt.Vertical)
-        h_splitter.addWidget(self.qt_table_printer.table_widget)
+        h_splitter.addWidget(self.right_tab_widget)
         h_splitter.setStretchFactor(0, 2)
         PropertyEditor.parent_widget = h_splitter
         # Add chat,window, tab
