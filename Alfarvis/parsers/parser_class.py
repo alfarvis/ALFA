@@ -6,6 +6,7 @@ from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
                                         findNumbers, findClosestMatch,
                                         searchFileFromFolder)
 from Alfarvis.printers import Printer
+import traceback
 
 # TODO Remove/split based on commas and semicolumns etc
 # TODO Handle capitalization when user string input is used
@@ -398,7 +399,14 @@ class AlfaDataParser:
 
     def executeCommand(self, command, arguments):
         # Execute command and take action based on result
-        results = command.evaluate(**arguments)
+        try:
+            results = command.evaluate(**arguments)
+        except Exception as e:
+            Printer.Print("Failed to evaluate ", command.commandTags()[0])
+            Printer.Print("save this chat and tag it when creating a bug report")
+            Printer.Print(traceback.format_exc())
+            return
+
         self.last_result_names = []
         if type(results) == list:
             for result in results:
