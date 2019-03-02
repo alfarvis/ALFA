@@ -53,6 +53,7 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
         addKeyword(keyword, second_keyword_list)
     comp_list = [command_name_list, first_keyword_list, second_keyword_list]
     name, name_comp = getName(comp_list)
+    additional_keyword_added = False
     if checkName(name, name_dict):
         foundName = True
     else:
@@ -63,7 +64,8 @@ def createName(name_dict, keyword_list1, keyword_list2=[], command_name=''):
                 foundName = True
                 break
             comp_list[-1][0] = str(i + 2)
+        additional_keyword_added = True
     if foundName:
         name = name.lower()
-        return name, name_comp
+        return name, name_comp, additional_keyword_added
     raise RuntimeError("Cannot find a unique name")
