@@ -24,6 +24,10 @@ class AbstractCommand(object):
         Unknown = 5
 
     @abstractproperty
+    def run_in_background(self):
+        return False
+
+    @abstractmethod
     def commandTags(self):
         """
         Return a list of strings that
@@ -61,10 +65,20 @@ class AbstractCommand(object):
         pass
 
     @abstractmethod
+    def preEvaluate(self, *args):
+        """
+        Applicable for run_in_background tasks. Takes in command arguments
+
+        Performs the parallelizable part of the command (No Qt commands should be
+        used). Returns results which will be passed to evaluate.
+        """
+        raise RuntimeError("Not implemented")
+
+    @abstractmethod
     def evaluate(self, *args):
         """
         Evaluate the command using the arguments
-        passed
+        passed. If run_in_background, gets args from preEvaluate.
 
         Returns ResultObject with result and any errors
         """

@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QApplication
 from Alfarvis.printers import Printer
 from collections import deque
 from Alfarvis.parsers.parser_states import ParserStates
+from Alfarvis.basic_definitions import ThreadPoolManager
 
 
 class UserInputHandler(object):
@@ -75,6 +76,8 @@ class UserInputHandler(object):
         if (('bye' in lower_text_split) or
             (('quit' in lower_text_split or 'exit' in lower_text_split) and
              self.alpha.parser.currentState != ParserStates.command_known_data_unknown)):
+            print("Closing threads")
+            ThreadPoolManager.close()
             print("Qutting Application!")
             self.qt_app.quit()
             return
@@ -141,6 +144,7 @@ def main(gui_type='regular'):
         app = QApplication(sys.argv)
     else:
         app = QApplication.instance()
+    ThreadPoolManager.initialize()
     alpha_module_dictionary = create_alpha_module_dictionary()
     if gui_type == 'notebook':
         qt_gui = QtNotebookGUI()
@@ -155,6 +159,7 @@ def main(gui_type='regular'):
                                           alpha_module_dictionary)
     qt_gui.showMaximized()
     app.exec_()
+    ThreadPoolManager.close()
 
 
 if __name__ == "__main__":  # pragma: no cover

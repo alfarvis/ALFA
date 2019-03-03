@@ -16,6 +16,7 @@ if __name__ == "__main__":  # pragma: no cover
     alpha_module_dictionary = create_alpha_module_dictionary()
     Printer.selectPrinter(KernelPrinter())
     Window.selectWindowType(RegularWindow)
+    ThreadPoolManager.initialize()
     print("Input a text to receive response from Alfarvis")
     print("Enter Bye to close the program")
     #print(">", end=" ")
@@ -47,4 +48,6 @@ if __name__ == "__main__":  # pragma: no cover
         except (KeyboardInterrupt, EOFError) as e:
             print("")
             break
+    print("closing threads!")
+    ThreadPoolManager.close()
     print("Closing Program! Good Bye.")
