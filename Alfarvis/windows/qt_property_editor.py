@@ -40,6 +40,20 @@ class QtPropertyEditor(QWidget):
     def fillForm(self, properties):
         form_layout = QFormLayout()
         for key, value in properties.items():
+            if len(key) > 6 and key[:6] == 'COMBO_':
+                continue
+            else:
+                combo_key = 'COMBO_' + key
+                if combo_key in properties:
+                    combo_box = QComboBox()
+                    combo_box.addItems(properties[combo_key])
+                    index = combo_box.findText(value)
+                    if index != -1:
+                        combo_box.setCurrentIndex(index)
+                    combo_box.currentIndexChanged[str].connect(UpdateKey(properties, key))
+                    form_layout.addRow(key, combo_box)
+                    continue
+
             if isinstance(value, (bool, np.bool_)):
                 check_box = QCheckBox()
                 check_box.setCheckState(mapBool(value))
