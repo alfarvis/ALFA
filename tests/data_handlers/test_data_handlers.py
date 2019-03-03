@@ -15,14 +15,17 @@ class TestDataHandlers(unittest.TestCase):
         csv_handler = self.handlers[DataType.csv]
         file_path = os.path.join(package_directory, 'test_data/data.csv')
         keyword_list = ['tumor', 'data']
-        res_list = csv_handler.read(file_path, keyword_list)
-        self.assertEqual(len(res_list), 35)
+        pre_eval_res = csv_handler.preRead(file_path, keyword_list)
+        res_list = csv_handler.read(file_path, keyword_list, pre_eval_res)
+        # Adding logical arrays as categorical will increase the count to 35
+        self.assertEqual(len(res_list), 33)
         self.assertEqual(res_list[0].keyword_list, keyword_list)
 
     def test_read_wrong_csv(self):
         csv_handler = self.handlers[DataType.csv]
         file_path = os.path.join(package_directory, 'resources/random.csv')
-        res = csv_handler.read(file_path, None)
+        pre_eval_res = csv_handler.preRead(file_path, None)
+        res = csv_handler.read(file_path, None, pre_eval_res)
         self.assertEqual(res.command_status, CommandStatus.Error)
 
     def test_read_image(self):

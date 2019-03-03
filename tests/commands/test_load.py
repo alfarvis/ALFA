@@ -36,13 +36,18 @@ class TestLoad(unittest.TestCase):
         file_name_object = DataObject(
             file_name_data_object, ['random', 'file'])
         arguments = {arg.keyword: file_name_object}
+        pre_eval_res = load_command.preEvaluate(**arguments)
+        arguments['pre_evaluate_results'] = pre_eval_res
         result_object = load_command.evaluate(**arguments)
         self.assertEqual(result_object.command_status, CommandStatus.Error)
         file_name_data_object.path = os.path.join(
             package_directory, 'test_data', 'data.csv')
         file_name_data_object.data_type = DataType.csv
         file_name_object.data = file_name_data_object
+        arguments.pop('pre_evaluate_results', None)
 
+        pre_eval_res = load_command.preEvaluate(**arguments)
+        arguments['pre_evaluate_results'] = pre_eval_res
         result_objects = load_command.evaluate(**arguments)
         self.assertEqual(
             result_objects[0].command_status, CommandStatus.Success)
