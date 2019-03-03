@@ -34,7 +34,7 @@ class ReadCSV(AbstractReader):
         result_object = ResultObject(
             data, keyword_list, DataType.csv, command_status,
             add_to_cache=True)
-        result_object.createName(keyword_list)
+        result_object.createName(result_object.keyword_list)
         result_objects.append(result_object)
         # Too many columns do not extract them individually
         if len(data.columns) > 5000:
