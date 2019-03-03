@@ -45,10 +45,9 @@ class DM_RunCrossValidation(AbstractCommand):
         A list of  argument structs that specify the inputs needed for
         executing the train classifier command
         """
-        # TODO Add an argument for k = number of clusters
         return [Argument(keyword="data_frame", optional=True, argument_type=DataType.csv, number=1, fill_from_cache=False),
                 Argument(keyword="array_datas", optional=True, argument_type=DataType.array, number=-1, fill_from_cache=False),
-                Argument(keyword="classifier_algo", optional=False, argument_type=DataType.algorithm_arg)]
+                Argument(keyword="classifier_algo", optional=True, argument_type=DataType.algorithm_arg)]
 
     def createDefaultProperties(self):
         properties = {}
