@@ -35,7 +35,7 @@ class ReadFolder(AbstractReader):
         keywords = splitPattern(base_name)
         file_object = FileObject(os.path.join(parent_path, dir_entry.name), file_type,
                 '', False)  # Future can generate some description
-        file_name, _ = createName(folder_database._argument_database[file_type].name_dict.keys(), keywords)
+        file_name, _, _ = createName(folder_database._argument_database[file_type].name_dict.keys(), keywords)
         folder_database.add(file_type, keywords, file_object, file_name)
 
     def read(self, file_path, keyword_list, recursive=False, folder_database=None):
@@ -61,7 +61,7 @@ class ReadFolder(AbstractReader):
                 print("Cannot find folder: ", file_path)
                 return result_object
         for dir_entry in os.scandir(file_path):
-            if self.checkEndsWith(dir_entry.name, ['.csv','.xlsx']) and dir_entry.is_file():
+            if self.checkEndsWith(dir_entry.name, ['.csv', '.xlsx']) and dir_entry.is_file():
                 self.addFile(dir_entry, DataType.csv, folder_database, file_path)
             elif self.checkEndsWith(dir_entry.name, ['.png', '.jpg', '.JPG', '.jpeg']) and dir_entry.is_file():
                 self.addFile(dir_entry, DataType.image, folder_database, file_path)

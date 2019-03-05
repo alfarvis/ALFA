@@ -120,6 +120,8 @@ class AbstractCommand(object):
     def DataMineArgFoundResponse(self, arg_name):
         if arg_name == "data_frame":
             Printer.Print("Found the data frame")
+        elif arg_name == "array_datas":
+            Printer.Print("Found array data")
         else:
             Printer.Print("Found the classification models to test")
 
@@ -128,6 +130,9 @@ class AbstractCommand(object):
             Printer.Print("I found multiple data frames that seem to match your query")
             Printer.Print("Could you please look at the following data frames and tell me which one you "
                   "want to classify?")
+        elif arg_name == "classifier_algo":
+            Printer.Print("I found multiple classification algorithms matching your query")
+            Printer.Print("Could you please look at available classification algorithms: ")
 
     def addCommandToKeywords(self, keyword_set):
         """

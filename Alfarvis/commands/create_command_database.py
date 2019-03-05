@@ -20,7 +20,7 @@ def create_command_database():
         cls_instance = cls()
         command_type = str(cls_instance.commandType()).split('.')[-1]
         split_tags = [command_type] + cls_instance.commandTags()[0].split(' ')
-        name, _ = createName(command_name_set, split_tags)
+        name, _, _ = createName(command_name_set, split_tags)
         command_database.add(cls_instance.commandTags(), cls_instance, name=name)
         command_name_set.add(name)
     return command_database

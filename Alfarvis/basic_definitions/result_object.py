@@ -39,9 +39,10 @@ class ResultObject:
         if self.data_type not in self._name_database:
             self._name_database[self.data_type] = set()
         name_set = self._name_database[self.data_type]
-        name, components = createName(name_set, keyword_list1, keyword_list2,
-                                      command_name)
+        name, components, keyword_flag = createName(name_set, keyword_list1,
+                                                    keyword_list2,
+                                                    command_name)
         self.name = name
         name_set.add(name)
-        if set_keyword_list:
+        if set_keyword_list or keyword_flag:
             self.keyword_list = components

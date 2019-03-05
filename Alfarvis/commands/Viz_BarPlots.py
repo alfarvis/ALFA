@@ -5,6 +5,7 @@ Create a bar plot with multiple variables
 
 from Alfarvis.basic_definitions import (DataType, CommandStatus,
                                         ResultObject)
+from Alfarvis.basic_definitions.color_maps import cmaps_all
 from .abstract_command import AbstractCommand
 from .argument import Argument
 from Alfarvis.printers import Printer
@@ -55,6 +56,7 @@ class VizBarPlots(AbstractCommand):
         properties["invert"] = False
         properties["color_map"] = "jet"
         properties["rotation"] = 0
+        properties['COMBO_color_map'] = cmaps_all
         return properties
 
     def evaluate(self, array_datas):

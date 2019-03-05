@@ -56,6 +56,9 @@ class AlfaDataParser:
     def printArguments(self, args):
         if type(args) is DataObject:
             args = [args]
+        if args is None:
+            Printer.Print(" None")
+            return
         for arg in args:
             Printer.Print(" ".join(arg.keyword_list))
 
@@ -185,7 +188,7 @@ class AlfaDataParser:
                     argumentsFound[arg_name] = None
                     continue
                 if arg_number > 1:
-                    Printer.Print("Arguments with multi-input",
+                    Printer.Print("Arguments with multi-input and cache fill",
                                   "cannot be optional")
                     continue
                 cache_res = self.history.getLastObject(arg_types[0])
@@ -325,7 +328,7 @@ class AlfaDataParser:
             all_arg_names.add(arg_name)
             # If file name, try searching folders
             if DataType.file_name in self.wrap(arg_type) and len(data_res) == 0:
-                print("Searching for file from folders")
+                Printer.Print("Searching for file from folders")
                 data_res = searchFileFromFolder(key_words, self.history)
             # If infinite args allowed and we found some args or
             # if finite args allowed and we found exactly those
@@ -385,18 +388,16 @@ class AlfaDataParser:
                         self.currentCommand.MultipleArgsFoundResponse(arg)
                     except:
                         Printer.Print("\nMultiple arguments found for ", arg)
-                    (self.printArguments(
-                            self.argument_search_result[arg]))
+                    self.printArguments(self.argument_search_result[arg])
                 else:
                     try:
                         self.currentCommand.ArgNotFoundResponse(arg)
                     except:
                         Printer.Print("Could not find any match for ", arg)
             if len(unknownList) > 0:
-                print()
-                # Do nothing
-                # Printer.Print("\nPlease provide more clues to help me resolve",
-                #              "these arguments")
+                Printer.Print("\nPlease provide more clues to help me resolve",
+                              "these arguments! or 'quit' to abort",
+                              "command execution")
 
     def consumePreEvaluateResults(self, command, arguments, pre_evaluate_results):
         if (type(pre_evaluate_results) is not list and
