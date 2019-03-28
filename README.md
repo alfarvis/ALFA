@@ -24,22 +24,22 @@ Alternatively, you can also clone the git [repository](https://github.com/alfarv
 Step 3: Unzip ALFA 
 
 ### Windows
-Step 2: Open Anaconda Prompt from Start Menu
+Step 4: Open Anaconda Prompt from Start Menu
 
-Step 3: Navigate to the directory where ALFA was downloaded 
+Step 5: Navigate to the directory where ALFA was downloaded 
 
 	cd [path where ALFA was unzipped]
 
-Step 4: Type the following command
+Step 6: Type the following command
 
 	conda env create -f environment.yaml
 	
 Once all the packages are installed, you can close the window. 
 
 ### Linux/macOS
-Step 2: Open terminal 
+Step 4: Open terminal 
 
-Step 3: Type the following command
+Step 5: Type the following command
 
 	conda env create -f environment.yaml
 	
@@ -61,4 +61,4 @@ Open terminal and type the following commands
 	python ./qt_run.py
 
 # Tutorials
-To learn more about Alfa, visit our [wiki](https://github.com/Alfarvis/ALFA/wiki)
+To learn more about ALFA, visit our [wiki](https://github.com/Alfarvis/ALFA/wiki)
