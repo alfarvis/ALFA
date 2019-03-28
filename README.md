@@ -17,8 +17,10 @@ Alfa allows us to explore big datasets and run complex machine learning algorith
 # Installation
 Step 1: Install anaconda [distribution](https://www.anaconda.com/enterprise/?gclid=Cj0KCQjwlv_XBRDrARIsAH-iRJRs4Z2f4a9RqhkFkI3xryMwrPEOknxk3OOhNbrk9GqYmaj00kL3XUMaAik1EALw_wcB).
 
-Step 2: Download [ALFA](https://github.com/alfarvis/ALFA/archive/master.zip) 
-You can also clone the git [repository](https://github.com/alfarvis/ALFA)
+Step 2: Download [ALFA](https://github.com/alfarvis/ALFA/archive/master.zip).
+
+Alternatively, you can also clone the git [repository](https://github.com/alfarvis/ALFA)
+
 Step 3: Unzip ALFA 
 
 ### Windows
