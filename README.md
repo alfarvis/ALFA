@@ -1,6 +1,6 @@
 # ALFA
 Alfa is a natural language interpreter for Artificial Intelligence  
-Alfa allows us to explore big datasets and run complex machine learning algorithms using plain old English.
+Alfa allows us to explore big datasets and run complex machine learning algorithms using plain old English !!!
 
 ## Here is an example code written in ALFA
 	Load training data
