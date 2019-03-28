@@ -1,5 +1,5 @@
 # 
-![ALFA LOGO|15px](https://github.com/alfarvis/ALFA/blob/master/ALFA.png)
+<img src="https://github.com/alfarvis/ALFA/blob/master/ALFA.png" width="300"/>
 Alfa is a natural language interpreter for Artificial Intelligence.
 Alfa allows us to explore big datasets and run complex machine learning algorithms using plain old English !!!
 
