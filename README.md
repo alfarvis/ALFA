@@ -46,11 +46,9 @@ Step 5: Type the following command
 	
 # Running ALFA
 
-
+Navigate to the directory where ALFA was downloaded
 
 ### Windows
-
-Navigate to the directory where ALFA was downloaded
 
 Double click on the file named ALFA_WIN
 
