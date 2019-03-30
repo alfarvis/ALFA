@@ -41,7 +41,8 @@ class ReadCSV(AbstractReader):
         if len(data.columns) > 5000:
             return result_objects
         new_column_names = []
-        # num_unique = float("inf") # Used for smallest unique vec finding
+        num_unique = float("inf")  # Used for smallest unique vec finding
+        current_gt = None
         for column in data.columns:
             if self.col_head_pattern.match(column):
                 data.drop(column, axis=1, inplace=True)
@@ -81,19 +82,21 @@ class ReadCSV(AbstractReader):
             new_column_names.append(result_object.name)
             result_objects.append(result_object)
             # For now removing unique value search which is pretty slow
-            #unique_vals = StatContainer.isCategorical(col_data)
-            # if unique_vals is not None:
-            #    if len(unique_vals) < num_unique:
-            #        current_gt = result_object
-            #        num_unique = len(unique_vals)
-            #    # Do not add unique values as columns unless they are only a
-            #    # few
-            #    if len(unique_vals) < 5:
-            #        result_objects = self.add_categories_as_columns(
-            #        unique_vals, col_data, col_split,
-            #        result_objects, command_status)
+            unique_vals = StatContainer.isCategorical(col_data)
+            if unique_vals is not None:
+                if len(unique_vals) < num_unique:
+                    current_gt = result_object
+                    num_unique = len(unique_vals)
+                # Do not add unique values as columns unless they are only a
+                # few
+                # if len(unique_vals) < 5:
+                #    result_objects = self.add_categories_as_columns(
+                #    unique_vals, col_data, col_split,
+                #    result_objects, command_status)
         # Replace columns:
         data.columns = new_column_names
+        if current_gt is not None:
+            StatContainer.ground_truth = current_gt
         return result_objects
 
     def read(self, file_path, keyword_list, pre_evaluate_results):
@@ -103,11 +106,6 @@ class ReadCSV(AbstractReader):
             return ResultObject(None, None, None, CommandStatus.Error)
         # List the information about csv
         Printer.Print("Loaded " + " ".join(keyword_list))
-        #current_gt = None
-        # if current_gt is not None:
-        #    StatContainer.ground_truth = current_gt
-        #    Printer.Print("Setting ground truth to ",
-        #                  " ".join(current_gt.keyword_list))
         self.list_command.evaluate(pre_evaluate_results[0], DataObject([''], []))
         return pre_evaluate_results
 
