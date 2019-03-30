@@ -5,7 +5,9 @@ from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
                                         findNumbers, findClosestMatch,
-                                        searchFileFromFolder, ThreadPoolManager)
+                                        searchFileFromFolder, ThreadPoolManager,
+                                        createFileObjectFromName)
+from PyQt5.QtWidgets import QFileDialog
 from Alfarvis.printers import Printer
 import traceback
 
@@ -172,6 +174,29 @@ class AlfaDataParser:
                 closest_match = findClosestMatch(match_res)
                 if closest_match is not None:
                     argumentsFound[arg_name] = closest_match
+
+    def fillUsingFileDialog(self, argumentsFound, argumentTypes):
+
+        def hasFileType(arg_types):
+            for arg_type in arg_types:
+                if arg_type == DataType.file_name:
+                    return True
+            return False
+
+        for argument in argumentTypes:
+            arg_name = argument.keyword
+            if ((arg_name not in argumentsFound) and
+                (arg_name not in self.argument_search_result) and
+                argument.number == 1 and
+                hasFileType(self.wrap(argument.argument_type))):
+                    # ask user for input TODO GG - make getting input from user generic
+                    # to be compatible with non-GUI versions of the alfarvis
+                file_to_load, _ = QFileDialog.getOpenFileName(None, "select file", "", "All Files (*);; Csv Files (*.csv);; Excel files (*.xslx *.xls);; Images (*.png *.jpg);; Alfa Scripts(*.alfa *.alpha)")
+                if file_to_load:
+                    print("File : ", file_to_load)
+                    data_object = createFileObjectFromName(file_to_load)
+                    if data_object is not None:
+                        argumentsFound[arg_name] = data_object
 
     def fillOptionalArguments(self, argumentsFound, argumentTypes):
         """
@@ -363,6 +388,7 @@ class AlfaDataParser:
                                   argumentTypes)
         # Fill all the optional arguments
         self.fillOptionalArguments(self.argumentsFound, argumentTypes)
+        self.fillUsingFileDialog(self.argumentsFound, argumentTypes)
         if self.checkArgumentsFound(self.argumentsFound, argumentTypes):
             self.currentState = ParserStates.command_known_data_known
             self.argument_search_result = {}

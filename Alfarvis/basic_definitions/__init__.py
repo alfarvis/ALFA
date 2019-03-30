@@ -15,3 +15,4 @@ from .search_date_time import searchDateTime
 from .find_closest_match import findClosestMatch
 from .search_file_from_folder import searchFileFromFolder
 from .thread_pool_manager import ThreadPoolManager
+from .create_file_object_from_name import createFileObjectFromName
