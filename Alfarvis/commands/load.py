@@ -34,6 +34,10 @@ class Load(AbstractCommand):
         """
         return ["load", "import", "open"]
 
+    @property
+    def run_in_background(self):
+        return True
+
     def argumentTypes(self):
         """
         A list of  argument structs that specify the inputs needed for
@@ -43,7 +47,23 @@ class Load(AbstractCommand):
                          argument_type=[DataType.file_name,
                                         DataType.figure])]
 
-    def evaluate(self, file_name):
+    def preEvaluate(self, file_name):
+        """
+            For readers that allow run in background
+        """
+        if (file_name.data_type is not DataType.figure and
+            (not file_name.data.loaded or
+                file_name.data.data_type is DataType.algorithm_arg) and
+            os.path.isfile(file_name.data.path) and
+            file_name.data.data_type in self.reader_dictionary and
+            self.reader_dictionary[file_name.data.data_type].read_in_background):
+            reader = self.reader_dictionary[file_name.data.data_type]
+            parallel_result = reader.preRead(file_name.data.path,
+                                             file_name.keyword_list)
+            return parallel_result
+        return ResultObject(None, None, None, CommandStatus.Success)
+
+    def evaluate(self, file_name, pre_evaluate_results=None):
         """
         Load the file name specified and store it in history
         Parameters:
@@ -70,8 +90,12 @@ class Load(AbstractCommand):
             data_type = file_name.data.data_type
             if data_type in self.reader_dictionary:
                 reader = self.reader_dictionary[data_type]
-                result_object = reader.read(file_name.data.path,
-                                            file_name.keyword_list)
+                if reader.read_in_background:
+                    result_object = reader.read(file_name.data.path,
+                                                file_name.keyword_list, pre_evaluate_results)
+                else:
+                    result_object = reader.read(file_name.data.path,
+                                                file_name.keyword_list)
                 Printer.Print("Loaded file: ",
                               os.path.basename(file_name.data.path))
                 file_name.data.loaded = True

@@ -1,10 +1,11 @@
 from .parser_states import ParserStates
+from .runnable_evaluate_command import EvaluateCommand
 from Alfarvis.commands import create_command_database, helpCommand
 from Alfarvis.commands.argument import Argument
 from Alfarvis.history import TypeDatabase
 from Alfarvis.basic_definitions import (CommandStatus, DataType, DataObject,
                                         findNumbers, findClosestMatch,
-                                        searchFileFromFolder)
+                                        searchFileFromFolder, ThreadPoolManager)
 from Alfarvis.printers import Printer
 import traceback
 
@@ -398,7 +399,17 @@ class AlfaDataParser:
                               "these arguments! or 'quit' to abort",
                               "command execution")
 
-    def executeCommand(self, command, arguments):
+    def consumePreEvaluateResults(self, command, arguments, pre_evaluate_results):
+        if (type(pre_evaluate_results) is not list and
+                pre_evaluate_results.command_status == CommandStatus.Error):
+            Printer.Print("Failed to evaluate parallel thread: ")
+            if(type(pre_evaluate_results.data) == str):
+                Printer.Print(pre_evaluate_results.data)
+            return
+        arguments['pre_evaluate_results'] = pre_evaluate_results
+        self.postEvaluateCommand(command, arguments)
+
+    def postEvaluateCommand(self, command, arguments):
         # Execute command and take action based on result
         try:
             results = command.evaluate(**arguments)
@@ -419,6 +430,17 @@ class AlfaDataParser:
                 Printer.Print("Saving result to", results.name)
                 self.last_result_names.append(results.name)
             self.addResultToHistory(results)
+
+    def executeCommand(self, command, arguments):
+
+        if command.run_in_background:
+            Printer.Print("Running command in background!")
+
+            def consume_pre_evaluate_results(x): return self.consumePreEvaluateResults(command, arguments, x)
+            evaluate_command_wrapper = EvaluateCommand(command, arguments, consume_pre_evaluate_results)
+            ThreadPoolManager.addWorker(evaluate_command_wrapper)
+        else:
+            self.postEvaluateCommand(command, arguments)
 
     def lastResultNames(self):
         out = list(self.last_result_names)

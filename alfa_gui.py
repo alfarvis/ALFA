@@ -11,12 +11,15 @@ import sys
 from Alfarvis import create_alpha_module_dictionary
 from Alfarvis.qt_gui import QtGUI, QtNotebookGUI
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QTimer
 from Alfarvis.printers import Printer
 from collections import deque
 from Alfarvis.parsers.parser_states import ParserStates
+from Alfarvis.basic_definitions import ThreadPoolManager
 
 
 class UserInputHandler(object):
+
     def __init__(self, user_input, completion_model,
                  update_labels, variable_history, qt_app,
                  alpha_module_dictionary):
@@ -34,6 +37,9 @@ class UserInputHandler(object):
         self.user_input.downArrowPress.connect(self.userPressedDownArrow)
         self.pattern = re.compile(
             '(L|l)oad (A|a)l(f|ph)a\s*\w*\s*(\d+.?\d*)\w*')
+        self.timer = QTimer()
+        self.timer.timeout.connect(update_labels)
+        self.timer.start(1000)  # 1 second
         latest_version = max(alpha_module_dictionary.keys())
         self.alpha = self.alpha_module_dictionary[latest_version]()
         self.initializeAlpha()
@@ -75,6 +81,8 @@ class UserInputHandler(object):
         if (('bye' in lower_text_split) or
             (('quit' in lower_text_split or 'exit' in lower_text_split) and
              self.alpha.parser.currentState != ParserStates.command_known_data_unknown)):
+            print("Closing threads")
+            ThreadPoolManager.close()
             print("Qutting Application!")
             self.qt_app.quit()
             return
@@ -102,7 +110,6 @@ class UserInputHandler(object):
         else:
             Printer.Print("No alpha loaded!")
         # Update ground truth etc
-        self.update_labels()
         self.previous_input_text.appendleft(input_text)
         self.user_input.clear()
         self.buffer_index = -1
@@ -141,6 +148,7 @@ def main(gui_type='regular'):
         app = QApplication(sys.argv)
     else:
         app = QApplication.instance()
+    ThreadPoolManager.initialize()
     alpha_module_dictionary = create_alpha_module_dictionary()
     if gui_type == 'notebook':
         qt_gui = QtNotebookGUI()
@@ -155,6 +163,7 @@ def main(gui_type='regular'):
                                           alpha_module_dictionary)
     qt_gui.showMaximized()
     app.exec_()
+    ThreadPoolManager.close()
 
 
 if __name__ == "__main__":  # pragma: no cover

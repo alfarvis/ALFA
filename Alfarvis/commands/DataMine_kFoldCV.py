@@ -31,6 +31,10 @@ class DM_RunCrossValidation(AbstractCommand):
     def briefDescription(self):
         return "train classifier on a dataset"
 
+    @property
+    def run_in_background(self):
+        return True
+
     def commandType(self):
         return AbstractCommand.CommandType.MachineLearning
 
@@ -54,13 +58,8 @@ class DM_RunCrossValidation(AbstractCommand):
         properties["k (default: LOOCV)"] = "0"
         return properties
 
-    def evaluate(self, data_frame, array_datas, classifier_algo):
-        """
-        Train a classifier on multiple arrays
-
-        """
+    def preEvaluate(self, data_frame, array_datas, classifier_algo):
         result_object = ResultObject(None, None, None, CommandStatus.Error)
-
         # Get the data frame
         sns.set(color_codes=True)
         if data_frame is not None:
@@ -70,24 +69,21 @@ class DM_RunCrossValidation(AbstractCommand):
             command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
                 array_datas)
             if command_status == CommandStatus.Error:
-                return ResultObject(None, None, None, CommandStatus.Error)
+                print("Error in getting dataframe!")
+                result_object.data = "Error in getting dataframe!"
+                return result_object
         else:
-            Printer.Print("Please provide data frame or arrays to analyze")
-            return ResultObject(None, None, None, CommandStatus.Error)
-        #command_status, df, kl1, _ = DataGuru.transformArray_to_dataFrame(array_datas)
-        # if command_status == CommandStatus.Error:
-        #    return ResultObject(None, None, None, CommandStatus.Error)
+            result_object.data = "Please provide data frame or arrays to analyze"
+            return result_object
 
         # Get the ground truth array
         if StatContainer.ground_truth is None:
-            Printer.Print("Please set a feature vector to ground truth by",
-                          "typing set ground truth before using this command")
-            result_object = ResultObject(None, None, None, CommandStatus.Error)
+            result_object.data = ("Please set a feature vector to ground truth by" +
+                                  "typing set ground truth before using this command")
             return result_object
         else:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
             Y = StatContainer.ground_truth.data
-
         # Remove nans:
         df, Y = DataGuru.removenan(df, Y)
 
@@ -103,57 +99,77 @@ class DM_RunCrossValidation(AbstractCommand):
 
         properties = self.createDefaultProperties()
         properties['title'] = cname
-        win = Window.window()
+        cv_output = self.performCV(properties, X, Y, model)
+        aux_output = (properties, [X, Y, model])
 
-        if data_frame is not None:
-            result_object = VizContainer.createResult(win, data_frame, ['cval'])
-        else:
-            result_object = VizContainer.createResult(win, array_datas, ['cval'])
+        return [ResultObject(cv_output, None),
+                ResultObject(aux_output, None)]
 
-        result_object.data = [win, properties, [X, Y, model], self.updateFigure]
-        self.updateFigure(result_object.data)
-        self.modify_figure.evaluate(result_object)
-        return result_object
-
-        #cm, cvscores = DataGuru.runLOOCV(X, Y, model)
-        #cm, cvscores = DataGuru.runKFoldCV(X, Y, model,2)
-
-        #f = win.gcf()
-        #ax = f.add_subplot(111)
-        #DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
-        # win.show()
-
-    def updateFigure(self, result_data):
-        win = result_data[0]
-        f = win.gcf()
-        f.clear()
-        ax = f.add_subplot(111)
-        properties = result_data[1]
-        data = result_data[2]
-        X = data[0]
-        Y = data[1]
-        model = data[2]
+    def performCV(self, properties, X, Y, model):
         try:
             kValue = int(properties["k (default: LOOCV)"])
-            if kValue == 0:
-                Printer.Print("Using leave one out cross validation")
-            else:
-                Printer.Print("Using", kValue, "fold cross validation")
         except:
-            Printer.Print("Using leave one out cross validation")
             kValue = 0
-
         if kValue > X.shape[0]:
             kValue = 0
-            Printer.Print("k too high. Using leave one out cross validation")
 
         if kValue == 0:
             cm, cvscores = DataGuru.runLOOCV(X, Y, model)
         else:
             cm, cvscores = DataGuru.runKFoldCV(X, Y, model, kValue)
+        return kValue, cm, cvscores
+
+    def printkValueMessage(self, kValue):
+        if kValue == 0:
+            Printer.Print("Using leave one out cross validation")
+        else:
+            Printer.Print("Using", kValue, "fold cross validation")
+
+    def evaluate(self, data_frame, array_datas, classifier_algo, pre_evaluate_results=None):
+        """
+        Train a classifier on multiple arrays
+
+        """
+        result_object = ResultObject(None, None, None, CommandStatus.Error)
+        if type(pre_evaluate_results) is not list:
+            Printer.Print("Pre evaluation results failed! Attach bug report!")
+            return result_object
+        win = Window.window()
+
+        if data_frame is not None:
+            result_object = VizContainer.createResult(win, data_frame, ['cval'])
+        elif array_datas is not None:
+            result_object = VizContainer.createResult(win, array_datas, ['cval'])
+        else:
+            Printer.Print("Provide one of data frame or array datas")
+            return result_object
+        cv_output, aux_output = pre_evaluate_results
+        properties, model_data = aux_output.data
+
+        result_object.data = [win, properties, model_data, self.processkFoldCV]
+        self.printkValueMessage(cv_output.data[0])
+        self.updateWindow(win, cv_output.data[1], cv_output.data[2], model_data[1], properties["title"])
+        self.modify_figure.evaluate(result_object)
+        return result_object
+
+    def updateWindow(self, win, cm, cvscores, Y, title):
+        f = win.gcf()
+        f.clear()
+        ax = f.add_subplot(111)
         DataGuru.plot_confusion_matrix(cm, np.unique(Y), ax, title="confusion matrix")
-        ax.set_title(properties["title"])
+        ax.set_title(title)
         win.show()
+
+    def processkFoldCV(self, result_data):
+        win = result_data[0]
+        properties = result_data[1]
+        data = result_data[2]
+        X = data[0]
+        Y = data[1]
+        model = data[2]
+        kValue, cm, cvscores = self.performCV(properties, X, Y, model)
+        self.printkValueMessage(kValue)
+        self.updateWindow(win, cm, cvscores, Y, properties["title"])
 
     def ArgNotFoundResponse(self, arg_name):
         super().DataMineArgNotFoundResponse(arg_name)
