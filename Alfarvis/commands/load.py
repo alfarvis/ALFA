@@ -57,7 +57,6 @@ class Load(AbstractCommand):
             os.path.isfile(file_name.data.path) and
             file_name.data.data_type in self.reader_dictionary and
             self.reader_dictionary[file_name.data.data_type].read_in_background):
-            print("Reader status: ", self.reader_dictionary[file_name.data.data_type].read_in_background)
             reader = self.reader_dictionary[file_name.data.data_type]
             parallel_result = reader.preRead(file_name.data.path,
                                              file_name.keyword_list)
