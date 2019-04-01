@@ -61,3 +61,4 @@ Open terminal and type the following commands
 
 # Tutorials
 To learn more about ALFA, visit our [wiki](https://github.com/Alfarvis/ALFA/wiki)
+
