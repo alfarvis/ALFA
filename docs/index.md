@@ -1,6 +1,6 @@
 # 
 <img src="https://github.com/alfarvis/ALFA/blob/master/ALFA.png?raw=true" width="300"/>
-<img src="https://www.cs.jhu.edu/~vparekh5/images/banner.jpg"  width="300"/>
+
 Alfa is a natural language interpreter for Artificial Intelligence.
 Alfa allows us to explore big datasets and run complex machine learning algorithms using plain old English !!!
 
