@@ -61,3 +61,6 @@ Open terminal and type the following commands
 
 # Tutorials
 To learn more about ALFA, visit our [wiki](https://github.com/Alfarvis/ALFA/wiki)
+
+# Notebooks
+Checkout some of the ALFA [notebooks](https://github.com/Alfarvis/ALFA/wiki/notebooks) demonstrating codes written in ALFA for analyzing different datasets.
