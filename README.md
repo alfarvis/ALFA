@@ -23,7 +23,8 @@ Alfa allows us to explore big datasets and run complex machine learning algorith
    * [Example Notebooks](#H4)
 
 <h1 id="H1"> Installation </h1>
-Step 1: Install anaconda [distribution](https://www.anaconda.com/enterprise/?gclid=Cj0KCQjwlv_XBRDrARIsAH-iRJRs4Z2f4a9RqhkFkI3xryMwrPEOknxk3OOhNbrk9GqYmaj00kL3XUMaAik1EALw_wcB).
+
+Step 1: Install anaconda <a href="https://www.anaconda.com/enterprise/?gclid=Cj0KCQjwlv_XBRDrARIsAH-iRJRs4Z2f4a9RqhkFkI3xryMwrPEOknxk3OOhNbrk9GqYmaj00kL3XUMaAik1EALw_wcB">distribution</a>
 
 Step 2: Download [ALFA](https://github.com/alfarvis/ALFA/archive/master.zip).
 
@@ -67,7 +68,7 @@ Open terminal and type the following commands
 	python ./qt_run.py
 
 <h1 id="H3"> Tutorials </h1>
-To learn more about ALFA, visit our [wiki](https://github.com/Alfarvis/ALFA/wiki)
+To learn more about ALFA, visit our <a href = "https://github.com/Alfarvis/ALFA/wiki">wiki</a>
 
 <h1 id="H4"> Notebooks </h1>
-Checkout some of the ALFA [notebooks](https://github.com/Alfarvis/ALFA/wiki/notebooks) demonstrating codes written in ALFA for analyzing different datasets.
+Checkout some of the ALFA  <a href = "https://github.com/Alfarvis/ALFA/wiki/notebooks">notebooks</a> demonstrating programs written in ALFA for analyzing different datasets.
