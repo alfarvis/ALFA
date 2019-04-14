@@ -209,8 +209,8 @@ class DataGuru:
 
             allTrue = allTrue + (list(Y[test]))
             allPred = allPred + (list(model.predict(X_test)))
-        allTrue = np.array(allTrue) - 1
-        allPred = np.array(allPred) - 1
+        #allTrue = np.array(allTrue) - 1
+        #allPred = np.array(allPred) - 1
         #TP,FP,TN,FN = self.perf_measure(self,allTrue,allPred)
         #Sens = TP/(TP+FN)
         #Spec = TN/(FP+TN)
@@ -256,8 +256,11 @@ class DataGuru:
 
             allTrue = allTrue + (list(Y[test]))
             allPred = allPred + (list(model.predict(X_test)))
-        allTrue = np.array(allTrue) - 1
-        allPred = np.array(allPred) - 1
+        
+        # Checking why we need the following two lines
+        #allTrue = np.array(allTrue) - 1
+        #allPred = np.array(allPred) - 1
+        
         #TP,FP,TN,FN = self.perf_measure(self,allTrue,allPred)
         #Sens = TP/(TP+FN)
         #Spec = TN/(FP+TN)

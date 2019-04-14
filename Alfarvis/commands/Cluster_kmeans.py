@@ -71,8 +71,11 @@ class Cluster_kmeans(AbstractCommand):
         elif array_datas is not None:
             command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
                 array_datas, useCategorical=True)
+
             if command_status == CommandStatus.Error:
                 return ResultObject(None, None, None, CommandStatus.Error)
+            
+            df = DataGuru.convertStrCols_toNumeric(df)
         else:
             Printer.Print("Please provide data frame or arrays to analyze")
             return ResultObject(None, None, None, CommandStatus.Error)
@@ -80,6 +83,8 @@ class Cluster_kmeans(AbstractCommand):
         if StatContainer.ground_truth is not None:
             df = DataGuru.removeGT(df, StatContainer.ground_truth)
             Y = StatContainer.filterGroundTruth()
+
+        
             # Remove nans:
             df, Y = DataGuru.removenan(df, Y)
         else:
@@ -100,6 +105,8 @@ class Cluster_kmeans(AbstractCommand):
             num_clusters = int(numbers[0].data)
         else:
             num_clusters = 2  # If not specified use 2 clusters
+        
+        
         kY = self.performOperation(X, num_clusters)
         result_objects = []
         if StatContainer.ground_truth is not None:
@@ -110,6 +117,9 @@ class Cluster_kmeans(AbstractCommand):
             win = Window.window()
             f = win.gcf()
             ax = f.add_subplot(111)
+            
+            df_res = DataGuru.convertStrCols_toNumeric(df_res)
+            
             sns.heatmap(df_res, ax=ax)
             win.show()
             if data_frame is not None:
