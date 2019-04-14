@@ -138,5 +138,3 @@ class VizScatter2D(AbstractCommand):
             m, b = np.polyfit(array[:, 0], array[:, 1], 1)
             X_plot = np.linspace(ax.get_xlim()[0], ax.get_xlim()[1], 100)
             ax.plot(X_plot, m * X_plot + b, '-')
-
-        win.show()

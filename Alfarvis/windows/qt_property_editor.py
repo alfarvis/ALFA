@@ -93,6 +93,8 @@ class QtPropertyEditor(QWidget):
         # for key, value in properties.items():
         #    print(key, ": ", value)
         self.result.data[-1](self.result.data)
+        # Window show
+        self.result.data[0].show()
 
     def initUI(self):
         if type(self.result.data) != list:
