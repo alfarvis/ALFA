@@ -66,7 +66,7 @@ class Cluster_kmeans(AbstractCommand):
         # Get the data frame
         if data_frame is not None:
             df = data_frame.data
-            df = DataGuru.convertStrCols_toNumeric(df)
+            
             cname = data_frame.name
         elif array_datas is not None:
             command_status, df, kl1, cname = DataGuru.transformArray_to_dataFrame(
@@ -75,7 +75,7 @@ class Cluster_kmeans(AbstractCommand):
             if command_status == CommandStatus.Error:
                 return ResultObject(None, None, None, CommandStatus.Error)
             
-            df = DataGuru.convertStrCols_toNumeric(df)
+
         else:
             Printer.Print("Please provide data frame or arrays to analyze")
             return ResultObject(None, None, None, CommandStatus.Error)
