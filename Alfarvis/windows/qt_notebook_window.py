@@ -22,6 +22,7 @@ class QtNotebookWindow(AbstractWindow):
             kwargs['figsize'] = (max(min_size, self.scale_notebook[0] * (size.width() / dpi)),
                     max(min_size, self.scale_notebook[1] * (size.height() / dpi)))
             kwargs['dpi'] = dpi
+        self.show_count = 0
         self.buf = None
         self.figure = plt.figure(*args, **kwargs)
         self.canvas = FigureCanvas(self.figure)
@@ -42,8 +43,9 @@ class QtNotebookWindow(AbstractWindow):
         size = self.canvas.size()
         self.buf, (width, height) = self.canvas.print_to_buffer()
         image = QImage(self.buf, width, height, QImage.Format_ARGB32)
-        self.parent_notebook.insertImage(image, 'figure_' + str(self.figure.number))
+        self.parent_notebook.insertImage(image, 'figure_' + str(self.figure.number) + '_' + str(self.show_count))
         self.parent_notebook.resetFontSize()
+        self.show_count = self.show_count + 1
 
     def gcf(self):
         return self.figure

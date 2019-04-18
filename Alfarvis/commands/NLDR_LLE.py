@@ -139,4 +139,3 @@ class NLDR_LLE(AbstractCommand):
             cbar.ax.get_yaxis().labelpad = 15
             cbar.ax.set_ylabel(StatContainer.ground_truth.name, rotation=270)
         ax.set_title(properties["title"])
-        win.show()

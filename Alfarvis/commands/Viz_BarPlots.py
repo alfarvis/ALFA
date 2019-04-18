@@ -152,7 +152,6 @@ class VizBarPlots(AbstractCommand):
             ax.set_xlabel(properties["xlabel"])
             ax.set_ylabel(properties["ylabel"])
         ax.set_title(properties["title"])
-        win.show()
 
     def ArgNotFoundResponse(self, arg_name):
         super().AnalyzeArgNotFoundResponse(arg_name, 'plot')
