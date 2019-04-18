@@ -89,7 +89,7 @@ class VizHistogram(AbstractCommand):
                 df = dCol.to_frame(name=kl1[0])
                 sns.countplot(x=kl1[0], data=df, ax=ax)
         elif np.issubdtype(dCol.dtype, np.number):
-            df.plot.hist(stacked=True, bins=20, ax=ax)
+            df.plot.hist(stacked=True, ax=ax)
 
         win.show()
 
