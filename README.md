@@ -15,8 +15,16 @@ Alfa allows us to explore big datasets and run complex machine learning algorith
 	Plot the ROC curve and the confusion matrix for the results
 	Save  
 
-# Installation
-Step 1: Install anaconda [distribution](https://www.anaconda.com/enterprise/?gclid=Cj0KCQjwlv_XBRDrARIsAH-iRJRs4Z2f4a9RqhkFkI3xryMwrPEOknxk3OOhNbrk9GqYmaj00kL3XUMaAik1EALw_wcB).
+# Stuff you might be looking for
+
+   * [Installing ALFA](#H1)
+   * [Run ALFA](#H2)
+   * [Tutorials](#H3)
+   * [Example Notebooks](#H4)
+
+<h1 id="H1"> Installation </h1>
+
+Step 1: Install anaconda <a href="https://www.anaconda.com/enterprise/?gclid=Cj0KCQjwlv_XBRDrARIsAH-iRJRs4Z2f4a9RqhkFkI3xryMwrPEOknxk3OOhNbrk9GqYmaj00kL3XUMaAik1EALw_wcB">distribution</a>
 
 Step 2: Download [ALFA](https://github.com/alfarvis/ALFA/archive/master.zip).
 
@@ -44,7 +52,7 @@ Step 5: Type the following command
 
 	conda env create -f environment.yaml
 	
-# Running ALFA
+<h1 id="H2"> Running ALFA </h1>
 
 Navigate to the directory where ALFA was downloaded
 
@@ -59,5 +67,8 @@ Open terminal and type the following commands
 	conda activate Alfarvis
 	python ./qt_run.py
 
-# Tutorials
-To learn more about ALFA, visit our [wiki](https://github.com/Alfarvis/ALFA/wiki)
+<h1 id="H3"> Tutorials </h1>
+To learn more about ALFA, visit our <a href = "https://github.com/Alfarvis/ALFA/wiki">wiki</a>
+
+<h1 id="H4"> Notebooks </h1>
+Checkout some of the ALFA  <a href = "https://github.com/Alfarvis/ALFA/wiki/notebooks">notebooks</a> demonstrating programs written in ALFA for analyzing different datasets.
