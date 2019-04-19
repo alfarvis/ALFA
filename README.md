@@ -33,6 +33,10 @@ Alternatively, you can also clone the git [repository](https://github.com/alfarv
 Step 3: Unzip ALFA 
 
 ### Windows
+Step 4: Double click on the file named **INSTALL_ALFA**
+
+**OR**
+
 Step 4: Open Anaconda Prompt from Start Menu
 
 Step 5: Navigate to the directory where ALFA was downloaded 
