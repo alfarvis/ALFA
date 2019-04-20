@@ -393,6 +393,7 @@ class AlfaDataParser:
             self.currentState = ParserStates.command_known_data_known
             self.argument_search_result = {}
             self.executeCommand(self.currentCommand, self.argumentsFound)
+            self.clearCommandSearchResults()
         else:
             self.currentState = ParserStates.command_known_data_unknown
             unknown_args = all_arg_names.difference(
@@ -483,7 +484,6 @@ class AlfaDataParser:
             self.history.add(result.data_type, result.keyword_list,
                              result.data, result.add_to_cache, result.name)
         self.currentState = ParserStates.command_unknown
-        self.clearCommandSearchResults()
 
     def parse(self, textInput):
         """
