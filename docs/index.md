@@ -1,4 +1,10 @@
- 
+ <nav>
+<a href="/GettingStarted/">Getting Started</a> |
+<a href="/Documentation/">CSS</a> |
+<a href="/js/">/Tutorials/</a> |
+<a href="/jquery/">/Notebooks/</a>
+</nav>
+
 <img src="https://github.com/alfarvis/ALFA/blob/master/ALFA.png?raw=true" width="300" align="middle">
 
 Alfa is a natural language interpreter for Artificial Intelligence.
