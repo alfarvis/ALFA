@@ -1,20 +1,3 @@
-<style>
-	nav {
-  margin: 0;
-  padding: 0;
-  width: 25%;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
-	</style>
-<nav>
-<a href="/GettingStarted/">Getting Started</a> |
-<a href="/Documentation/">CSS</a> |
-<a href="/js/">Tutorials</a> |
-<a href="/jquery/">Notebooks</a>
-</nav>
 
 <img src="https://github.com/alfarvis/ALFA/blob/master/ALFA.png?raw=true" width="300" align="middle">
 
