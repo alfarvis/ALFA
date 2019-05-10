@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ALFA</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">ALFA</a>
+					</header>
+
+				<!-- Nav -->
+					
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="download.html">Download</a></li>
+							<li><a href="getting_started.html">Getting Started</a></li>
+							<li class="active"><a href="wiki.html">Wiki</a></li>
+							<li><a href="tutorials.html">Tutorials</a></li>
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+						
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<section>
+							
+
+							<nav class="sidenav">
+
+							<ul class="mainmenu">
+								
+
+								<li><a href="wiki.html">Data analytics</a>
+
+
+									<ul class="submenu">
+										<li><a href="wiki.html">Data handling</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_load_data.html">Load Data</a></li>
+
+												<li><a href="wiki_save_data.html">Save Data</a></li>
+
+												<li><a href="wiki_filter_data.html">Filter Data</a></li>
+
+												<li><a href="wiki_misc_funcs.html">Miscellaneous Functions</a></li>
+											</ul>
+										</li>
+										<li><a href="wiki_data_statistics.html">Data statistics</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_decriptive_statistics.html">Descriptive statistics</a></li>
+
+												<li><a href="wiki_advanced_statistics.html">Advanced statistics</a></li>
+											</ul>
+										</li>
+
+										<li><a href="wiki_data_visualization.html">Data visualization</a></li>
+									</ul>
+								</li>
+
+								<li><a href="wiki.html">Machine learning</a>
+
+
+								<ul class="submenu">
+								<li><a href="wiki_classification.html">Classification</a></li>
+
+								<li><a href="wiki_cluster_analysis.html">Cluster Analysis</a></li>
+
+								<li><a href="wiki_dimensionality_reduction.html">Dimensionality Reduction</a></li></ul>
+								</li>
+
+								</ul>
+							</nav>
+
+								<h1 id="descriptivestatistics">Descriptive Statistics</h1>
+
+							<p><strong>keywords:</strong> ALFA, summary statistics, descriptive statistics, groupwise</p>
+
+							<h2 id="outline"><strong>OUTLINE</strong></h2>
+
+							<ol>
+							<li><a href="#H1">Basic statistics</a></li>
+
+							<li><a href="#H2">Summary statistics</a></li>
+
+							<li><a href="#H3">Groupwise statistics</a></li>
+							</ol>
+
+							<h2 id="H1"> 1. Basic statistics </h2>
+
+							<p>You can find usual statistics such as mean, median and standard deviation of any of the arrays by just giving the command name and the array name. For example, you can compute mean of an array as</p>
+
+							<pre><code>load tumor data<br>mean of id</code></pre>
+
+							<p><strong>Alfa will figure out what you are trying to do as long as the instructions are unambiguous</strong></p>
+
+							<p>If you ask for the mean of non-numeric data, Alfa will fail to execute the command. All the statistics commands can be listed using <code>list statistics commands.</code> </p>
+
+							<h2 id="H2">2. Summary Statistics </h2>
+
+							<p>Alfa also provides a <code>summary</code> command that computes the basic statistics of a data file. 
+							This can either take a bunch of arrays or the complete dataframe/dataset as an input. The summary command calculates the basic statistics for each of the variables provided and displays the result in a tabular format. </p>
+
+							<p>Example:</p>
+
+							<pre><code>load tumor data<br>summary statistics of tumor data</code></pre>
+
+							<p>Alternatively, you can also provide the following command: </p>
+
+							<pre><code>summary statistics of area perimeter and texture of the tumor data</code></pre>
+
+							<h2 id="H3">3. Groupwise Statistics </h2>
+
+							<p>Groupwise statistics are useful to look at statistics of a variable based on a certain reference. For example, I want to look at the tumor area statistics for benign and malignant tumors, I can use groupwise statistics as follows:</p>
+
+							<pre><code>load tumor data<br>set reference to tumor type [benign or malignant]<br>groupwise mean of area</code></pre>
+
+							<p>This will give me a tabular result with mean area values corresponding to each tumor type.</p>
+
+							<p>Groupwise statistics can also be done to summarize the data.</p>
+
+							<p>Example:</p>
+
+							<pre><code>load tumor data<br>set reference to tumor type [benign or malignant]<br>groupwise summary of tumor data</code></pre>
+						</section>
+
+					</div>
+					<!-- Footer -->
+					<footer id="footer">
+						
+							<section>
+								<center>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+								</center>
+							</section>
+						
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Alfarvis</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

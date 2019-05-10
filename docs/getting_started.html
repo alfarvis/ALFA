@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ALFA</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">ALFA</a>
+					</header>
+
+				<!-- Nav -->
+					
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="download.html">Download</a></li>
+							<li class="active"><a href="getting_started.html">Getting Started</a></li>
+							<li><a href="wiki.html">Wiki</a></li>
+							<li><a href="tutorials.html">Tutorials</a></li>
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+						
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<section>
+							<p>Click on the element below to open the side navigation menu.</p>
+							
+
+							<div id="navPanel">
+							  <ul class = "links">
+							    <li><a href="">Home</a></li>
+							    <li><a href="">About</a></li>
+							    <li><a href="">Products</a>							      
+							  </ul>
+							</div>
+
+							<h2 id="H1">Opening Alfa</h2>
+
+							<p>Navigate to the directory where ALFA was downloaded</p>
+
+							<h3 id="windows">Windows</h3>
+
+							<p>Double click on the file named ALFA_WIN</p>
+
+							<h3 id="linuxmacos">Linux/macOS</h3>
+
+							<p>Open terminal and type the following commands</p>
+
+							<pre><code>conda activate Alfarvis<br>python ./qt_run.py</code></pre>
+
+							<h1 id="tutorials">Tutorials</h1>
+
+							<p>To learn more about ALFA, visit our <a href="wiki.html">wiki</a></p>
+
+							<h2 id="keycomponentsofgui">Key Components of GUI</h2>
+
+							<span class="image fit"><img src="images/figures/screen_shot_Alfa.png" alt="Screen shot of Alfa GUI showing main components of GUI" /></span>
+							<p>The components of the GUI are as follows:</p>
+
+							<p>|Component|Label|Description|
+							|---------|------|----------|
+							|Chat box | A    |shows a history of user inputs and responses from Alfa |
+							| Visualization window | B | visualizes plots requested by the user |
+							| Table section | C | displays any tabular information printed by user |
+							| User input | D | entry point for sending commands to Alfa |
+							| Ground truth | E | shows the current reference variable/ground truth set by user |
+							| Row label | F | row label set by the user|
+							| filter | G | filter applied by the user |</p>
+
+							<p>In this tutorial, we will only deal with the chat box, user input, and table section to understand how to load a file into ALFA.</p>
+
+							<h2 id="basicworkflow">Basic Workflow</h2>
+
+							<p>Once you open ALFA, the chat box will show a default help message describing the basic help commands. The figure and table windows will be empty since we did not load any data.</p>
+
+							<h3 id="loadingdata">Loading Data</h3>
+
+							<p>You can ask Alfa to load a data file by using the <strong>load</strong> command. Alfa has a flexible syntax. For example, all the commands below produce the same result:</p>
+
+							<pre><code>load tumor
+							load tumoor data
+							open tumor data
+							Please load tumor csv file
+							</code></pre>
+
+							<p>Once the data is loaded, the table box shows the columns in the csv file along with the type of column and the range of data present in the column.</p>
+
+							<p>Load command supports more files than just csv files. You can load an image file using the same procedure</p>
+
+							<pre><code> load phone image
+							</code></pre>
+
+							<p>will load an image from database and display it in the visualization window.</p>
+
+							<h3 id="gettinghelp">Getting Help</h3>
+
+							<p>If you want to get help about using any particular commands supported by Alfa, you can ask for help using the help command. You can list all available commands using <code>list commands</code>. This should print a list of all available commands. If you want to know more about a specific command, you can ask <code>help command [command name]</code>. Alfa will search for the command and provide command specific help.</p>
+
+							<h3 id="basiccommands">Basic commands</h3>
+
+							<p>Some basic commands you can try</p>
+
+							<p>|Command|Description|
+							|-------|-----------|
+							|list | Can list columns in a csv, or list variables/files etc in history|
+							|load | load data files/models/images/figures into history |
+							|show | images in window|
+							|summary| A summary of the data i.e mean, stdev, max etc for each column|</p>
+						</section>
+
+					</div>
+					<!-- Footer -->
+					<footer id="footer">
+						
+							<section>
+								<center>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+								</center>
+							</section>
+						
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Alfarvis</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
+

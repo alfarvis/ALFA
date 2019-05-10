@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ALFA</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">ALFA</a>
+					</header>
+
+				<!-- Nav -->
+					
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="download.html">Download</a></li>
+							<li><a href="getting_started.html">Getting Started</a></li>
+							<li class="active"><a href="wiki.html">Wiki</a></li>
+							<li><a href="tutorials.html">Tutorials</a></li>
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+						
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<section>
+							
+
+							<nav class="sidenav">
+
+							<ul class="mainmenu">
+								
+
+								<li><a href="wiki.html">Data analytics</a>
+
+
+									<ul class="submenu">
+										<li><a href="wiki.html">Data handling</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_load_data.html">Load Data</a></li>
+
+												<li><a href="wiki_save_data.html">Save Data</a></li>
+
+												<li><a href="wiki_filter_data.html">Filter Data</a></li>
+
+												<li><a href="wiki_misc_funcs.html">Miscellaneous Functions</a></li>
+											</ul>
+										</li>
+										<li><a href="wiki_data_statistics.html">Data statistics</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_decriptive_statistics.html">Descriptive statistics</a></li>
+
+												<li><a href="wiki_advanced_statistics.html">Advanced statistics</a></li>
+											</ul>
+										</li>
+
+										<li><a href="wiki_data_visualization.html">Data visualization</a></li>
+									</ul>
+								</li>
+
+								<li><a href="wiki_machine_learning.html">Machine learning</a>
+
+
+								<ul class="submenu">
+								<li><a href="wiki_classification.html">Classification</a></li>
+
+								<li><a href="wiki_cluster_analysis.html">Cluster Analysis</a></li>
+
+								<li><a href="wiki_dimensionality_reduction.html">Dimensionality Reduction</a></li></ul>
+								</li>
+
+								</ul>
+							</nav>
+
+							
+							<h1 id="loaddata">Load Data</h1>
+
+								<p>You can ask Alfa to load a data file by using the <strong>load</strong> command. Alfa has a flexible syntax. For example, all the commands below produce the same result:</p>
+
+								<pre><code>load tumor<br>load tumoor data<br>open tumor data<br>Please load tumor csv file</code></pre>
+
+								<p>Once the data is loaded, the table box shows the columns in the csv file along with the type of column and the range of data present in the column.</p>
+
+								<p>Load command supports more files than just csv files. You can load an image file using the same procedure<br><code>load phone image</code> <br> will load an image from database and display it in the visualization window.</p>
+
+								
+
+								
+
+								<h2 id="howdoesalfaknowwheretoloadthefilefrom">How does Alfa know where to load the file from?</h2>
+
+								<p>There are three ways to add a custom data file so that Alfa can find it. </p>
+
+								<ol>
+								<li><p>Adding the data file to the path<br>
+								The first method is to edit Alfarvis/resources/file/database.csv to add the path to the file and specify the keywords associated with the file. This process is tedious but allows the user to add custom keywords describing the file.</p></li>
+
+								<li><p>Adding folders to the path<br>
+								The other approach is for Alfa to figure out the file given the folder it lives in. You can add a few common data folders to the file database, and Alfa will figure out the file keywords based on its name and type. Alfa creates a database every time it loads up so any changes to folders will be visible after boot up.</p></li>
+								
+
+								<p>For example, if you have an abc_data.csv in the downloads folder, you can load the csv file using any of the following instructions</p>
+
+								<pre><code>load abc data from downloads<br>load abc data</code></pre>
+
+								<p>The second command can lead to ambiguity if there are multiple abc data files in other folders specified by the user.</p>
+
+								
+								<li><p>loading files directly<br>
+								If the file or the folder containing the file is not present in the Alfa path, just type load or import in the Alfa command window and Alfa will open up a dialog which will allow you to navigate to the folder where the file is present and load it.
+								Use either of the following commands. </p>
+
+								<pre><code>load<br>import</code></pre>
+								</li>
+								</ol>
+
+						</section>
+
+					</div>
+					<!-- Footer -->
+					<footer id="footer">
+						
+							<section>
+								<center>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+								</center>
+							</section>
+						
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Alfarvis</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
