@@ -15,8 +15,9 @@
 	<body class="is-preload">
 
 		<!-- Wrapper -->
-			<div id="wrapper" class="fade-in">
 
+			<div id="wrapper" class="fade-in">
+				{% block head %}
 				<!-- Intro -->
 					<div id="intro" style="background-color:#000000; color:#FFFFFF" >
 						<h1 style="color:#000000"><br>
@@ -43,10 +44,14 @@
 						</ul>
 						
 					</nav>
+				{% endblock %}
 
+				
+				
 				<!-- Main -->
 					<div id="main">
-
+						{% block content1 %}{% endblock %}
+						{% block content2 %}
 						<!-- Featured Post -->
 							<article>
 								
@@ -70,7 +75,7 @@
 										</h2>
 									</header>
 									
-									<p>The most time consuming part of a research project is data analysis, statistics and visualization. ALFA makes this process easy and straightforward. You can directly tell ALFA what you want, for example, you can just type <code> do a summary statistics on my data</code> or <code> create bar plots for x y and z variables</code>. Compared to traditional tools, ALFA is intuitive, requires no training and produces paper ready figures and tables. Check out our <a href="tutorials.html">ALFA Notebooks</a> for some examples. </p> <p> Take ALFA for a test drive today ... </p>
+									<p>The most time consuming part of a research project is data analysis, statistics and visualization. ALFA makes this process easy and straightforward. You can directly tell ALFA what you want, for example, you can just type <code> do a summary statistics on my data</code> or <code> create bar plots for x y and z variables</code>. Compared to traditional tools, ALFA is intuitive, requires no training and produces paper ready figures and tables. </p> <p> Take ALFA for a test drive today ... </p>
 									
 								</article>
 								<article>
@@ -80,7 +85,7 @@
 										
 									</header>
 									
-									<p>For someone new to the field of data science, the huge set of tools required to master data science can be quite overwhelming. You need to learn a new programming language, its syntax and the whole set of libraries required to run data science algorithms. <br> ALFA removes all these additional layers and makes data science accessible to everyone. </p> <p> Hop onto the <a href="tutorials.html">ALFA Notebooks</a> and start learning data science, machine learning, computer vision, and many more interesting concepts ...</p>
+									<p>For someone new to the field of data science, the huge set of tools required to master data science can be quite overwhelming. You need to learn a new programming language, its syntax and the whole set of libraries required to run data science algorithms. <br> ALFA removes all these additional layers and makes data science accessible to everyone. </p> <p> Hop onto the courses tab and start learning data science, machine learning, computer vision, and many more interesting concepts ...</p>
 									
 									
 								</article>
@@ -116,7 +121,7 @@
 							</section>
 
 						<!-- Footer -->
-							
+							{% endblock %}
 
 					</div>
 
