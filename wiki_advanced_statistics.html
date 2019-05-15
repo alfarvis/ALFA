@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ALFA</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">ALFA</a>
+					</header>
+
+				<!-- Nav -->
+					
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="download.html">Download</a></li>
+							<li><a href="getting_started.html">Getting Started</a></li>
+							<li class="active"><a href="wiki.html">Wiki</a></li>
+							<li><a href="tutorials.html">ALFA Notebooks</a></li>
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+						
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<section>
+							
+
+							<nav class="sidenav">
+
+							<ul class="mainmenu">
+								
+
+								<li><a href="wiki.html">Data analytics</a>
+
+
+									<ul class="submenu">
+										<li><a href="wiki.html">Data handling</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_load_data.html">Load Data</a></li>
+
+												<li><a href="wiki_save_data.html">Save Data</a></li>
+
+												<li><a href="wiki_filter_data.html">Filter Data</a></li>
+
+												<li><a href="wiki_misc_funcs.html">Miscellaneous Functions</a></li>
+											</ul>
+										</li>
+										<li><a href="wiki_data_statistics.html">Data statistics</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_decriptive_statistics.html">Descriptive statistics</a></li>
+
+												<li><a href="wiki_advanced_statistics.html">Advanced statistics</a></li>
+											</ul>
+										</li>
+
+										<li><a href="wiki_data_visualization.html">Data visualization</a></li>
+									</ul>
+								</li>
+
+								<li><a href="wiki.html">Machine learning</a>
+
+
+								<ul class="submenu">
+								<li><a href="wiki_classification.html">Classification</a></li>
+
+								<li><a href="wiki_cluster_analysis.html">Cluster Analysis</a></li>
+
+								<li><a href="wiki_dimensionality_reduction.html">Dimensionality Reduction</a></li></ul>
+								</li>
+
+								</ul>
+							</nav>
+
+								<h1 id="datavisualization">Advanced Statistics</h1>
+
+							<p><strong>keywords:</strong> ALFA, statistics</p>
+
+							<h2 id="outline"><strong>OUTLINE</strong></h2>
+
+							<ol>
+							<li><a href="#H1">t-test</a></li>
+
+							<li><a href="#H2">ROC analysis </a></li>
+
+							<li><a href="#H3">Correlation</a></li>
+							</ol>
+
+							<h2 id="H1"> 1. t-test </h2>
+
+							<p>ALFA currently supports t-test for hypothesis testing. The t-test function would require the ground truth or the reference variable be set. The syntax of t-test is very flexible and here is a non-exhaustive set of commands that will work:</p>
+
+							<pre><code>p value of [variable(s)/dataset]<br>t test of [variable(s)/dataset]<br>ttest of [variable(s)/dataset]</code></pre>
+
+							<p>ALFA currently does not support nonparametric hypothesis testing techniques such as WIlkoxon ranksum test. </p>
+
+							<h2 id="H2"> 2. ROC analysis </h2>
+
+							<p>The ROC analysis refers to the receiver operating characteristic (ROC) curve analysis that is used to find the univariate predictive capability of each variable. It used the area under the curve (AUC) to determine the predictive power of a particular variable. here is a non-exhaustive set of commands that can be used to invoke this function:</p>
+
+							<pre><code>auc of [variable(s)/dataset]<br>roc of [variable(s)/dataset]</code></pre>
+
+							<h2 id="H10"> 8. Correlation </h2>
+
+							<p>A correlation plot visualizes the correlation coefficient between multiple variables and displays it in the form of a color coded matrix. An example correlation map for our dataset is shown below:</p>
+
+							<p><img src="images/figures/example_correlation_plot.png?raw=true" alt="Figure 10" width="500" height="500"/></p>
+
+						</section>
+
+					</div>
+					<!-- Footer -->
+					<footer id="footer">
+						
+							<section>
+								<center>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+								</center>
+							</section>
+						
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Alfarvis</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

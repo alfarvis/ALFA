@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>ALFA</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">ALFA</a>
+					</header>
+
+				<!-- Nav -->
+					
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="download.html">Download</a></li>
+							<li><a href="getting_started.html">Getting Started</a></li>
+							<li class="active"><a href="wiki.html">Wiki</a></li>
+							<li><a href="tutorials.html">ALFA Notebooks</a></li>
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+						
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<section>
+							
+
+							<nav class="sidenav">
+
+							<ul class="mainmenu">
+								
+
+								<li><a href="wiki.html">Data analytics</a>
+
+
+									<ul class="submenu">
+										<li><a href="wiki.html">Data handling</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_load_data.html">Load Data</a></li>
+
+												<li><a href="wiki_save_data.html">Save Data</a></li>
+
+												<li><a href="wiki_filter_data.html">Filter Data</a></li>
+
+												<li><a href="wiki_misc_funcs.html">Miscellaneous Functions</a></li>
+											</ul>
+										</li>
+										<li><a href="wiki_data_statistics.html">Data statistics</a>
+											<ul class="subsubmenu">
+												<li><a href="wiki_decriptive_statistics.html">Descriptive statistics</a></li>
+
+												<li><a href="wiki_advanced_statistics.html">Advanced statistics</a></li>
+											</ul>
+										</li>
+
+										<li><a href="wiki_data_visualization.html">Data visualization</a></li>
+									</ul>
+								</li>
+
+								<li><a href="wiki_machine_learning.html">Machine learning</a>
+
+
+								<ul class="submenu">
+								<li><a href="wiki_classification.html">Classification</a></li>
+
+								<li><a href="wiki_cluster_analysis.html">Cluster Analysis</a></li>
+
+								<li><a href="wiki_dimensionality_reduction.html">Dimensionality Reduction</a></li></ul>
+								</li>
+
+								</ul>
+							</nav>
+
+							
+							<h1 id="filterdata">Filter Data</h1>
+
+								<p><strong>keywords:</strong> ALFA, data filtering</p>
+
+								<p>Data filtering is one of the basic functionalities of any data science toolkit. This basically includes extracting something interesting/relevant information from the big dataset. Alfa provides a large number of different functionalities to filter and explore big datasets. Let's look at each of them in detail.</p>
+
+								<h2 id="outline"><strong>OUTLINE</strong></h2>
+
+								<ol>
+								<li><a href="#H1">Filter names/strings</a></li>
+
+								<li><a href="#H2">Top/Bottom value filtering</a></li>
+
+								<li><a href="#H3"><code>greater than</code>,<code>&gt;</code>,<code>less than</code>,<code>&lt;</code>,<code>between</code>...</a></li>
+
+								<li><a href="#H4">Logical operations</a></li>
+
+								<li><a href="#H5">Create Categorical arrays</a></li>
+
+								<li><a href="#H6">Print First/Last N values in an array</a></li>
+								</ol>
+
+								<h2 id="H1"> 1. Filter names/strings </h2>
+
+								<p></p>
+
+								<p>Command: <code>contains</code></p>
+
+								<p>This functionality allows users to filter datasets based on a string/substring present in a variable. This functionality also provides support for misspelt words. 
+								As an example, consider a sports dataset (e.g. cricket, tennis, soccer, etc.) given to us and we want to analyze stats of a particular player, say for example, MS Dhoni's stats in a cricketing dataset. We can do this in ALFA using the following sequence of commands. </p>
+
+								<pre><code>load cricket<br>batsman name contains dhoni</code></pre>
+
+								<p>The following commands would also work</p>
+
+								<pre><code>batsman contains dhon<br>batsman contains dhoi</code></pre>
+
+								<p>The command is <code>contains</code> and it outputs a logical vector with 1s where the desired string or a substring is found in the search variables. </p>
+
+								<p>Now, we can make this even more interesting. In order to use and apply this particular filter in all the subsequent analysis, use the command <code>set filter</code>. The usage is as follows:</p>
+
+								<pre><code>load cricket<br>batsman contains dhoni<br>set filter<br>sum of runs scored<br>mean of runs scored<br>count matches played</code></pre>
+
+								<p>The above set of commands filters the cricket dataset based on MS Dhoni and computes the total runs scored by Dhoni, his average and the number of matches played by him. </p>
+
+								<p><strong>Note</strong>: The filter can be cleared/disabled by typing <code>clear</code> or <code>clear filter</code>. </p>
+
+								<p><h2 id="H2"> 2. Top/Bottom value filtering </h2></p>
+
+								<p>Using the top and bottom filtering, the largest or smallest N values could be filtered out. This could be useful in many cases. For example, if we want to study tumors that are greater than a particular size, we can apply such filters of tumor size. Here is an example of its usage.</p>
+
+								<pre><code>load tumor data<br>find 20 largest tumors OR find top 20 tumors<br>set filter<br>[extract properties]</code></pre>
+
+								<p>Similar commands: <code>top</code>,<code>bottom</code>,<code>largest</code>,<code>smallest</code></p>
+
+								<h2 id="H3"> 3. "greater than", "less than", "between"... </h2>
+
+								<p>Examples:</p>
+
+								<pre><code>area &gt; 50<br>perimeter &lt; 10<br>area &lt;= 400<br>perimeter between 20 and 50</code></pre>
+
+								<h2 id="H4"> 4. Logical operations </h2>
+
+								<p>The logical arrays generated from the above mentioned filtering operations can be combined using logical operations such as <code>AND</code>,<code>OR</code>,<code>NOT</code>,<code>XOR</code>, and their corresponding symbols <code>&amp;, ||, !, ^</code></p>
+
+								<p>Example:</p>
+
+								<pre><code>height &gt; 50<br>save as h1<br>height &lt; 10<br>save as h2<br>h1 || h2<br>save as h3<br>set filter<br>[do further analysis]
+								</code></pre>
+
+								<h2 id="H5"> 5. Create Categorical arrays </h2>
+
+								<p>The logical vectors can be combined to create categorical arrays. Categorical arrays can then be used as reference arrays for statistical and machine learning analysis. For example, in a housing dataset, I am interested in analyzing the characteristics of houses in different price ranges, their differences and similarities. I can do this by creating a categorical array as follows:</p>
+
+								<pre><code>load housing data<br>price &lt;= 250000<br>save as p1<br>price between 250000 and 750000<br>save as p2<br>price &gt; 750000<br>save as p3<br>create categorical array from p1 p2 and p3<br>save as categPrice<br>set categPrice as reference<br>[do further analysis, see statistics, visualization, and machine learning]</code></pre>
+
+								<h2 id="H6"> 6. Print First/Last N values in an array </h2>
+
+								<p>This command can be used to inspect an array/variable. This can be done by just typing </p>
+
+								<pre><code>print first 10 values of housing price<br>print last 10 cricketer names</code></pre>
+
+								<hr />
+
+								<p><strong>Warning:</strong> If you are creating a new filter, while a filter already exists, they are composed together. For example:</p>
+
+								<pre><code>find area.mean &gt; 100<br>set filter<br>find area.mean &lt; 500<br>set filter<br>range area.mean</code></pre>
+
+								<p>will give range of elements between 100 and 500. If you want only data less than 500, you can <code>clear filter</code> before creating a new filter as</p>
+
+								<pre><code>find area.mean &gt; 100<br>set filter<br>range area.mean<br>clear filter<br>find area.mean &lt; 500<br>set filter<br>range area.mean</code></pre>
+
+						</section>
+
+					</div>
+					<!-- Footer -->
+					<footer id="footer">
+						
+							<section>
+								<center>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+								</center>
+							</section>
+						
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Alfarvis</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
