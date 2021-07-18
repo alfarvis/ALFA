@@ -75,4 +75,4 @@ Open terminal and type the following commands
 To learn more about ALFA, visit our <a href = "https://github.com/Alfarvis/ALFA/wiki">wiki</a>
 
 <h1 id="H4"> Notebooks </h1>
-Checkout some of the ALFA  <a href = "https://github.com/Alfarvis/ALFA/wiki/notebooks">notebooks</a> demonstrating programs written in ALFA for analyzing different datasets.
+Checkout some of the ALFA  <a href = "https://alfarvis.github.io/ALFA/tutorials.html">notebooks</a> demonstrating programs written in ALFA for analyzing different datasets.
